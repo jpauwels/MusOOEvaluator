@@ -20,19 +20,19 @@ using namespace MusOO;
 
 SimilarityScoreKey::SimilarityScoreKey(const std::string& inScoreSelect)
 {
-	if (!inScoreSelect.compare("mirex"))
+	if (!inScoreSelect.compare("Mirex"))
 	{
 		m_ScoreMatrix << 
 			(Eigen::Array<double,1,12>() << 1., 0.5, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.5).finished(), 
 			(Eigen::Array<double,1,12>() << 0.2, 0., 0., 0.3, 0., 0., 0., 0., 0., 0., 0., 0.).finished();
 	}
-	else if (!inScoreSelect.compare("binary"))
+	else if (!inScoreSelect.compare("Binary"))
 	{
 		m_ScoreMatrix << 
 			(Eigen::Array<double,1,12>() << 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.).finished(), 
 			(Eigen::Array<double,1,12>() << 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.).finished();
 	}
-	else if (!inScoreSelect.compare("lerdahl"))
+	else if (!inScoreSelect.compare("Lerdahl"))
 	{
 		m_ScoreMatrix << 
 			(Eigen::Array<double,1,12>() << 0., 7., 14., 14., 16., 23., 30., 23., 16., 14., 14., 7.).finished(), 

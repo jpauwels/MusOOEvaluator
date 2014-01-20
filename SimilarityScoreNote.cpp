@@ -18,7 +18,7 @@ using namespace MusOO;
 
 SimilarityScoreNote::SimilarityScoreNote(const std::string& inScoreSelect)
 {
-	if (inScoreSelect.compare("piano") == 0)
+	if (inScoreSelect.compare("Piano") == 0)
 	{
 		this->m_NumOfCategories = 89;
 		m_LowestNote = 21;

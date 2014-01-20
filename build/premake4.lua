@@ -1,8 +1,8 @@
 -- A solution contains projects, and defines the available configurations
-solution "KeyChordEvaluation"
+solution "MusOOEvaluator"
 	configurations {"Release", "Debug"}
-	location (_ACTION)
-	targetdir (_ACTION)
+	location (os.get() .. '-' .. _ACTION)
+	targetdir (os.get() .. '-' .. _ACTION)
 
 	-- A project defines one build target
 	project "MusOOEvaluator"
@@ -34,15 +34,15 @@ solution "KeyChordEvaluation"
 			flags {"Optimize"}
 
 		configuration "macosx"
-			links {"boost_filesystem-xgcc42-mt", "boost_program_options-xgcc42-mt", "boost_system-xgcc42-mt"}
+			links {"boost_filesystem", "boost_program_options", "boost_system"}
 			linkoptions {"-undefined dynamic_lookup"}
 
 		configuration "linux"
-			links {"boost_filesystem-gcc41-mt", "boost_program_options-gcc41-mt", "boost_system-gcc41-mt"}
+			links {"boost_filesystem", "boost_program_options", "boost_system"}
 			defines {"_SYS_SYSMACROS_H"}
 		 
 		configuration "vs*"
-			defines {"_CRT_SECURE_NO_WARNINGS"}
+			defines {"_CRT_SECURE_NO_WARNINGS", "_SCL_SECURE_NO_WARNINGS"}
 			targetdir("$(SolutionDir)$(ConfigurationName)")
 			objdir("$(ConfigurationName)")
 			targetname("$(ProjectName)")

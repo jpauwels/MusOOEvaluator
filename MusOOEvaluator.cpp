@@ -73,45 +73,45 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
         ("verbose", "Write comparison file for each individual file")
 		;
 
-	options_description theOneListOptions("One list options");
-	theOneListOptions.add_options()
+	options_description theRelativeListOptions("Relative list options");
+	theRelativeListOptions.add_options()
 		("list", value<path>(&outListPath), "list with base file names")
-		("refdir", value<path>(&outRefPath), "directory with reference annotations")
+        ("refdir", value<path>(&outRefPath), "directory with reference annotations")
+        ("refext", value<string>(&outRefExt), "extension of the reference annotations")
 		("testdir", value<path>(&outTestPath), "directory with files to evaluate")
-		("refext", value<string>(&outRefExt), "extension of the reference annotations")
 		("testext", value<string>(&outTestExt), "extension of the files to evaluate")
 		("timingdir", value<path>(), "directory with files with start and end times")
 		("timingext", value<string>()->default_value("-timing.txt"), "extension of the files with start and end times")
 		;
     
 	options_description theSingleFileOptions("Single file options");
-	theOneListOptions.add_options()
+	theSingleFileOptions.add_options()
         ("reffile", value<path>(&outRefPath), "file with reference annotation")
         ("testfile", value<path>(&outTestPath), "file to evaluate")
         ("timingfile", value<path>(), "file with start and end times")
         ;
 
 	options_description theOptions;
-	theOptions.add(theGeneralOptions).add(theOneListOptions).add(theSingleFileOptions);
+	theOptions.add(theGeneralOptions).add(theRelativeListOptions).add(theSingleFileOptions);
 
 	store(parse_command_line(inNumOfArguments, inArguments, theOptions), outVarMap);
 	notify(outVarMap);
 
-	if (outVarMap.count("chords") + outVarMap.count("keys") + outVarMap.count("globalkey") + outVarMap.count("notes") + outVarMap.count("segmentation") != 1)
-	{
-		throw invalid_argument("Please select a single 'chords', 'keys', 'globalkey', 'notes' or 'segmentation' mode");
-	}
 	if (inNumOfArguments < 2 ||outVarMap.count("help") > 0)
 	{
-		cout << "Description: this application compares generated chord files to annotated chords\n"
-			<< "    and writes the result out in a report. The annotations and generated chord files\n"
-			<< "    can be given in two modes. to be completed..\n" << endl;
+		cout << "Description: This application compares music label sequences.\n"
+			<< "    The reference and test sequence(s) can be specified by two modes:\n"
+			<< "    as single files or as a list of multiple files.\n" << endl;
 		cout << theOptions << endl;
 		cout << "Author: Johan Pauwels - Build: " << __DATE__ << endl;
 		cout << endl;
 		exit(0);
 	}
-
+    
+	if (outVarMap.count("chords") + outVarMap.count("keys") + outVarMap.count("globalkey") + outVarMap.count("notes") + outVarMap.count("segmentation") != 1)
+	{
+		throw invalid_argument("Please select a single 'chords', 'keys', 'globalkey', 'notes' or 'segmentation' mode");
+	}
 	if (!exists(absolute(outOutputFilePath.parent_path())))
 	{
 		create_directories(outOutputFilePath.parent_path());

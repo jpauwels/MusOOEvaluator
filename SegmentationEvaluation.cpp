@@ -26,13 +26,13 @@ void SegmentationEvaluation::evaluate(const LabelSequence& inRefSequence, const 
     //        void operator()(const MusOO::TimedLabel<std::string>& tl) {tl.onset();}
     //    };
     Eigen::ArrayXd refOnsets(inRefSequence.size());
-    std::transform(inRefSequence.begin(), inRefSequence.end(), &refOnsets[0], std::mem_fun_ref<const double&>(&MusOO::TimedLabel<std::string>::onset));
+    std::transform(inRefSequence.begin(), inRefSequence.end(), &refOnsets[0], std::mem_fun_ref<const double&, MusOO::TimedLabel<std::string> >(&MusOO::TimedLabel<std::string>::onset));
     Eigen::ArrayXd refOffsets(inRefSequence.size());
-    std::transform(inRefSequence.begin(), inRefSequence.end(), &refOffsets[0], std::mem_fun_ref<const double&>(&MusOO::TimedLabel<std::string>::offset));
+    std::transform(inRefSequence.begin(), inRefSequence.end(), &refOffsets[0], std::mem_fun_ref<const double&, MusOO::TimedLabel<std::string> >(&MusOO::TimedLabel<std::string>::offset));
     Eigen::ArrayXd testOnsets(inTestSequence.size());
-    std::transform(inTestSequence.begin(), inTestSequence.end(), &testOnsets[0], std::mem_fun_ref<const double&>(&MusOO::TimedLabel<std::string>::onset));
+    std::transform(inTestSequence.begin(), inTestSequence.end(), &testOnsets[0], std::mem_fun_ref<const double&, MusOO::TimedLabel<std::string> >(&MusOO::TimedLabel<std::string>::onset));
     Eigen::ArrayXd testOffsets(inTestSequence.size());
-    std::transform(inTestSequence.begin(), inTestSequence.end(), &testOffsets[0], std::mem_fun_ref<const double&>(&MusOO::TimedLabel<std::string>::offset));
+    std::transform(inTestSequence.begin(), inTestSequence.end(), &testOffsets[0], std::mem_fun_ref<const double&, MusOO::TimedLabel<std::string> >(&MusOO::TimedLabel<std::string>::offset));
     
     Eigen::ArrayXd recalls;
     Eigen::ArrayXd precisions;
