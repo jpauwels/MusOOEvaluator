@@ -44,14 +44,14 @@ SimilarityScoreKey::SimilarityScoreKey(const std::string& inScoreSelect)
 	{
 		throw runtime_error("Unknown score selector: " + inScoreSelect);
 	}
-	this->m_NumOfCategories = 25;
-	this->m_CategoryLabels = vector<string>(this->m_NumOfCategories);
+	this->m_NumOfLabels = 25;
+	this->m_Labels = vector<string>(this->m_NumOfLabels);
 	for (size_t i = 0; i < 24; ++i)
 	{
-		m_CategoryLabels[i] = KeyElis(Key(Chroma::circleOfFifths(s_firstChroma)[i / 2], 
+		m_Labels[i] = KeyElis(Key(Chroma::circleOfFifths(s_firstChroma)[i / 2], 
 			i%2==0?Mode::major():Mode::minorNatural())).str();
 	}
-	this->m_CategoryLabels.back() = KeyElis(Key::silence()).str();
+	this->m_Labels.back() = KeyElis(Key::silence()).str();
 }
 
 SimilarityScoreKey::~SimilarityScoreKey()
@@ -61,11 +61,11 @@ SimilarityScoreKey::~SimilarityScoreKey()
 
 const double SimilarityScoreKey::score(const Key& inRefKey, const Key& inTestKey)
 {
-	this->m_RefCategory = calcKeyCategory(inRefKey);
-	this->m_TestCategory = calcKeyCategory(inTestKey);
+	this->m_RefIndex = calcKeyIndex(inRefKey);
+	this->m_TestIndex = calcKeyIndex(inTestKey);
 
-	if ((this->m_RefCategory == 24 || this->m_TestCategory == 24) &&
-		this->m_RefCategory != this->m_TestCategory)
+	if ((this->m_RefIndex == 24 || this->m_TestIndex == 24) &&
+		this->m_RefIndex != this->m_TestIndex)
 	{
 		return 0.;
 	}
@@ -84,7 +84,7 @@ const double SimilarityScoreKey::score(const Key& inRefKey, const Key& inTestKey
 	}
 }
 
-const size_t SimilarityScoreKey::calcKeyCategory(const Key& inKey)
+const size_t SimilarityScoreKey::calcKeyIndex(const Key& inKey)
 {
 	if (inKey == Key::silence())
 	{

@@ -341,9 +341,9 @@ int main(int inNumOfArguments,char* inArguments[])
 			theKeyEvaluation = new PairwiseEvaluation<Key>(theVarMap["globalkey"].as<string>());
 		}
 		theGlobalConfusionMatrix = 
-			Eigen::ArrayXXd::Zero(theKeyEvaluation->getNumOfCategories(),
-			theKeyEvaluation->getNumOfCategories());
-		theLabels = theKeyEvaluation->getCategoryLabels();
+			Eigen::ArrayXXd::Zero(theKeyEvaluation->getNumOfLabels(),
+			theKeyEvaluation->getNumOfLabels());
+		theLabels = theKeyEvaluation->getLabels();
 
 		ofstream theCSVFile;
 		if (theVarMap.count("csv") > 0)
@@ -409,8 +409,8 @@ int main(int inNumOfArguments,char* inArguments[])
 				double theScore = theSimilarityScoreKey.score(theGlobalRefKey, theGlobalTestKey);
 				theWeightedScore += theScore;
 				++theTotalDuration;
-				++theGlobalConfusionMatrix(theSimilarityScoreKey.getTestCategory(),
-					theSimilarityScoreKey.getRefCategory());
+				++theGlobalConfusionMatrix(theSimilarityScoreKey.getTestIndex(),
+					theSimilarityScoreKey.getRefIndex());
 				if (theVarMap.count("csv") > 0)
 				{
 					theCSVFile << theCSVQuotes << *i << theCSVQuotes << theCSVSeparator 
@@ -428,9 +428,9 @@ int main(int inNumOfArguments,char* inArguments[])
 	else if (theVarMap.count("chords") > 0)
 	{
 		PairwiseEvaluation<Chord> theChordEvaluation(theVarMap["chords"].as<string>());
-		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theChordEvaluation.getNumOfCategories(),
-			theChordEvaluation.getNumOfCategories());
-		theLabels = theChordEvaluation.getCategoryLabels();
+		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theChordEvaluation.getNumOfLabels(),
+			theChordEvaluation.getNumOfLabels());
+		theLabels = theChordEvaluation.getLabels();
 
 		ofstream theCSVFile;
 		if (theVarMap.count("csv") > 0)
@@ -509,9 +509,9 @@ int main(int inNumOfArguments,char* inArguments[])
 	else if (theVarMap.count("notes") > 0)
 	{
 		PairwiseEvaluation<Note> theNoteEvaluation(theVarMap["notes"].as<string>());
-		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theNoteEvaluation.getNumOfCategories(),
-			theNoteEvaluation.getNumOfCategories());
-		theLabels = theNoteEvaluation.getCategoryLabels();
+		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theNoteEvaluation.getNumOfLabels(),
+			theNoteEvaluation.getNumOfLabels());
+		theLabels = theNoteEvaluation.getLabels();
 
 		ofstream theCSVFile;
 		if (theVarMap.count("csv") > 0)

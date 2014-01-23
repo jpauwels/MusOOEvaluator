@@ -29,7 +29,7 @@ protected:
 
 private:
 	void initialize(const std::string& inMapping, const std::set<MusOO::ChordType> inInputLimitingSet, const std::set<MusOO::ChordType> inOutputLimitingSet, const std::string& inScoring);
-	const size_t calcChordCategory(const MusOO::Chord& inChord, MusOO::Chord& outMappedChord) const;
+	const size_t calcChordIndex(const MusOO::Chord& inChord, MusOO::Chord& outMappedChord) const;
     const MusOO::ChordType calcMappedChordType(const MusOO::ChordType& inChordType) const;
 	const MusOO::ChordType mirexMapping(const MusOO::ChordType& inChordType) const;
     void insertInversions(std::set<MusOO::ChordType>& inSet, const MusOO::ChordType& inChordType) const;
@@ -39,7 +39,6 @@ private:
     std::set<MusOO::ChordType> m_OutputLimitingSet;
 	std::set<MusOO::ChordType> m_MappedTypes;
 	size_t m_NumOfMappedTypes;
-	bool m_IncludeNoChords;
     std::string m_Scoring;
 };
 

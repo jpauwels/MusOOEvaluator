@@ -298,7 +298,7 @@ void SimilarityScoreChord::initialize(const std::string& inMapping, const std::s
         }
 	}
 	m_NumOfMappedTypes = m_MappedTypes.size();
-	this->m_NumOfCategories = 12*m_NumOfMappedTypes;
+	this->m_NumOfLabels = 12*m_NumOfMappedTypes + 1;
     const vector<Chroma> theChromas = Chroma::circleOfFifths(s_firstChroma);
     if (m_Mapping != "bass")
     {
@@ -306,7 +306,7 @@ void SimilarityScoreChord::initialize(const std::string& inMapping, const std::s
         {
             for (set<ChordType>::const_iterator theTypeIt = m_MappedTypes.begin(); theTypeIt != m_MappedTypes.end(); ++theTypeIt)
             {
-                this->m_CategoryLabels.push_back(ChordQM(Chord(*theChromaIt,*theTypeIt)).str());
+                this->m_Labels.push_back(ChordQM(Chord(*theChromaIt,*theTypeIt)).str());
             }
         }
     }
@@ -314,12 +314,10 @@ void SimilarityScoreChord::initialize(const std::string& inMapping, const std::s
     {
         for (vector<Chroma>::const_iterator theChromaIt = theChromas.begin(); theChromaIt != theChromas.end(); ++theChromaIt)
         {
-            this->m_CategoryLabels.push_back(theChromaIt->str());
+            this->m_Labels.push_back(theChromaIt->str());
         }
     }
-    ++this->m_NumOfCategories;
-    this->m_CategoryLabels.push_back(ChordQM("N").str());
-    // this->m_CategoryLabels.push_back(ChordQM(ChordQM::undefined()).str());
+    this->m_Labels.push_back(ChordQM("N").str());
 }
 
 SimilarityScoreChord::~SimilarityScoreChord()
@@ -329,115 +327,113 @@ SimilarityScoreChord::~SimilarityScoreChord()
 
 const double SimilarityScoreChord::score(const Chord& inRefChord, const Chord& inTestChord)
 {
-    this->m_RefCategory = calcChordCategory(inRefChord, this->m_MappedRefLabel);
-    this->m_TestCategory = calcChordCategory(inTestChord, this->m_MappedTestLabel);
+    this->m_RefIndex = calcChordIndex(inRefChord, this->m_MappedRefLabel);
+    this->m_TestIndex = calcChordIndex(inTestChord, this->m_MappedTestLabel);
     
-    // Check input limiting set
-    if (m_InputLimitingSet.empty() || m_InputLimitingSet.count(inRefChord.type()) > 0)
+    // Check input and output limiting set and check for unmappable chords in reference sequence
+    if ((m_InputLimitingSet.empty() || m_InputLimitingSet.count(inRefChord.type()) > 0) &&
+        (m_OutputLimitingSet.empty() || m_OutputLimitingSet.count(this->m_MappedRefLabel.type()) > 0) &&
+        (this->m_RefIndex != this->m_NumOfLabels))
     {
         // Check for unmappable chords in test sequence
-        if (this->m_TestCategory == this->m_NumOfCategories)
+        if (this->m_TestIndex == this->m_NumOfLabels)
         {
             throw invalid_argument("The chord " + ChordQM(inTestChord).str() + " in the test sequence cannot be handled by the current evaluating rules");
         }
         
-        // Check for unmappabe chords in reference sequence
-        if (this->m_RefCategory != this->m_NumOfCategories)
+        if (m_Scoring == "exact")
         {
-            // Check output limiting set
-            if (m_OutputLimitingSet.empty() || m_OutputLimitingSet.count(this->m_MappedRefLabel.type()) > 0)
+            if (this->m_RefIndex == this->m_TestIndex)
             {
-                if (m_Scoring == "exact")
+                return 1.;
+            }
+            else
+            {
+                return 0.;
+            }
+        }
+        else if (m_Scoring == "mirex2010")
+        {
+            size_t theNumOfCommonChromas = inRefChord.commonChromas(inTestChord).size();
+            if (theNumOfCommonChromas > 2 ||
+                (!inRefChord.isTrueChord() && !inTestChord.isTrueChord()) ||
+                (theNumOfCommonChromas > 1 && (inRefChord.type().triad(false) == ChordType::diminished() || inRefChord.type().triad(false) == ChordType::augmented()))/* || inRefChord.type().cardinality() == theNumOfCommonChromas*/)
+            {
+                return 1.;
+            }
+            else
+            {
+                return 0.;
+            }
+        }
+        else if (m_Scoring == "chromarecall")
+        {
+            if (inRefChord.isTrueChord())
+            {
+                double theNumOfCommonChromas = inRefChord.commonChromas(inTestChord).size();
+                return theNumOfCommonChromas / inRefChord.type().cardinality();
+            }
+            else
+            {
+                if (!inTestChord.isTrueChord())
                 {
-                    if (this->m_RefCategory == this->m_TestCategory)
-                    {
-                        return 1.;
-                    }
-                    else
-                    {
-                        return 0.;
-                    }
-                }
-                else if (m_Scoring == "mirex2010")
-                {
-                    size_t theNumOfCommonChromas = inRefChord.commonChromas(inTestChord).size();
-                    if (theNumOfCommonChromas > 2 ||
-                        (!inRefChord.isTrueChord() && !inTestChord.isTrueChord()) ||
-                        (theNumOfCommonChromas > 1 && (inRefChord.type().triad(false) == ChordType::diminished() || inRefChord.type().triad(false) == ChordType::augmented()))/* || inRefChord.type().cardinality() == theNumOfCommonChromas*/)
-                    {
-                        return 1.;
-                    }
-                    else
-                    {
-                        return 0.;
-                    }
-                }
-                else if (m_Scoring == "chromarecall")
-                {
-                    if (inRefChord.isTrueChord())
-                    {
-                        double theNumOfCommonChromas = inRefChord.commonChromas(inTestChord).size();
-                        return theNumOfCommonChromas / inRefChord.type().cardinality();
-                    }
-                    else
-                    {
-                        if (!inTestChord.isTrueChord())
-                        {
-                            return 1.;
-                        }
-                        else
-                        {
-                            return 0.;
-                        }
-                    }
-                }
-                else if (m_Scoring == "chromaprecision")
-                {
-                    if (inTestChord.isTrueChord())
-                    {
-                        double theNumOfCommonChromas = inRefChord.commonChromas(inTestChord).size();
-                        return theNumOfCommonChromas / inTestChord.type().cardinality();        }
-                    else
-                    {
-                        if (!inRefChord.isTrueChord())
-                        {
-                            return 1.;
-                        }
-                        else
-                        {
-                            return 0.;
-                        }
-                    }
-                }
-                else if (m_Scoring == "chromafmeasure")
-                {
-                    if (inRefChord.isTrueChord() && inTestChord.isTrueChord())
-                    {
-                        double theNumOfCommonChromas = inRefChord.commonChromas(inTestChord).size();
-                        return 2 * theNumOfCommonChromas / (inRefChord.type().cardinality() + inTestChord.type().cardinality());        }
-                    else
-                    {
-                        if (!inRefChord.isTrueChord() && !inTestChord.isTrueChord())
-                        {
-                            return 1.;
-                        }
-                        else
-                        {
-                            return 0.;
-                        }
-                    }
+                    return 1.;
                 }
                 else
                 {
-                    throw runtime_error("Unknown scoring function: " + m_Scoring);
+                    return 0.;
                 }
             }
         }
+        else if (m_Scoring == "chromaprecision")
+        {
+            if (inTestChord.isTrueChord())
+            {
+                double theNumOfCommonChromas = inRefChord.commonChromas(inTestChord).size();
+                return theNumOfCommonChromas / inTestChord.type().cardinality();        }
+            else
+            {
+                if (!inRefChord.isTrueChord())
+                {
+                    return 1.;
+                }
+                else
+                {
+                    return 0.;
+                }
+            }
+        }
+        else if (m_Scoring == "chromafmeasure")
+        {
+            if (inRefChord.isTrueChord() && inTestChord.isTrueChord())
+            {
+                double theNumOfCommonChromas = inRefChord.commonChromas(inTestChord).size();
+                return 2 * theNumOfCommonChromas / (inRefChord.type().cardinality() + inTestChord.type().cardinality());        }
+            else
+            {
+                if (!inRefChord.isTrueChord() && !inTestChord.isTrueChord())
+                {
+                    return 1.;
+                }
+                else
+                {
+                    return 0.;
+                }
+            }
+        }
+        else
+        {
+            throw runtime_error("Unknown scoring function: " + m_Scoring);
+        }
     }
-    return -1.;
+    else
+    {
+        // Exclude from evaluation
+        return -1.;
+    }
 }
 
-const size_t SimilarityScoreChord::calcChordCategory(const MusOO::Chord& inChord, MusOO::Chord& outMappedChord) const
+const size_t SimilarityScoreChord::calcChordIndex(const MusOO::Chord& inChord, MusOO::Chord& outMappedChord) const
 {
 	if (inChord == Chord::silence() || inChord == Chord::none())
 	{
@@ -462,7 +458,7 @@ const size_t SimilarityScoreChord::calcChordCategory(const MusOO::Chord& inChord
 		}
 		else
 		{
-			return this->m_NumOfCategories;
+			return this->m_NumOfLabels;
 		}
 	}
 }

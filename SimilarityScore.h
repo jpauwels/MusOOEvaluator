@@ -27,10 +27,10 @@ public:
 
 	virtual const double score(const T& inRef, const T& inTest) = 0;
 
-	const size_t& getRefCategory() const;
-	const size_t& getTestCategory() const;
-	const std::vector<std::string>& getCategoryLabels() const;
-	const size_t getNumOfCategories() const;
+	const size_t& getRefIndex() const;
+	const size_t& getTestIndex() const;
+	const std::vector<std::string>& getLabels() const;
+	const size_t getNumOfLabels() const;
     
     const T& getMappedRefLabel() const;
     const T& getMappedTestLabel() const;
@@ -38,12 +38,12 @@ public:
 protected:
 
 	static const MusOO::Chroma s_firstChroma;
- 	size_t m_NumOfCategories;
-	size_t m_RefCategory;
-	size_t m_TestCategory;
+ 	size_t m_NumOfLabels;
+	size_t m_RefIndex;
+	size_t m_TestIndex;
     T m_MappedRefLabel;
     T m_MappedTestLabel;
-	std::vector<std::string> m_CategoryLabels;
+	std::vector<std::string> m_Labels;
 
 private:
 
@@ -64,27 +64,27 @@ SimilarityScore<T>::~SimilarityScore()
 }
 
 template <typename T>
-const size_t& SimilarityScore<T>::getRefCategory() const
+const size_t& SimilarityScore<T>::getRefIndex() const
 {
-	return m_RefCategory;
+	return m_RefIndex;
 }
 
 template <typename T>
-const size_t& SimilarityScore<T>::getTestCategory() const
+const size_t& SimilarityScore<T>::getTestIndex() const
 {
-	return m_TestCategory;
+	return m_TestIndex;
 }
 
 template <typename T>
-const std::vector<std::string>& SimilarityScore<T>::getCategoryLabels() const
+const std::vector<std::string>& SimilarityScore<T>::getLabels() const
 {
-	return m_CategoryLabels;
+	return m_Labels;
 }
 
 template <typename T>
-const size_t SimilarityScore<T>::getNumOfCategories() const
+const size_t SimilarityScore<T>::getNumOfLabels() const
 {
-	return m_NumOfCategories;
+	return m_NumOfLabels;
 }
 
 template <typename T>

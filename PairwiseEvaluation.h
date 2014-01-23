@@ -34,8 +34,8 @@ public:
 	const double getOverlapScore() const;
 	const Eigen::ArrayXXd& getConfusionMatrix() const;
 	const double getTotalDuration() const;
-	const std::vector<std::string>& getCategoryLabels() const;
-	const size_t getNumOfCategories() const;
+	const std::vector<std::string>& getLabels() const;
+	const size_t getNumOfLabels() const;
 
 	/** Destructor. */
 	virtual ~PairwiseEvaluation();
@@ -44,7 +44,7 @@ protected:
     void printVerboseOutput(std::ostream& inVerboseOStream, const double theStartTime, const double theEndTime, const T& theRefLabel, const T& theTestLabel, const T& theMappedRefLabel, const T& theMappedTestLabel, const double theScore, const double theSegmentLength) const;
 	
 	SimilarityScore<T>* m_Score;
-	size_t m_NumOfCategories;
+	size_t m_NumOfLabels;
 	Eigen::ArrayXXd m_ConfusionMatrix;
 	double m_TotalScore;
 
@@ -64,7 +64,7 @@ template <typename T>
 void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence,
                                      double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inDelay)
 {
-	m_ConfusionMatrix = Eigen::ArrayXXd::Zero(m_NumOfCategories, m_NumOfCategories);
+	m_ConfusionMatrix = Eigen::ArrayXXd::Zero(m_NumOfLabels, m_NumOfLabels);
 	m_TotalScore = 0.;
 	double theCurTime = inStartTime;
 	double thePrevTime;
@@ -138,7 +138,6 @@ void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const L
 		/***********************************/
 		/* Classification of ended segment */
 		/***********************************/
-		double theScore = 0.;
         T theRefLabel;
         T theTestLabel;
 		//label in reference
@@ -161,7 +160,7 @@ void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const L
         {
             theTestLabel = T::silence();
         }
-        theScore = m_Score->score(theRefLabel, theTestLabel);
+		double theScore = m_Score->score(theRefLabel, theTestLabel);
         // NemaEval implementation errors recreation
         //        if (theCurTime > theTestEndTime || theCurTime <= inTestSequence[theTestIndex].onset()-inDelay || theCurTime <= inRefSequence[theRefIndex].onset())
         //        {
@@ -169,7 +168,7 @@ void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const L
         //        }
 		if (theScore >= 0)
 		{
-			m_ConfusionMatrix(m_Score->getTestCategory(),m_Score->getRefCategory()) += theSegmentLength;
+			m_ConfusionMatrix(m_Score->getTestIndex(),m_Score->getRefIndex()) += theSegmentLength;
 			m_TotalScore += theScore * theSegmentLength;
 		}
         /******************/
@@ -208,15 +207,15 @@ const double PairwiseEvaluation<T>::getTotalDuration() const
 }
 
 template <typename T>
-const std::vector<std::string>& PairwiseEvaluation<T>::getCategoryLabels() const
+const std::vector<std::string>& PairwiseEvaluation<T>::getLabels() const
 {
-	return m_Score->getCategoryLabels();
+	return m_Score->getLabels();
 }
 
 template <typename T>
-const size_t PairwiseEvaluation<T>::getNumOfCategories() const
+const size_t PairwiseEvaluation<T>::getNumOfLabels() const
 {
-	return m_NumOfCategories;
+	return m_NumOfLabels;
 }
 
 #endif	// #ifndef PairwiseEvaluation_h

@@ -72,9 +72,9 @@ The exact options that were used in the MIREX 2013 ACE[^2] evaluation campaign w
 ### Output options ###
 A result file with a score for the entire data set specified as input is written to the path given by `--output <file-path>`. Its output is a human readable summary that depends on the content mode, but if you add the option `--csv`, you get a comma separated value file in the same directory as the output file with separate results for each of the input files. For the "chords", "keys", "globalkey" and "notes" content modes, you can also get a confusion matrix by specifying `--confusion <path>`. Finally, for these same content modes, you can specify the `--verbose` option to get an idea what exactly is going on. It will write a file per input in the output directory in which the different steps of the score calculation are broken down. All the reference-test segment pairs are enumerated, with original labels, mapped labels, segment duration and whether or it is included in the evaluation. This gives a sort of "paper trail" that shows how the score is calculated so that it is easy to verify by hand and understand what exactly is going on.
 
-[^1]: [Johan Pauwels and Geoffroy Peeters, *Evaluating automatically estimated chord sequences*, Proceedings of the IEEE International Conference on Audio, Speech and Signal Processing (ICASSP), 2013.](http://dx.doi.org/10.1109/ICASSP.2013.6637748)
-[^2]: [MIREX 2013 Automatic Chord Estimation task](http://www.music-ir.org/mirex/wiki/2013:Audio_Chord_Estimation)
-[^3]: [Fred Lerdahl, *Tonal pitch space*, Oxford University Press, 2001](http://dx.doi.org/10.1093/acprof:oso/9780195178296.001.0001)
+[^1]: [Johan Pauwels and Geoffroy Peeters, *Evaluating automatically estimated chord sequences*, Proceedings of the IEEE International Conference on Audio, Speech and Signal Processing (ICASSP), 2013.](http://dx.doi.org/10.1109/ICASSP.2013.6637748)  
+[^2]: [MIREX 2013 Automatic Chord Estimation task](http://www.music-ir.org/mirex/wiki/2013:Audio_Chord_Estimation)  
+[^3]: [Fred Lerdahl, *Tonal pitch space*, Oxford University Press, 2001](http://dx.doi.org/10.1093/acprof:oso/9780195178296.001.0001)  
 
 [MusOO]: https://github.com/jpauwels/libMusOO
 [boost]: http://www.boost.org

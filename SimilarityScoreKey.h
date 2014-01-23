@@ -32,7 +32,7 @@ protected:
 
 private:
 
-	const size_t calcKeyCategory(const MusOO::Key& inKey);
+	const size_t calcKeyIndex(const MusOO::Key& inKey);
 	Eigen::Array<double, 2, 12> m_ScoreMatrix;
 
 };

@@ -24,7 +24,7 @@ PairwiseEvaluation<Key>::PairwiseEvaluation(const std::string& inScoreSelect)
 : m_TotalScore(0.)
 {
 	m_Score = new SimilarityScoreKey(inScoreSelect);
-	m_NumOfCategories = m_Score->getNumOfCategories();
+	m_NumOfLabels = m_Score->getNumOfLabels();
 }
 
 template <>
@@ -32,7 +32,7 @@ PairwiseEvaluation<Chord>::PairwiseEvaluation(const std::string& inScoreSelect)
 : m_TotalScore(0.)
 {
 	m_Score = new SimilarityScoreChord(inScoreSelect);
-	m_NumOfCategories = m_Score->getNumOfCategories();
+	m_NumOfLabels = m_Score->getNumOfLabels();
 }
 
 template <>
@@ -40,7 +40,7 @@ PairwiseEvaluation<Note>::PairwiseEvaluation(const std::string& inScoreSelect)
 : m_TotalScore(0.)
 {
 	m_Score = new SimilarityScoreNote(inScoreSelect);
-	m_NumOfCategories = m_Score->getNumOfCategories();
+	m_NumOfLabels = m_Score->getNumOfLabels();
 }
 
 template <>

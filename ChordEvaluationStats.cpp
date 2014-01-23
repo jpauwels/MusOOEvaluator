@@ -18,7 +18,7 @@ m_NumOfChords(m_NumOfChordTypes * m_NumOfChromas),
 m_OnlyRoots(Eigen::ArrayXd::Zero(inNumOfChromas)), m_OnlyTypes(Eigen::ArrayXd::Zero(m_NumOfChordTypes)),
 m_ChordsMatrix(m_ConfusionMatrix.topLeftCorner(m_NumOfChords,m_NumOfChords))
 {
-	for (int i = 0; i < 12; ++i)
+	for (int i = 0; i < m_NumOfChromas; ++i)
 	{
 		Eigen::Block<Eigen::ArrayXXd> theRootBlock = 
 			m_ConfusionMatrix.block(i*m_NumOfChordTypes,i*m_NumOfChordTypes,
