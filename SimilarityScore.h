@@ -30,7 +30,8 @@ public:
 	const size_t& getRefIndex() const;
 	const size_t& getTestIndex() const;
 	const std::vector<std::string>& getLabels() const;
-	const size_t getNumOfLabels() const;
+	const size_t getNumOfRefLabels() const;
+	const size_t getNumOfTestLabels() const;
     
     const T& getMappedRefLabel() const;
     const T& getMappedTestLabel() const;
@@ -38,7 +39,8 @@ public:
 protected:
 
 	static const MusOO::Chroma s_firstChroma;
- 	size_t m_NumOfLabels;
+ 	size_t m_NumOfRefLabels;
+ 	size_t m_NumOfTestLabels;
 	size_t m_RefIndex;
 	size_t m_TestIndex;
     T m_MappedRefLabel;
@@ -82,9 +84,15 @@ const std::vector<std::string>& SimilarityScore<T>::getLabels() const
 }
 
 template <typename T>
-const size_t SimilarityScore<T>::getNumOfLabels() const
+const size_t SimilarityScore<T>::getNumOfRefLabels() const
 {
-	return m_NumOfLabels;
+	return m_NumOfRefLabels;
+}
+
+template <typename T>
+const size_t SimilarityScore<T>::getNumOfTestLabels() const
+{
+	return m_NumOfTestLabels;
 }
 
 template <typename T>

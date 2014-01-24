@@ -217,8 +217,8 @@ void printConfusionMatrix(std::ostream& inOutputStream, const Eigen::ArrayXXd& i
 						  const std::vector<std::string>& inLabels, const string inSeparator = ",", const string inQuote = "\"")
 {
 	inOutputStream << inSeparator << inQuote;
-	copy(inLabels.begin(), inLabels.end()-1, std::ostream_iterator<string>(inOutputStream, (inQuote+inSeparator+inQuote).c_str()));
-	inOutputStream << inLabels.back() << inQuote << endl;
+	copy(inLabels.begin(), inLabels.begin()+inConfusionMatrix.cols()-1, std::ostream_iterator<string>(inOutputStream, (inQuote+inSeparator+inQuote).c_str()));
+	inOutputStream << inLabels[inConfusionMatrix.cols()-1] << inQuote << endl;
 	for (int i = 0; i < inConfusionMatrix.rows(); ++i)
 	{
 		inOutputStream << inQuote << inLabels[i] << inQuote;
@@ -341,8 +341,8 @@ int main(int inNumOfArguments,char* inArguments[])
 			theKeyEvaluation = new PairwiseEvaluation<Key>(theVarMap["globalkey"].as<string>());
 		}
 		theGlobalConfusionMatrix = 
-			Eigen::ArrayXXd::Zero(theKeyEvaluation->getNumOfLabels(),
-			theKeyEvaluation->getNumOfLabels());
+			Eigen::ArrayXXd::Zero(theKeyEvaluation->getNumOfTestLabels(),
+			theKeyEvaluation->getNumOfRefLabels());
 		theLabels = theKeyEvaluation->getLabels();
 
 		ofstream theCSVFile;
@@ -428,8 +428,8 @@ int main(int inNumOfArguments,char* inArguments[])
 	else if (theVarMap.count("chords") > 0)
 	{
 		PairwiseEvaluation<Chord> theChordEvaluation(theVarMap["chords"].as<string>());
-		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theChordEvaluation.getNumOfLabels(),
-			theChordEvaluation.getNumOfLabels());
+		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theChordEvaluation.getNumOfTestLabels(),
+			theChordEvaluation.getNumOfRefLabels());
 		theLabels = theChordEvaluation.getLabels();
 
 		ofstream theCSVFile;
@@ -509,8 +509,8 @@ int main(int inNumOfArguments,char* inArguments[])
 	else if (theVarMap.count("notes") > 0)
 	{
 		PairwiseEvaluation<Note> theNoteEvaluation(theVarMap["notes"].as<string>());
-		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theNoteEvaluation.getNumOfLabels(),
-			theNoteEvaluation.getNumOfLabels());
+		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theNoteEvaluation.getNumOfTestLabels(),
+			theNoteEvaluation.getNumOfRefLabels());
 		theLabels = theNoteEvaluation.getLabels();
 
 		ofstream theCSVFile;

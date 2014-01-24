@@ -10,7 +10,7 @@
 // Includes
 #include "NoteEvaluationStats.h"
 
-NoteEvaluationStats::NoteEvaluationStats(const Eigen::ArrayXXd inConfusionMatrix)
+NoteEvaluationStats::NoteEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix)
 : m_ConfusionMatrix(inConfusionMatrix), m_NumOfNotes(inConfusionMatrix.rows() - 1),
   m_NotesMatrix(m_ConfusionMatrix.topLeftCorner(m_NumOfNotes, m_NumOfNotes))
 {

@@ -36,10 +36,10 @@ private:
 
 	std::string m_Mapping;
 	std::set<MusOO::ChordType> m_InputLimitingSet;
-    std::set<MusOO::ChordType> m_OutputLimitingSet;
 	std::set<MusOO::ChordType> m_MappedTypes;
 	size_t m_NumOfMappedTypes;
     std::string m_Scoring;
+    size_t m_NumOfTrueChords;
 };
 
 #endif	// #ifndef SimilarityScoreChord_h

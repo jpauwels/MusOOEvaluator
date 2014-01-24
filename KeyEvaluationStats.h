@@ -16,7 +16,7 @@ class KeyEvaluationStats
 public:
 
 	/** Default constructor. */
-	KeyEvaluationStats(const Eigen::ArrayXXd inConfusionMatrix, const size_t inNumOfChromas = 12);
+	KeyEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix, const size_t inNumOfChromas = 12);
 
 	/** Destructor. */
 	virtual ~KeyEvaluationStats();

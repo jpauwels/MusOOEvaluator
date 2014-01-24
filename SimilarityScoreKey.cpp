@@ -44,8 +44,9 @@ SimilarityScoreKey::SimilarityScoreKey(const std::string& inScoreSelect)
 	{
 		throw runtime_error("Unknown score selector: " + inScoreSelect);
 	}
-	this->m_NumOfLabels = 25;
-	this->m_Labels = vector<string>(this->m_NumOfLabels);
+	this->m_NumOfRefLabels = 25;
+	this->m_NumOfTestLabels = 25;
+	this->m_Labels = vector<string>(this->m_NumOfRefLabels);
 	for (size_t i = 0; i < 24; ++i)
 	{
 		m_Labels[i] = KeyElis(Key(Chroma::circleOfFifths(s_firstChroma)[i / 2], 

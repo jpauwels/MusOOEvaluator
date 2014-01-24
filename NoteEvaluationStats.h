@@ -19,7 +19,7 @@ public:
 	/**	
 		@param	inConfusionMatrix	Confusion matrix with annotated values in the columns 
 									and predicted values in the rows */
-	NoteEvaluationStats(const Eigen::ArrayXXd inConfusionMatrix);
+	NoteEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix);
 
 	/** Destructor. */
 	virtual ~NoteEvaluationStats();

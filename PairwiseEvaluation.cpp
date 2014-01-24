@@ -24,7 +24,9 @@ PairwiseEvaluation<Key>::PairwiseEvaluation(const std::string& inScoreSelect)
 : m_TotalScore(0.)
 {
 	m_Score = new SimilarityScoreKey(inScoreSelect);
-	m_NumOfLabels = m_Score->getNumOfLabels();
+	m_NumOfRefLabels = m_Score->getNumOfRefLabels();
+    m_NumOfTestLabels = m_Score->getNumOfTestLabels();
+	m_ConfusionMatrix = Eigen::ArrayXXd(m_NumOfTestLabels, m_NumOfRefLabels);
 }
 
 template <>
@@ -32,7 +34,9 @@ PairwiseEvaluation<Chord>::PairwiseEvaluation(const std::string& inScoreSelect)
 : m_TotalScore(0.)
 {
 	m_Score = new SimilarityScoreChord(inScoreSelect);
-	m_NumOfLabels = m_Score->getNumOfLabels();
+	m_NumOfRefLabels = m_Score->getNumOfRefLabels();
+    m_NumOfTestLabels = m_Score->getNumOfTestLabels();
+	m_ConfusionMatrix = Eigen::ArrayXXd::Zero(m_NumOfTestLabels, m_NumOfRefLabels);
 }
 
 template <>
@@ -40,7 +44,9 @@ PairwiseEvaluation<Note>::PairwiseEvaluation(const std::string& inScoreSelect)
 : m_TotalScore(0.)
 {
 	m_Score = new SimilarityScoreNote(inScoreSelect);
-	m_NumOfLabels = m_Score->getNumOfLabels();
+	m_NumOfRefLabels = m_Score->getNumOfRefLabels();
+    m_NumOfTestLabels = m_Score->getNumOfTestLabels();
+	m_ConfusionMatrix = Eigen::ArrayXXd::Zero(m_NumOfTestLabels, m_NumOfRefLabels);
 }
 
 template <>

@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include "KeyEvaluationStats.h"
 
-KeyEvaluationStats::KeyEvaluationStats(const Eigen::ArrayXXd inConfusionMatrix, 
+KeyEvaluationStats::KeyEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix,
 									   const size_t inNumOfChromas /*= 12*/)
 : m_ConfusionMatrix(inConfusionMatrix), m_NumOfChromas(inNumOfChromas), 
   m_NumOfModes((inConfusionMatrix.rows()-1)/inNumOfChromas), 

@@ -16,7 +16,7 @@ class ChordEvaluationStats
 public:
 
 	/** Default constructor. */
-	ChordEvaluationStats(const Eigen::ArrayXXd inConfusionMatrix, const size_t inNumOfChromas = 12);
+	ChordEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix, const size_t inNumOfChromas = 12);
 
 	/** Destructor. */
 	virtual ~ChordEvaluationStats();
@@ -41,16 +41,19 @@ protected:
 
 private:
 
-	Eigen::ArrayXXd m_ConfusionMatrix;
-	size_t m_NumOfChromas;
-	size_t m_NumOfChordTypes;
-	size_t m_NumOfChords;
+	const Eigen::ArrayXXd m_ConfusionMatrix;
+	const size_t m_NumOfChromas;
+	const size_t m_NumOfChordTypes;
+	const size_t m_NumOfChords;
 
 	Eigen::ArrayXd m_OnlyRoots;
 	Eigen::ArrayXd m_OnlyTypes;
 	double m_AllWrong;
 	double m_CorrectChords;
-	Eigen::ArrayXXd m_ChordsMatrix;
+    const Eigen::ArrayXXd m_ChordsMatrix;
+    
+    const bool m_HasTestCatchAllChords;
+    const bool m_HasRefNoChord;
 
 };
 

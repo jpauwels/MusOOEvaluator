@@ -35,7 +35,8 @@ public:
 	const Eigen::ArrayXXd& getConfusionMatrix() const;
 	const double getTotalDuration() const;
 	const std::vector<std::string>& getLabels() const;
-	const size_t getNumOfLabels() const;
+	const size_t getNumOfRefLabels() const;
+	const size_t getNumOfTestLabels() const;
 
 	/** Destructor. */
 	virtual ~PairwiseEvaluation();
@@ -44,7 +45,8 @@ protected:
     void printVerboseOutput(std::ostream& inVerboseOStream, const double theStartTime, const double theEndTime, const T& theRefLabel, const T& theTestLabel, const T& theMappedRefLabel, const T& theMappedTestLabel, const double theScore, const double theSegmentLength) const;
 	
 	SimilarityScore<T>* m_Score;
-	size_t m_NumOfLabels;
+	size_t m_NumOfRefLabels;
+    size_t m_NumOfTestLabels;
 	Eigen::ArrayXXd m_ConfusionMatrix;
 	double m_TotalScore;
 
@@ -64,7 +66,7 @@ template <typename T>
 void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence,
                                      double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inDelay)
 {
-	m_ConfusionMatrix = Eigen::ArrayXXd::Zero(m_NumOfLabels, m_NumOfLabels);
+    m_ConfusionMatrix.setZero();
 	m_TotalScore = 0.;
 	double theCurTime = inStartTime;
 	double thePrevTime;
@@ -213,9 +215,15 @@ const std::vector<std::string>& PairwiseEvaluation<T>::getLabels() const
 }
 
 template <typename T>
-const size_t PairwiseEvaluation<T>::getNumOfLabels() const
+const size_t PairwiseEvaluation<T>::getNumOfRefLabels() const
 {
-	return m_NumOfLabels;
+	return m_NumOfRefLabels;
+}
+
+template <typename T>
+const size_t PairwiseEvaluation<T>::getNumOfTestLabels() const
+{
+	return m_NumOfTestLabels;
 }
 
 #endif	// #ifndef PairwiseEvaluation_h
