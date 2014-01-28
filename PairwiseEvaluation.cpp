@@ -8,6 +8,7 @@
 //============================================================================
 
 // Includes
+#include <iomanip>
 #include "MusOO/KeyQM.h"
 #include "MusOO/ChordQM.h"
 #include "PairwiseEvaluation.h"
@@ -83,4 +84,22 @@ template <>
 void PairwiseEvaluation<Note>::printVerboseOutput(std::ostream& inVerboseOStream, const double theStartTime, const double theEndTime, const Note& theRefLabel, const Note& theTestLabel, const Note& theMappedRefLabel, const Note& theMappedTestLabel, const double theScore, const double theSegmentLength) const
 {
     inVerboseOStream << theStartTime << "," << theEndTime << "," << NoteMidi(theRefLabel) << "," << NoteMidi(theTestLabel) << "," << theScore << "," << theSegmentLength << "\n";
+}
+
+void printConfusionMatrix(std::ostream& inOutputStream, const Eigen::ArrayXXd& inConfusionMatrix,
+						  const std::vector<std::string>& inLabels, const std::string inSeparator /*= ","*/,
+                          const std::string inQuote /*= "\""*/)
+{
+	inOutputStream << inSeparator << inQuote;
+	copy(inLabels.begin(), inLabels.begin()+inConfusionMatrix.cols()-1, std::ostream_iterator<std::string>(inOutputStream, (inQuote+inSeparator+inQuote).c_str()));
+	inOutputStream << inLabels[inConfusionMatrix.cols()-1] << inQuote << endl;
+	for (int i = 0; i < inConfusionMatrix.rows(); ++i)
+	{
+		inOutputStream << inQuote << inLabels[i] << inQuote;
+		for (int j = 0; j < inConfusionMatrix.cols(); ++j)
+		{
+			inOutputStream << inSeparator << std::fixed << std::setprecision(9) << inConfusionMatrix(i,j);
+		}
+		inOutputStream << endl;
+	}
 }

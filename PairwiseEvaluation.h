@@ -55,6 +55,9 @@ private:
 
 };
 
+void printConfusionMatrix(std::ostream& inOutputStream, const Eigen::ArrayXXd& inConfusionMatrix,
+						  const std::vector<std::string>& inLabels, const std::string inSeparator = ",",
+                          const std::string inQuote = "\"");
 
 template <typename T>
 PairwiseEvaluation<T>::~PairwiseEvaluation()

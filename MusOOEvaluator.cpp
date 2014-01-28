@@ -9,7 +9,6 @@
 //============================================================================
 
 #include <iostream>
-#include <iomanip>
 #include <string>
 #include <vector>
 #include <stdexcept>
@@ -213,23 +212,6 @@ const std::vector<std::string> readList(const path& inListPath)
     }
 }
 
-void printConfusionMatrix(std::ostream& inOutputStream, const Eigen::ArrayXXd& inConfusionMatrix,
-						  const std::vector<std::string>& inLabels, const string inSeparator = ",", const string inQuote = "\"")
-{
-	inOutputStream << inSeparator << inQuote;
-	copy(inLabels.begin(), inLabels.begin()+inConfusionMatrix.cols()-1, std::ostream_iterator<string>(inOutputStream, (inQuote+inSeparator+inQuote).c_str()));
-	inOutputStream << inLabels[inConfusionMatrix.cols()-1] << inQuote << endl;
-	for (int i = 0; i < inConfusionMatrix.rows(); ++i)
-	{
-		inOutputStream << inQuote << inLabels[i] << inQuote;
-		for (int j = 0; j < inConfusionMatrix.cols(); ++j)
-		{
-			inOutputStream << inSeparator << fixed << setprecision(9) << inConfusionMatrix(i,j);
-		}
-		inOutputStream << endl;
-	}
-}
-
 Key findLongestKey(TimedKeySequence inKeySequence)
 {
 	vector<std::pair<Key,double> > theUniqueKeys;
@@ -264,16 +246,25 @@ Key findLongestKey(TimedKeySequence inKeySequence)
 	return theLongestKey;
 }
 
-void constructPaths(const std::string& inBaseName, const path& theRefDirName, const std::string& theRefExt, const path& theTestDirName, const std::string& theTestExt, const variables_map& theVarMap, path& outRefFileName, path& outTestFileName, double& outBegin, double& outEnd)
+void constructPaths(std::string& ioBaseName, const path& theRefDirName, const std::string& theRefExt, const path& theTestDirName, const std::string& theTestExt, const variables_map& theVarMap, path& outRefFileName, path& outTestFileName, double& outBegin, double& outEnd)
 {
-    outTestFileName = theTestDirName / path(inBaseName + theTestExt);
-    outRefFileName = theRefDirName / path(inBaseName + theRefExt);
+    if (ioBaseName.empty())
+    {
+        ioBaseName = theTestDirName.stem().string();
+        outRefFileName = theRefDirName;
+        outTestFileName = theTestDirName;
+    }
+    else
+    {
+        outRefFileName = theRefDirName / path(ioBaseName + theRefExt);
+        outTestFileName = theTestDirName / path(ioBaseName + theTestExt);
+    }
     if (theVarMap.count("timingdir") > 0 || theVarMap.count("timingfile") > 0)
     {
         path theTimingPath;
         if (theVarMap.count("timingdir") > 0)
         {
-            theTimingPath = theVarMap["timingdir"].as<path>() / path(inBaseName + theVarMap["timingext"].as<string>());
+            theTimingPath = theVarMap["timingdir"].as<path>() / path(ioBaseName + theVarMap["timingext"].as<string>());
         }
         else
         {
@@ -294,8 +285,8 @@ int main(int inNumOfArguments,char* inArguments[])
 
 	path theOutputPath;
 	path theListPath;
-	path theTestDirName;
-	path theRefDirName;
+	path theTestDirPath;
+	path theRefDirPath;
 	string theTestExt;
 	string theRefExt;
 	double theBegin;
@@ -304,7 +295,7 @@ int main(int inNumOfArguments,char* inArguments[])
 	variables_map theVarMap;
 
 	parseCommandLine(inNumOfArguments, inArguments, theOutputPath, theListPath,
-		theRefDirName, theTestDirName, theRefExt, theTestExt,
+		theRefDirPath, theTestDirPath, theRefExt, theTestExt,
 		theBegin, theEnd, theDelay, theVarMap);
 
 	string theCSVSeparator = ",";
@@ -324,7 +315,14 @@ int main(int inNumOfArguments,char* inArguments[])
 	{
 		throw runtime_error("Could not open output file " + theOutputPath.string());
 	}
-	theOutputFile << "List: " << theListPath << "\n" << endl;
+    if (!theListPath.empty())
+    {
+        theOutputFile << "List: " << theListPath << "\n" << endl;
+    }
+    else
+    {
+        theOutputFile << "Files: " << theRefDirPath << " vs " << theTestDirPath << "\n" << endl;
+    }
 
 	/**********************/
 	/* Keys or global key */
@@ -368,10 +366,10 @@ int main(int inNumOfArguments,char* inArguments[])
 			theCSVFile << std::fixed;
 		}
 
-		for (vector<string>::const_iterator i = theListItems.begin(); i != theListItems.end(); ++i)
+		for (vector<string>::iterator i = theListItems.begin(); i != theListItems.end(); ++i)
 		{
+            constructPaths(*i, theRefDirPath, theRefExt, theTestDirPath, theTestExt, theVarMap, theRefPath, theTestPath, theBegin, theEnd);
 			cout << "Evaluating file " << *i << endl;
-            constructPaths(*i, theRefDirName, theRefExt, theTestDirName, theTestExt, theVarMap, theRefPath, theTestPath, theBegin, theEnd);
             
             TimedKeySequence theRefKeys = KeyFileUtil::readKeySequenceFromFile(theRefPath, true);
 			TimedKeySequence theTestKeys = KeyFileUtil::readKeySequenceFromFile(theTestPath, false);
@@ -449,10 +447,10 @@ int main(int inNumOfArguments,char* inArguments[])
 			theCSVFile << std::fixed;
 		}
 
-		for (vector<string>::const_iterator i = theListItems.begin(); i != theListItems.end(); ++i)
+		for (vector<string>::iterator i = theListItems.begin(); i != theListItems.end(); ++i)
 		{
+            constructPaths(*i, theRefDirPath, theRefExt, theTestDirPath, theTestExt, theVarMap, theRefPath, theTestPath, theBegin, theEnd);
 			cout << "Evaluating file " << *i << endl;
-            constructPaths(*i, theRefDirName, theRefExt, theTestDirName, theTestExt, theVarMap, theRefPath, theTestPath, theBegin, theEnd);
             
 			TimedChordSequence theRefChords = ChordFileUtil::readChordSequenceFromFile(theRefPath, true);
             TimedChordSequence theTestChords = ChordFileUtil::readChordSequenceFromFile(theTestPath, false);
@@ -532,10 +530,10 @@ int main(int inNumOfArguments,char* inArguments[])
 			theCSVFile << std::fixed;
 		}
 
-		for (vector<string>::const_iterator i = theListItems.begin(); i != theListItems.end(); ++i)
+		for (vector<string>::iterator i = theListItems.begin(); i != theListItems.end(); ++i)
 		{
+            constructPaths(*i, theRefDirPath, theRefExt, theTestDirPath, theTestExt, theVarMap, theRefPath, theTestPath, theBegin, theEnd);
 			cout << "Evaluating file " << *i << endl;
-            constructPaths(*i, theRefDirName, theRefExt, theTestDirName, theTestExt, theVarMap, theRefPath, theTestPath, theBegin, theEnd);
 
 			NoteFileMaps theTestFile(theTestPath.string());
 			NoteSequence theTestNotes = theTestFile.readAll();
@@ -600,10 +598,10 @@ int main(int inNumOfArguments,char* inArguments[])
         double theDirectionalHammingSum = 0.;
         double theUnderSegmentationSum = 0.;
         double theOverSegmentationSum = 0.;
-		for (vector<string>::const_iterator i = theListItems.begin(); i != theListItems.end(); ++i)
+		for (vector<string>::iterator i = theListItems.begin(); i != theListItems.end(); ++i)
 		{
+            constructPaths(*i, theRefDirPath, theRefExt, theTestDirPath, theTestExt, theVarMap, theRefPath, theTestPath, theBegin, theEnd);
 			cout << "Evaluating file " << *i << endl;
-            constructPaths(*i, theRefDirName, theRefExt, theTestDirName, theTestExt, theVarMap, theRefPath, theTestPath, theBegin, theEnd);
             
 			LabFile<std::string> theRefFile(theRefPath.string(), true);
             LabFile<std::string> theTestFile(theTestPath.string(), true);
