@@ -12,6 +12,8 @@
 //============================================================================
 #include <vector>
 #include <set>
+#include <iostream>
+#include <iterator>
 #include <Eigen/Core>
 #include "MusOO/TimedLabel.h"
 
