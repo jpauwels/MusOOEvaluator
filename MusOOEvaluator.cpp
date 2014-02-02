@@ -52,24 +52,27 @@ using boost::program_options::notify;
 using namespace MusOO;
 
 void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutputFilePath, path& outListPath,
-	path& outRefPath, path& outTestPath, string& outRefExt, string& outTestExt,
-	double& outBegin, double& outEnd, double& outTimeDelay, variables_map& outVarMap)
+                      path& outRefPath, path& outTestPath, string& outRefExt, string& outTestExt, string& outRefFormat,
+                      string& outTestFormat, double& outBegin, double& outEnd, double& outTimeDelay,
+                      variables_map& outVarMap)
 {
 	options_description theGeneralOptions("General options");
 	theGeneralOptions.add_options()
 		("help,h", "produce this help message")
-		("output", value<path>(&outOutputFilePath), "path to the output file")
 		("chords", value<string>(), "select chords mode")
 		("keys", value<string>(), "select keys mode")
 		("globalkey", value<string>(), "select global key mode")
         ("notes", value<string>(), "select notes mode")
         ("segmentation", value<string>(), "select segmentation mode")
-		("begin", value<double>(&outBegin)->default_value(0.), "the start time in seconds")
-		("end", value<double>(&outEnd)->default_value(0., "file end"), "the end time in seconds")
+        ("refformat", value<string>(&outRefFormat)->default_value("auto"), "format of the reference file(s)")
+        ("testformat", value<string>(&outTestFormat)->default_value("auto"), "format of the file(s) under test")
+        ("output", value<path>(&outOutputFilePath), "path to the output file")
 		("csv", "Print results for individual files to file in comma separated format")
-		("delay", value<double>(&outTimeDelay)->default_value(0.), "Add a time delay to the files to evaluate")
         ("confusion", value<path>(), "path to resulting global confusion matrix")
         ("verbose", "Write comparison file for each individual file")
+        ("begin", value<double>(&outBegin)->default_value(0.), "the start time in seconds")
+        ("end", value<double>(&outEnd)->default_value(0., "file end"), "the end time in seconds")
+        ("delay", value<double>(&outTimeDelay)->default_value(0.), "Add a time delay to the files to evaluate")
 		;
 
 	options_description theRelativeListOptions("Relative list options");
@@ -285,17 +288,19 @@ int main(int inNumOfArguments,char* inArguments[])
 
 	path theOutputPath;
 	path theListPath;
-	path theTestDirPath;
 	path theRefDirPath;
-	string theTestExt;
+	path theTestDirPath;
 	string theRefExt;
+	string theTestExt;
+    string theRefFormat;
+    string theTestFormat;
 	double theBegin;
 	double theEnd;
 	double theDelay;
 	variables_map theVarMap;
 
 	parseCommandLine(inNumOfArguments, inArguments, theOutputPath, theListPath,
-		theRefDirPath, theTestDirPath, theRefExt, theTestExt,
+		theRefDirPath, theTestDirPath, theRefExt, theTestExt, theRefFormat, theTestFormat,
 		theBegin, theEnd, theDelay, theVarMap);
 
 	string theCSVSeparator = ",";
@@ -371,8 +376,8 @@ int main(int inNumOfArguments,char* inArguments[])
             constructPaths(*i, theRefDirPath, theRefExt, theTestDirPath, theTestExt, theVarMap, theRefPath, theTestPath, theBegin, theEnd);
 			cout << "Evaluating file " << *i << endl;
             
-            TimedKeySequence theRefKeys = KeyFileUtil::readKeySequenceFromFile(theRefPath, true);
-			TimedKeySequence theTestKeys = KeyFileUtil::readKeySequenceFromFile(theTestPath, false);
+            TimedKeySequence theRefKeys = KeyFileUtil::readKeySequenceFromFile(theRefPath, true, theRefFormat);
+			TimedKeySequence theTestKeys = KeyFileUtil::readKeySequenceFromFile(theTestPath, false, theTestFormat);
             
 			if (theVarMap.count("keys") > 0)
 			{
@@ -452,8 +457,8 @@ int main(int inNumOfArguments,char* inArguments[])
             constructPaths(*i, theRefDirPath, theRefExt, theTestDirPath, theTestExt, theVarMap, theRefPath, theTestPath, theBegin, theEnd);
 			cout << "Evaluating file " << *i << endl;
             
-			TimedChordSequence theRefChords = ChordFileUtil::readChordSequenceFromFile(theRefPath, true);
-            TimedChordSequence theTestChords = ChordFileUtil::readChordSequenceFromFile(theTestPath, false);
+			TimedChordSequence theRefChords = ChordFileUtil::readChordSequenceFromFile(theRefPath, true, theRefFormat);
+            TimedChordSequence theTestChords = ChordFileUtil::readChordSequenceFromFile(theTestPath, false, theTestFormat);
 
             ofstream theVerboseStream;
             if (theVarMap.count("verbose"))
