@@ -13,6 +13,7 @@
 #include <vector>
 #include <stdexcept>
 #include <ctime>
+#include <algorithm>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/program_options.hpp>
@@ -53,7 +54,7 @@ using namespace MusOO;
 
 void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutputFilePath, path& outListPath,
                       path& outRefPath, path& outTestPath, string& outRefExt, string& outTestExt, string& outRefFormat,
-                      string& outTestFormat, double& outBegin, double& outEnd, double& outTimeDelay,
+                      string& outTestFormat, double& outBegin, double& outEnd, double& outMinRefDuration, double& outMaxRefDuration, double& outTimeDelay,
                       variables_map& outVarMap)
 {
 	options_description theGeneralOptions("General options");
@@ -72,6 +73,8 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
         ("verbose", "Write comparison file for each individual file")
         ("begin", value<double>(&outBegin)->default_value(0.), "the start time in seconds")
         ("end", value<double>(&outEnd)->default_value(0., "file end"), "the end time in seconds")
+        ("minduration", value<double>(&outMinRefDuration)->default_value(0.), "minimum duration the reference label needs to have to be included in evaluation")
+        ("maxduration", value<double>(&outMaxRefDuration)->default_value(std::numeric_limits<double>::infinity(), "inf"), "maximum duration the reference label needs to have to be included in evaluation")
         ("delay", value<double>(&outTimeDelay)->default_value(0.), "Add a time delay to the files to evaluate")
 		;
 
@@ -296,12 +299,14 @@ int main(int inNumOfArguments,char* inArguments[])
     string theTestFormat;
 	double theBegin;
 	double theEnd;
+    double theMinRefDuration;
+    double theMaxRefDuration;
 	double theDelay;
 	variables_map theVarMap;
 
 	parseCommandLine(inNumOfArguments, inArguments, theOutputPath, theListPath,
 		theRefDirPath, theTestDirPath, theRefExt, theTestExt, theRefFormat, theTestFormat,
-		theBegin, theEnd, theDelay, theVarMap);
+		theBegin, theEnd, theMinRefDuration, theMaxRefDuration, theDelay, theVarMap);
 
 	string theCSVSeparator = ",";
     string theCSVQuotes = "\"";
@@ -387,7 +392,7 @@ int main(int inNumOfArguments,char* inArguments[])
                     path theVerbosePath = theOutputPath.parent_path() / path(*i + ".csv");
                     theVerboseStream.open(theVerbosePath);
                 }
-				theKeyEvaluation->evaluate(theRefKeys, theTestKeys, theBegin, theEnd, theVerboseStream, theDelay);
+				theKeyEvaluation->evaluate(theRefKeys, theTestKeys, theBegin, theEnd, theVerboseStream, theMinRefDuration, theMaxRefDuration, theDelay);
 				double theDuration = theKeyEvaluation->getTotalDuration();
 				theTotalDuration += theDuration;
 				theWeightedScore += theKeyEvaluation->getOverlapScore() * theKeyEvaluation->getTotalDuration();
@@ -467,7 +472,7 @@ int main(int inNumOfArguments,char* inArguments[])
                 theVerboseStream.open(theVerbosePath);
                 theVerboseStream << "Start" << theCSVSeparator << "End" << theCSVSeparator << "RefLabel" << theCSVSeparator << "TestLabel" << theCSVSeparator << "Score" << theCSVSeparator << "Duration" << theCSVSeparator << "MappedRefLabel" << theCSVSeparator << "MappedTestLabel" << theCSVSeparator << "RefChromas" << theCSVSeparator << "TestChromas" << theCSVSeparator << "NumCommonChromas" << theCSVSeparator << "RefBass" << theCSVSeparator << "TestBass" << endl;
             }
-			theChordEvaluation.evaluate(theRefChords, theTestChords, theBegin, theEnd, theVerboseStream, theDelay);
+			theChordEvaluation.evaluate(theRefChords, theTestChords, theBegin, theEnd, theVerboseStream, theMinRefDuration, theMaxRefDuration, theDelay);
 			double theDuration = theChordEvaluation.getTotalDuration();
 			theTotalDuration += theDuration;
 			theWeightedScore += theChordEvaluation.getOverlapScore() * theDuration;
@@ -552,7 +557,7 @@ int main(int inNumOfArguments,char* inArguments[])
                 path theVerbosePath = theOutputPath.parent_path() / path(*i + ".csv");
                 theVerboseStream.open(theVerbosePath);
             }
-			theNoteEvaluation.evaluate(theRefNotes, theTestNotes, theBegin, theEnd, theVerboseStream, theDelay);
+			theNoteEvaluation.evaluate(theRefNotes, theTestNotes, theBegin, theEnd, theVerboseStream, theMinRefDuration, theMaxRefDuration, theDelay);
 			double theDuration = theNoteEvaluation.getTotalDuration();
 			theTotalDuration += theDuration;
 			theWeightedScore += theNoteEvaluation.getOverlapScore() * theDuration;

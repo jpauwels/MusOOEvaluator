@@ -23,12 +23,11 @@ m_HasRefNoChord(inConfusionMatrix.cols() > m_NumOfChords)
 	for (int i = 0; i < m_NumOfChromas; ++i)
 	{
 		const Eigen::Block<const Eigen::ArrayXXd> theRootBlock =
-			m_ChordsMatrix.block(i*m_NumOfChordTypes,i*m_NumOfChordTypes,
-			m_NumOfChordTypes,m_NumOfChordTypes);
+			m_ChordsMatrix.block(i*m_NumOfChordTypes, i*m_NumOfChordTypes, m_NumOfChordTypes, m_NumOfChordTypes);
 		m_OnlyRoots[i] = theRootBlock.sum() - theRootBlock.matrix().trace();
         if (m_HasTestCatchAllChords)
         {
-            m_OnlyRoots[i] += m_ConfusionMatrix.block(m_NumOfChords+1+i, i*m_NumOfChordTypes, 1, m_NumOfChordTypes).sum();
+            m_OnlyRoots[i] += m_ConfusionMatrix.row(m_NumOfChords+1+i).segment(i*m_NumOfChordTypes, m_NumOfChordTypes).sum();
         }
 	}
 	for (size_t i = 0; i < m_NumOfChordTypes; ++i)

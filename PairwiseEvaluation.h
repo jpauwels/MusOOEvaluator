@@ -14,6 +14,7 @@
 #include <set>
 #include <iostream>
 #include <iterator>
+#include <limits>
 #include <Eigen/Core>
 #include "MusOO/TimedLabel.h"
 
@@ -30,8 +31,7 @@ public:
 	/** Default constructor. */
 	PairwiseEvaluation(const std::string& inScoreSelect);
 
-	void evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence, 
-                  double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inDelay = 0.);
+	void evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inMinRefDuration = 0., const double inMaxRefDuration = std::numeric_limits<double>::infinity(), const double inDelay = 0.);
 
 	const double getOverlapScore() const;
 	const Eigen::ArrayXXd& getConfusionMatrix() const;
@@ -68,8 +68,7 @@ PairwiseEvaluation<T>::~PairwiseEvaluation()
 }
 
 template <typename T>
-void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence,
-                                     double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inDelay)
+void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inMinRefDuration /*= 0.*/, const double inMaxRefDuration /*= std::numeric_limits<double>::infinity()*/, const double inDelay /*= 0.*/)
 {
     m_ConfusionMatrix.setZero();
 	m_TotalScore = 0.;
@@ -146,17 +145,27 @@ void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const L
 		/* Classification of ended segment */
 		/***********************************/
         T theRefLabel;
-        T theTestLabel;
+        double theRefDuration;
 		//label in reference
 		if (theCurTime <= theRefEndTime && theCurTime > inRefSequence[theRefIndex].onset())
 		{
             theRefLabel = inRefSequence[theRefIndex].label();
+            theRefDuration = std::min(inRefSequence[theRefIndex].offset(), inEndTime) - std::max(inRefSequence[theRefIndex].onset(), inStartTime);
 		}
 		//no label in reference
 		else
 		{
 			theRefLabel = T::silence();
+            if (theRefIndex > 0 && inRefSequence[theRefIndex-1].offset() >= inStartTime)
+            {
+                theRefDuration = std::min(inRefSequence[theRefIndex].onset(), inEndTime) - inRefSequence[theRefIndex-1].offset();
+            }
+            else
+            {
+                theRefDuration = std::min(inRefSequence[theRefIndex].onset(), inEndTime) - inStartTime;
+            }
 		}
+        T theTestLabel;
         //label in test
         if (theCurTime <= theTestEndTime && theCurTime > inTestSequence[theTestIndex].onset()-inDelay)
         {
@@ -167,23 +176,27 @@ void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const L
         {
             theTestLabel = T::silence();
         }
-		double theScore = m_Score->score(theRefLabel, theTestLabel);
-        // NemaEval implementation errors recreation
-        //        if (theCurTime > theTestEndTime || theCurTime <= inTestSequence[theTestIndex].onset()-inDelay || theCurTime <= inRefSequence[theRefIndex].onset())
-        //        {
-        //            theScore = 0.;
-        //        }
-		if (theScore >= 0)
-		{
-			m_ConfusionMatrix(m_Score->getTestIndex(),m_Score->getRefIndex()) += theSegmentLength;
-			m_TotalScore += theScore * theSegmentLength;
-		}
-        /******************/
-        /* Verbose output */
-        /******************/
-        if (inVerboseOStream.good())
+        
+        if (theRefDuration >= inMinRefDuration && theRefDuration <= inMaxRefDuration)
         {
-            printVerboseOutput(inVerboseOStream, thePrevTime, theCurTime, theRefLabel, theTestLabel, m_Score->getMappedRefLabel(), m_Score->getMappedTestLabel(), theScore, theSegmentLength);
+            double theScore = m_Score->score(theRefLabel, theTestLabel);
+            // NemaEval implementation errors recreation
+            //        if (theCurTime > theTestEndTime || theCurTime <= inTestSequence[theTestIndex].onset()-inDelay || theCurTime <= inRefSequence[theRefIndex].onset())
+            //        {
+            //            theScore = 0.;
+            //        }
+            if (theScore >= 0)
+            {
+                m_ConfusionMatrix(m_Score->getTestIndex(),m_Score->getRefIndex()) += theSegmentLength;
+                m_TotalScore += theScore * theSegmentLength;
+            }
+            /******************/
+            /* Verbose output */
+            /******************/
+            if (inVerboseOStream.good())
+            {
+                printVerboseOutput(inVerboseOStream, thePrevTime, theCurTime, theRefLabel, theTestLabel, m_Score->getMappedRefLabel(), m_Score->getMappedTestLabel(), theScore, theSegmentLength);
+            }
         }
 	}
 }
