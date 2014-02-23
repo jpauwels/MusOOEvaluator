@@ -11,7 +11,6 @@
 #include <stdexcept>
 	using std::runtime_error;
 #include "SimilarityScoreKey.h"
-#include "MusOO/KeyElis.h"
 
 using std::string;
 using std::vector;
@@ -46,16 +45,13 @@ SimilarityScoreKey::SimilarityScoreKey(const std::string& inScoreSelect)
 	}
 	this->m_NumOfRefLabels = 25;
 	this->m_NumOfTestLabels = 25;
-	this->m_Labels = vector<string>(this->m_NumOfRefLabels);
+	this->m_Labels.resize(this->m_NumOfRefLabels);
 	for (size_t i = 0; i < 24; ++i)
 	{
-		m_Labels[i] = KeyElis(Key(Chroma::circleOfFifths(s_firstChroma)[i / 2], 
-			i%2==0?Mode::major():Mode::minorNatural())).str();
+		m_Labels[i] = Key(Chroma::circleOfFifths(s_firstChroma)[i / 2],
+			i%2==0?Mode::major():Mode::minorNatural());
 	}
-	this->m_Labels.back() = KeyElis(Key::silence()).str();
-    this->m_SubLabels = vector<string>(2);
-    this->m_SubLabels[0] = ModeElis(Mode::major()).str();
-    this->m_SubLabels[1] = ModeElis(Mode::minorNatural()).str();
+	this->m_Labels.back() = Key::silence();
 }
 
 SimilarityScoreKey::~SimilarityScoreKey()

@@ -356,13 +356,13 @@ void SimilarityScoreChord::initialize(const std::string& inMapping, const std::s
         {
             for (set<ChordType>::const_iterator theTypeIt = m_MappedTypes.begin(); theTypeIt != m_MappedTypes.end(); ++theTypeIt)
             {
-                this->m_Labels.push_back(ChordQM(Chord(*theChromaIt,*theTypeIt)).str());
+                this->m_Labels.push_back(Chord(*theChromaIt,*theTypeIt));
             }
         }
-        this->m_Labels.push_back(ChordQM("N").str());
+        this->m_Labels.push_back(Chord::none());
         for (vector<Chroma>::const_iterator theChromaIt = theChromas.begin(); theChromaIt != theChromas.end(); ++theChromaIt)
         {
-            this->m_Labels.push_back(ChordQM(Chord(*theChromaIt,ChordType::none())).str());
+            this->m_Labels.push_back(Chord(*theChromaIt,ChordType::undefined()));
         }
     }
     else
@@ -370,12 +370,10 @@ void SimilarityScoreChord::initialize(const std::string& inMapping, const std::s
         this->m_NumOfTestLabels = m_NumOfTrueChords + 1;
         for (vector<Chroma>::const_iterator theChromaIt = theChromas.begin(); theChromaIt != theChromas.end(); ++theChromaIt)
         {
-            this->m_Labels.push_back(theChromaIt->str());
+            this->m_Labels.push_back(Chord(*theChromaIt,ChordType::none()));
         }
-        this->m_Labels.push_back(ChordQM("N").str());
+        this->m_Labels.push_back(Chord::none());
     }
-    this->m_SubLabels = vector<string>(m_MappedTypes.size());
-    std::transform(m_MappedTypes.begin(), m_MappedTypes.end(), this->m_SubLabels.begin(), std::mem_fun_ref(&MusOO::ChordTypeQM::str));
 }
 
 SimilarityScoreChord::~SimilarityScoreChord()

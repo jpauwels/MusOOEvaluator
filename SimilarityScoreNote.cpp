@@ -28,12 +28,12 @@ SimilarityScoreNote::SimilarityScoreNote(const std::string& inScoreSelect)
 	{
 		throw std::invalid_argument("Unknown score selector: " + inScoreSelect);
 	}
-	this->m_Labels = vector<string>(this->m_NumOfRefLabels);
+	this->m_Labels.resize(this->m_NumOfRefLabels);
 	for (size_t i = 0; i+1 < this->m_NumOfRefLabels; ++i)
 	{
-		m_Labels[i] = NoteMidi(m_LowestNote.number()+i).str();
+		m_Labels[i] = NoteMidi(m_LowestNote.number()+i);
 	}
-	this->m_Labels.back() = Note::silence().str();
+	this->m_Labels.back() = Note::silence();
 }
 
 SimilarityScoreNote::~SimilarityScoreNote()

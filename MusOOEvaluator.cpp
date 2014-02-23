@@ -366,8 +366,8 @@ int main(int inNumOfArguments,char* inArguments[])
 		theGlobalConfusionMatrix = 
 			Eigen::ArrayXXd::Zero(theKeyEvaluation->getNumOfTestLabels(),
 			theKeyEvaluation->getNumOfRefLabels());
-		theLabels = theKeyEvaluation->getLabels();
-        const vector<string>& theModes = theKeyEvaluation->getSubLabels();
+        theLabels.resize(theKeyEvaluation->getNumOfTestLabels());
+        std::transform(theKeyEvaluation->getLabels().begin(), theKeyEvaluation->getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::KeyQM::str));
 
 		ofstream theCSVFile;
 		if (theVarMap.count("csv") > 0)
@@ -480,7 +480,7 @@ int main(int inNumOfArguments,char* inArguments[])
         const Eigen::ArrayXXd theResultsPerMode = theGlobalStats.getCorrectKeysPerMode();
         for (size_t iMode = 0; iMode < theResultsPerMode.rows(); ++iMode)
         {
-            theOutputFile << theModes[iMode] << ": "
+            theOutputFile << ModeQM(theKeyEvaluation->getLabels()[iMode].mode()) << ": "
                 << printResultLine(theResultsPerMode(iMode,0), theResultsPerMode(iMode,1), theUnit) << " of "
                 << printResultLine(theResultsPerMode(iMode,1), theTotalDuration, theUnit) << endl;
         }
@@ -493,9 +493,9 @@ int main(int inNumOfArguments,char* inArguments[])
 	{
 		PairwiseEvaluation<Chord> theChordEvaluation(theVarMap["chords"].as<string>());
 		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theChordEvaluation.getNumOfTestLabels(),
-			theChordEvaluation.getNumOfRefLabels());
-		theLabels = theChordEvaluation.getLabels();
-        const vector<string>& theChordTypes = theChordEvaluation.getSubLabels();
+                                                         theChordEvaluation.getNumOfRefLabels());
+        theLabels.resize(theChordEvaluation.getNumOfTestLabels());
+        std::transform(theChordEvaluation.getLabels().begin(), theChordEvaluation.getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::ChordQM::str));
 
 		ofstream theCSVFile;
 		if (theVarMap.count("csv") > 0)
@@ -586,7 +586,7 @@ int main(int inNumOfArguments,char* inArguments[])
         const Eigen::ArrayXXd theResultsPerType = theGlobalStats.getCorrectChordsPerType();
         for (size_t iChordType = 0; iChordType < theResultsPerType.rows(); ++iChordType)
         {
-            theOutputFile << theChordTypes[iChordType] << ": "
+            theOutputFile << ChordTypeQM(theChordEvaluation.getLabels()[iChordType].type()) << ": "
                 << printResultLine(theResultsPerType(iChordType,0), theResultsPerType(iChordType,1), " s") << " of "
                 << printResultLine(theResultsPerType(iChordType,1), theTotalDuration, " s") << endl;
         }
@@ -598,8 +598,9 @@ int main(int inNumOfArguments,char* inArguments[])
 	{
 		PairwiseEvaluation<Note> theNoteEvaluation(theVarMap["notes"].as<string>());
 		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theNoteEvaluation.getNumOfTestLabels(),
-			theNoteEvaluation.getNumOfRefLabels());
-		theLabels = theNoteEvaluation.getLabels();
+                                                         theNoteEvaluation.getNumOfRefLabels());
+        theLabels.resize(theNoteEvaluation.getNumOfTestLabels());
+        std::transform(theNoteEvaluation.getLabels().begin(), theNoteEvaluation.getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::NoteMidi::str));
 
 		ofstream theCSVFile;
 		if (theVarMap.count("csv") > 0)
