@@ -32,6 +32,8 @@ public:
 
 	const size_t getNumOfUniquesInRef() const;
 	const size_t getNumOfUniquesInTest() const;
+    
+    const Eigen::ArrayXXd getCorrectKeysPerMode() const;
 
 protected:
 

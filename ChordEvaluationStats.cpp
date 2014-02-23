@@ -155,3 +155,17 @@ const double ChordEvaluationStats::getAllWrong() const
 {
 	return m_AllWrong;
 }
+
+const Eigen::ArrayXXd ChordEvaluationStats::getCorrectChordsPerType() const
+{
+    Eigen::ArrayXXd outCorrectChordsPerType = Eigen::ArrayXXd::Zero(m_NumOfChordTypes, 2);
+    for (size_t iChordType = 0; iChordType < m_NumOfChordTypes; ++iChordType)
+    {
+        for (size_t iChroma = 0; iChroma < m_NumOfChromas; ++iChroma)
+        {
+            outCorrectChordsPerType(iChordType,0) += m_ConfusionMatrix(iChroma*m_NumOfChordTypes+iChordType, iChroma*m_NumOfChordTypes+iChordType);
+            outCorrectChordsPerType(iChordType,1) += m_ConfusionMatrix.col(iChroma*m_NumOfChordTypes+iChordType).sum();
+        }
+    }
+    return outCorrectChordsPerType;
+}

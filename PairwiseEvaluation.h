@@ -37,6 +37,7 @@ public:
 	const Eigen::ArrayXXd& getConfusionMatrix() const;
 	const double getTotalDuration() const;
 	const std::vector<std::string>& getLabels() const;
+	const std::vector<std::string>& getSubLabels() const;
 	const size_t getNumOfRefLabels() const;
 	const size_t getNumOfTestLabels() const;
 
@@ -230,6 +231,12 @@ template <typename T>
 const std::vector<std::string>& PairwiseEvaluation<T>::getLabels() const
 {
 	return m_Score->getLabels();
+}
+
+template <typename T>
+const std::vector<std::string>& PairwiseEvaluation<T>::getSubLabels() const
+{
+	return m_Score->getSubLabels();
 }
 
 template <typename T>

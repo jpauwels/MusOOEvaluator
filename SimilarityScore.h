@@ -30,6 +30,7 @@ public:
 	const size_t& getRefIndex() const;
 	const size_t& getTestIndex() const;
 	const std::vector<std::string>& getLabels() const;
+	const std::vector<std::string>& getSubLabels() const;
 	const size_t getNumOfRefLabels() const;
 	const size_t getNumOfTestLabels() const;
     
@@ -46,6 +47,7 @@ protected:
     T m_MappedRefLabel;
     T m_MappedTestLabel;
 	std::vector<std::string> m_Labels;
+	std::vector<std::string> m_SubLabels;
 
 private:
 
@@ -81,6 +83,12 @@ template <typename T>
 const std::vector<std::string>& SimilarityScore<T>::getLabels() const
 {
 	return m_Labels;
+}
+
+template <typename T>
+const std::vector<std::string>& SimilarityScore<T>::getSubLabels() const
+{
+	return m_SubLabels;
 }
 
 template <typename T>

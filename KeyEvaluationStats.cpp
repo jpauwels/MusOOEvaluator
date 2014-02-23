@@ -105,3 +105,17 @@ const size_t KeyEvaluationStats::getNumOfUniquesInTest() const
 {
 	return (m_KeysMatrix > 0.).rowwise().any().count();
 }
+
+const Eigen::ArrayXXd KeyEvaluationStats::getCorrectKeysPerMode() const
+{
+    Eigen::ArrayXXd outCorrectKeysPerMode = Eigen::ArrayXXd::Zero(m_NumOfModes, 2);
+    for (size_t iMode = 0; iMode < m_NumOfModes; ++iMode)
+    {
+        for (size_t iChroma = 0; iChroma < m_NumOfChromas; ++iChroma)
+        {
+            outCorrectKeysPerMode(iMode,0) += m_ConfusionMatrix(iChroma*m_NumOfModes+iMode, iChroma*m_NumOfModes+iMode);
+            outCorrectKeysPerMode(iMode,1) += m_ConfusionMatrix.col(iChroma*m_NumOfModes+iMode).sum();
+        }
+    }
+    return outCorrectKeysPerMode;
+}

@@ -285,6 +285,21 @@ void constructPaths(std::string& ioBaseName, const path& theRefDirName, const st
     }
 }
 
+const std::string printResultLine(const double inResult, const double inTotal, const std::string& inUnit)
+{
+    std::ostringstream stringStream;
+    stringStream << inResult << inUnit << " (";
+    if (inTotal > 0)
+    {
+        stringStream << 100 * inResult / inTotal << "%)";
+    }
+    else
+    {
+        stringStream << "n/a)";
+    }
+    return stringStream.str();
+}
+
 /**	Start point of the program. */
 int main(int inNumOfArguments,char* inArguments[])
 { try {
@@ -352,6 +367,7 @@ int main(int inNumOfArguments,char* inArguments[])
 			Eigen::ArrayXXd::Zero(theKeyEvaluation->getNumOfTestLabels(),
 			theKeyEvaluation->getNumOfRefLabels());
 		theLabels = theKeyEvaluation->getLabels();
+        const vector<string>& theModes = theKeyEvaluation->getSubLabels();
 
 		ofstream theCSVFile;
 		if (theVarMap.count("csv") > 0)
@@ -428,6 +444,46 @@ int main(int inNumOfArguments,char* inArguments[])
 				}
 			}
  		}
+        
+        // Global output file
+        string theUnit;
+		if (theVarMap.count("keys") > 0)
+		{
+            theUnit = " s";
+			string theKeyMode = theVarMap["keys"].as<string>();
+			theOutputFile << string(theKeyMode.size()+9,'*') << "\n* Keys " << theKeyMode << " *\n" << string(theKeyMode.size()+9,'*') << endl;
+			theOutputFile << "Duration of evaluated keys: " << theTotalDuration << " s" << endl;
+		}
+		else
+		{
+			string theGlobalKeyMode = theVarMap["globalkey"].as<string>();
+			theOutputFile << string(theGlobalKeyMode.size()+15,'*') << "\n* Global key " << theGlobalKeyMode << " *\n" << string(theGlobalKeyMode.size()+15,'*') << endl;
+			theOutputFile << "Number of evaluated files: " << theTotalDuration << endl;
+		}
+        
+		theOutputFile << "Average score: " << 100 * theWeightedScore / theTotalDuration << "%\n" << endl;
+        
+		KeyEvaluationStats theGlobalStats(theGlobalConfusionMatrix);
+        theOutputFile << "Correct keys: " << printResultLine(theGlobalStats.getCorrectKeys(), theTotalDuration, theUnit) << endl;
+        theOutputFile << "Adjacent keys: " << printResultLine(theGlobalStats.getAdjacentKeys(), theTotalDuration, theUnit) << endl;
+        theOutputFile << "Relative keys: " << printResultLine(theGlobalStats.getRelativeKeys(), theTotalDuration, theUnit) << endl;
+        theOutputFile << "Parallel keys: " << printResultLine(theGlobalStats.getParallelKeys(), theTotalDuration, theUnit) << endl;
+        
+		if (theVarMap.count("keys") > 0)
+		{
+            theOutputFile << "Deleted keys: " << printResultLine(theGlobalStats.getKeyDeletions(), theTotalDuration, theUnit) << endl;
+            theOutputFile << "\nCorrect no-keys: " << printResultLine(theGlobalStats.getCorrectNoKeys(), theTotalDuration, theUnit) << endl;
+            theOutputFile << "Inserted keys: " << printResultLine(theGlobalStats.getKeyInsertions(), theTotalDuration, theUnit) << endl;
+		}
+        
+        theOutputFile << "\nResults per mode\n" << "----------------" << endl;
+        const Eigen::ArrayXXd theResultsPerMode = theGlobalStats.getCorrectKeysPerMode();
+        for (size_t iMode = 0; iMode < theResultsPerMode.rows(); ++iMode)
+        {
+            theOutputFile << theModes[iMode] << ": "
+                << printResultLine(theResultsPerMode(iMode,0), theResultsPerMode(iMode,1), theUnit) << " of "
+                << printResultLine(theResultsPerMode(iMode,1), theTotalDuration, theUnit) << endl;
+        }
 		delete theKeyEvaluation;
 	}
 	/**********/
@@ -439,6 +495,7 @@ int main(int inNumOfArguments,char* inArguments[])
 		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theChordEvaluation.getNumOfTestLabels(),
 			theChordEvaluation.getNumOfRefLabels());
 		theLabels = theChordEvaluation.getLabels();
+        const vector<string>& theChordTypes = theChordEvaluation.getSubLabels();
 
 		ofstream theCSVFile;
 		if (theVarMap.count("csv") > 0)
@@ -491,9 +548,7 @@ int main(int inNumOfArguments,char* inArguments[])
 						<< 100*theStats.getCorrectChords()/theDuration << theCSVSeparator
 						<< 100*theStats.getOnlyRootCorrect()/theDuration << theCSVSeparator
 						<< 100*theStats.getOnlyTypeCorrect()/theDuration << theCSVSeparator
-						<< 100*theStats.getAllWrong()/theDuration << theCSVSeparator
-						<< theStats.getNumOfUniquesInRef() << theCSVSeparator
-						<< theStats.getNumOfUniquesInTest() << endl;
+						<< 100*theStats.getAllWrong()/theDuration << theCSVSeparator;
 				}
 				else
 				{
@@ -503,13 +558,38 @@ int main(int inNumOfArguments,char* inArguments[])
 						<< "n/a" << theCSVSeparator
 						<< "n/a" << theCSVSeparator
 						<< "n/a" << theCSVSeparator
-						<< "n/a" << theCSVSeparator
-						<< theStats.getNumOfUniquesInRef() << theCSVSeparator
-						<< theStats.getNumOfUniquesInTest() << endl;
+						<< "n/a" << theCSVSeparator;
 				}
+                theCSVFile << theStats.getNumOfUniquesInRef() << theCSVSeparator << theStats.getNumOfUniquesInTest() << endl;
 			}
 		}
 		theCSVFile.close();
+        
+        // Global output file
+		string theChordMode = theVarMap["chords"].as<string>();
+		theOutputFile << string(theChordMode.size()+11,'*') << "\n* Chords " << theChordMode << " *\n"
+        << string(theChordMode.size()+11,'*') << endl;
+		theOutputFile << "Duration of evaluated chords: " << theTotalDuration << " s" << endl;
+		theOutputFile << "Average score: " << 100 * theWeightedScore / theTotalDuration << "%\n" << endl;
+        
+		ChordEvaluationStats theGlobalStats(theGlobalConfusionMatrix);
+		theOutputFile << "Correct chords: " << printResultLine(theGlobalStats.getCorrectChords(), theTotalDuration, " s") << endl;
+		theOutputFile << "Only root correct: " << printResultLine(theGlobalStats.getOnlyRootCorrect(), theTotalDuration, " s") << endl;
+		theOutputFile << "Only type correct: " << printResultLine(theGlobalStats.getOnlyTypeCorrect(), theTotalDuration, " s") << endl;
+		theOutputFile << "All wrong: " << printResultLine(theGlobalStats.getAllWrong(), theTotalDuration, " s") << endl;
+		theOutputFile << "Deleted chords: " << printResultLine(theGlobalStats.getChordDeletions(), theTotalDuration, " s") << endl;
+        
+		theOutputFile << "\nCorrect no-chords: " << printResultLine(theGlobalStats.getCorrectNoChords(), theTotalDuration, " s") << endl;
+		theOutputFile << "Inserted chords: " << printResultLine(theGlobalStats.getChordInsertions(), theTotalDuration, " s") << endl;
+        
+        theOutputFile << "\nResults per chord type\n" << "----------------------" << endl;
+        const Eigen::ArrayXXd theResultsPerType = theGlobalStats.getCorrectChordsPerType();
+        for (size_t iChordType = 0; iChordType < theResultsPerType.rows(); ++iChordType)
+        {
+            theOutputFile << theChordTypes[iChordType] << ": "
+                << printResultLine(theResultsPerType(iChordType,0), theResultsPerType(iChordType,1), " s") << " of "
+                << printResultLine(theResultsPerType(iChordType,1), theTotalDuration, " s") << endl;
+        }
 	}
 	/*********/
 	/* Notes */
@@ -581,6 +661,24 @@ int main(int inNumOfArguments,char* inArguments[])
 			}
 		}
 		theCSVFile.close();
+        
+        // Global output file
+		string theNoteMode = theVarMap["notes"].as<string>();
+		theOutputFile << string(theNoteMode.size()+10,'*') << "\n* Notes " << theNoteMode << " *\n"
+        << string(theNoteMode.size()+10,'*') << endl;
+		theOutputFile << "Duration of evaluated notes: " << theTotalDuration << " s" << endl;
+		theOutputFile << "Average score: " << 100 * theWeightedScore / theTotalDuration << "%\n" << endl;
+        
+		NoteEvaluationStats theGlobalStats(theGlobalConfusionMatrix);
+		theOutputFile << "Correct notes: " << printResultLine(theGlobalStats.getCorrectNotes(), theTotalDuration, " s") << endl;
+		theOutputFile << "Octave errors: " << printResultLine(theGlobalStats.getOctaveErrors(), theTotalDuration, " s") << endl;
+		theOutputFile << "Fifth errors: " << printResultLine(theGlobalStats.getFifthErrors(), theTotalDuration, " s") << endl;
+		theOutputFile << "Chromatic up errors: " << printResultLine(theGlobalStats.getChromaticUpErrors(), theTotalDuration, " s") << endl;
+		theOutputFile << "Chromatic down errors: " << printResultLine(theGlobalStats.getChromaticDownErrors(), theTotalDuration, " s") << endl;
+		theOutputFile << "Deleted notes: " << printResultLine(theGlobalStats.getNoteDeletions(), theTotalDuration, " s") << endl;
+        
+		theOutputFile << "\nCorrect no-notes: " << printResultLine(theGlobalStats.getCorrectNoNotes(), theTotalDuration, " s") << endl;
+		theOutputFile << "Inserted notes: " << printResultLine(theGlobalStats.getNoteInsertions(), theTotalDuration, " s") << endl;
 	}
 	/****************/
 	/* Segmentation */
@@ -638,103 +736,6 @@ int main(int inNumOfArguments,char* inArguments[])
         theOutputFile << "Under-segmentation: " << theUnderSegmentationSum / theListItems.size() << endl;
         theOutputFile << "Over-segmentation: " << theOverSegmentationSum / theListItems.size() << endl;
     }
-
-    /**********************/
-	/* Global output file */
-    /**********************/
-	if (theVarMap.count("chords") > 0)
-	{
-		string theChordMode = theVarMap["chords"].as<string>();
-		theOutputFile << string(theChordMode.size()+11,'*') << "\n* Chords " << theChordMode << " *\n" 
-			<< string(theChordMode.size()+11,'*') << endl;
-		theOutputFile << "Duration of evaluated symbols: " << theTotalDuration << " s" << endl;
-		theOutputFile << "Average score: " << 100 * theWeightedScore / theTotalDuration << "%\n" << endl;
-
-		ChordEvaluationStats theGlobalStats(theGlobalConfusionMatrix);
-		theOutputFile << "Correct chords: " << theGlobalStats.getCorrectChords() << "s (" 
-			<< 100 * theGlobalStats.getCorrectChords() / theTotalDuration << "%)"  << endl;
-		theOutputFile << "Only root correct: " << theGlobalStats.getOnlyRootCorrect() << "s (" 
-			<< 100 * theGlobalStats.getOnlyRootCorrect() / theTotalDuration << "%)"  << endl;
-		theOutputFile << "Only type correct: " << theGlobalStats.getOnlyTypeCorrect() << "s (" 
-			<< 100 * theGlobalStats.getOnlyTypeCorrect() / theTotalDuration << "%)"  << endl;
-		theOutputFile << "All wrong: " << theGlobalStats.getAllWrong() << "s (" 
-            << 100 * theGlobalStats.getAllWrong() / theTotalDuration << "%)"  << endl;
-		theOutputFile << "Deleted chords: " << theGlobalStats.getChordDeletions() << " s ("
-            << 100 * theGlobalStats.getChordDeletions() / theTotalDuration << "%)\n" << endl;
-
-		theOutputFile << "Correct no-chords: " << theGlobalStats.getCorrectNoChords() << " s ("
-			<< 100 * theGlobalStats.getCorrectNoChords() / theTotalDuration << "%)" << endl;
-		theOutputFile << "Inserted chords: " << theGlobalStats.getChordInsertions() << " s ("
-			<< 100 * theGlobalStats.getChordInsertions() / theTotalDuration << "%)" << endl;
-	}
-	else if (theVarMap.count("keys") > 0 || theVarMap.count("globalkey") > 0)
-	{
-		if (theVarMap.count("keys") > 0)
-		{
-			string theKeyMode = theVarMap["keys"].as<string>();
-			theOutputFile << string(theKeyMode.size()+9,'*') << "\n* Keys " << theKeyMode << " *\n" 
-				<< string(theKeyMode.size()+9,'*') << endl;
-
-			theOutputFile << "Duration of evaluated keys: " << theTotalDuration << " s" << endl;
-		}
-		else
-		{
-			string theGlobalKeyMode = theVarMap["globalkey"].as<string>();
-			theOutputFile << string(theGlobalKeyMode.size()+15,'*') << "\n* Global key " 
-				<< theGlobalKeyMode << " *\n" << string(theGlobalKeyMode.size()+15,'*') << endl;
-
-			theOutputFile << "Number of evaluated files: " << theTotalDuration << endl;
-		}
-
-		theOutputFile << "Average score: " << 100 * theWeightedScore / theTotalDuration << "%\n" << endl;
-
-		KeyEvaluationStats theGlobalStats(theGlobalConfusionMatrix);
-		theOutputFile << "Correct keys: " << theGlobalStats.getCorrectKeys() << " s ("
-			<< 100 * theGlobalStats.getCorrectKeys() / theTotalDuration << "%)" << endl;
-		theOutputFile << "Adjacent keys: " << theGlobalStats.getAdjacentKeys() << " s ("
-			<< 100 * theGlobalStats.getAdjacentKeys() / theTotalDuration << "%)" << endl;
-		theOutputFile << "Relative keys: " << theGlobalStats.getRelativeKeys() << " s ("
-			<< 100 * theGlobalStats.getRelativeKeys() / theTotalDuration << "%)" << endl;
-		theOutputFile << "Parallel keys: " << theGlobalStats.getParallelKeys() << " s ("
-			<< 100 * theGlobalStats.getParallelKeys() / theTotalDuration << "%)" << endl;
-
-		if (theVarMap.count("keys") > 0)
-		{
-			theOutputFile << "Deleted keys: " << theGlobalStats.getKeyDeletions() << " s ("
-                << 100 * theGlobalStats.getKeyDeletions() / theTotalDuration << "%)\n" << endl;
-			theOutputFile << "Correct no-keys: " << theGlobalStats.getCorrectNoKeys() << " s ("
-                << 100 * theGlobalStats.getCorrectNoKeys() / theTotalDuration << "%)" << endl;
-			theOutputFile << "Inserted keys: " << theGlobalStats.getKeyInsertions() << " s ("
-                << 100 * theGlobalStats.getKeyInsertions() / theTotalDuration << "%)" << endl;
-		}
-	}
-	else if (theVarMap.count("notes") > 0)
-	{
-		string theNoteMode = theVarMap["notes"].as<string>();
-		theOutputFile << string(theNoteMode.size()+10,'*') << "\n* Notes " << theNoteMode << " *\n" 
-			<< string(theNoteMode.size()+10,'*') << endl;
-		theOutputFile << "Duration of evaluated notes: " << theTotalDuration << " s" << endl;
-		theOutputFile << "Average score: " << 100 * theWeightedScore / theTotalDuration << "%\n" << endl;
-
-		NoteEvaluationStats theGlobalStats(theGlobalConfusionMatrix);
-		theOutputFile << "Correct notes: " << theGlobalStats.getCorrectNotes() << " s ("
-			<< 100 * theGlobalStats.getCorrectNotes() / theTotalDuration << "%)\n";
-		theOutputFile << "Octave errors: " << theGlobalStats.getOctaveErrors() << " s ("
-			<< 100 * theGlobalStats.getOctaveErrors() / theTotalDuration << "%)\n";
-		theOutputFile << "Fifth errors: " << theGlobalStats.getFifthErrors() << " s ("
-			<< 100 * theGlobalStats.getFifthErrors() / theTotalDuration << "%)\n";
-		theOutputFile << "Chromatic up errors: " << theGlobalStats.getChromaticUpErrors() << " s ("
-			<< 100 * theGlobalStats.getChromaticUpErrors() / theTotalDuration << "%)\n";
-		theOutputFile << "Chromatic down errors: " << theGlobalStats.getChromaticDownErrors() << " s ("
-            << 100 * theGlobalStats.getChromaticDownErrors() / theTotalDuration << "%)" << endl;
-		theOutputFile << "Deleted notes: " << theGlobalStats.getNoteDeletions() << " s ("
-            << 100 * theGlobalStats.getNoteDeletions() / theTotalDuration << "%)\n" << endl;
-
-		theOutputFile << "Correct no-notes: " << theGlobalStats.getCorrectNoNotes() << " s ("
-			<< 100 * theGlobalStats.getCorrectNoNotes() / theTotalDuration << "%)" << endl;
-		theOutputFile << "Inserted notes: " << theGlobalStats.getNoteInsertions() << " s ("
-			<< 100 * theGlobalStats.getNoteInsertions() / theTotalDuration << "%)" << endl;
-	}
 
     /********************/
 	/* Confusion matrix */

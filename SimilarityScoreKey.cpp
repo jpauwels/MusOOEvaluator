@@ -53,6 +53,9 @@ SimilarityScoreKey::SimilarityScoreKey(const std::string& inScoreSelect)
 			i%2==0?Mode::major():Mode::minorNatural())).str();
 	}
 	this->m_Labels.back() = KeyElis(Key::silence()).str();
+    this->m_SubLabels = vector<string>(2);
+    this->m_SubLabels[0] = ModeElis(Mode::major()).str();
+    this->m_SubLabels[1] = ModeElis(Mode::minorNatural()).str();
 }
 
 SimilarityScoreKey::~SimilarityScoreKey()

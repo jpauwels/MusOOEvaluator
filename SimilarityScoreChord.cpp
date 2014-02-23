@@ -188,6 +188,7 @@ void SimilarityScoreChord::initialize(const std::string& inMapping, const std::s
     m_Scoring = inScoring;
 	m_InputLimitingSet = inInputLimitingSet;
     m_MappedTypes.clear();
+    this->m_Labels.clear();
     
     // If input limiting set specified, the mapped set is the mapping of the input limiting set
     if (!m_InputLimitingSet.empty())
@@ -373,6 +374,8 @@ void SimilarityScoreChord::initialize(const std::string& inMapping, const std::s
         }
         this->m_Labels.push_back(ChordQM("N").str());
     }
+    this->m_SubLabels = vector<string>(m_MappedTypes.size());
+    std::transform(m_MappedTypes.begin(), m_MappedTypes.end(), this->m_SubLabels.begin(), std::mem_fun_ref(&MusOO::ChordTypeQM::str));
 }
 
 SimilarityScoreChord::~SimilarityScoreChord()

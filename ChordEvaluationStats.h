@@ -35,6 +35,8 @@ public:
 
 	const double getRefChordsDuration() const;
 	const double getRefNoChordsDuration() const;
+    
+    const Eigen::ArrayXXd getCorrectChordsPerType() const;
 
 protected:
 
