@@ -104,12 +104,7 @@ const double ChordEvaluationStats::getChordInsertions() const
 
 const double ChordEvaluationStats::getChordSubstitutions() const
 {
-    double chordSubstitutions = m_ChordsMatrix.sum() - m_ChordsMatrix.matrix().trace();
-    if (m_HasTestCatchAllChords)
-    {
-        chordSubstitutions += m_ConfusionMatrix.block(m_NumOfChords+1, 0, m_NumOfChromas, m_NumOfChords).sum();
-    }
-	return chordSubstitutions;
+	return m_ChordsMatrix.sum() - getCorrectChords() + getChordsWithUnknownWrong();
 }
 
 const size_t ChordEvaluationStats::getNumOfUniquesInRef() const
@@ -192,4 +187,16 @@ const double ChordEvaluationStats::getChordsWithNWrong(const size_t inNumOfWrong
 const double ChordEvaluationStats::getChordsWithSDI(const size_t inNumOfSubstitutedChromas, const size_t inNumOfDeletedChromas, const size_t inNumOfInsertedChromas) const
 {
     return (m_NumOfWrongChromas == inNumOfSubstitutedChromas && m_CardinalityDiff == -inNumOfDeletedChromas+inNumOfInsertedChromas).select(m_ChordsMatrix, 0.).sum();
+}
+
+const double ChordEvaluationStats::getChordsWithUnknownWrong() const
+{
+    if (m_HasTestCatchAllChords)
+    {
+        return m_ConfusionMatrix.block(m_NumOfChords+1, 0, m_NumOfChromas, m_NumOfChords).sum();
+    }
+    else
+    {
+        return 0.;
+    }
 }

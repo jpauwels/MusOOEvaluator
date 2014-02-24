@@ -74,7 +74,7 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
         ("begin", value<double>(&outBegin)->default_value(0.), "the start time in seconds")
         ("end", value<double>(&outEnd)->default_value(0., "file end"), "the end time in seconds")
         ("minduration", value<double>(&outMinRefDuration)->default_value(0.), "minimum duration the reference label needs to have to be included in evaluation")
-        ("maxduration", value<double>(&outMaxRefDuration)->default_value(std::numeric_limits<double>::infinity(), "inf"), "maximum duration the reference label needs to have to be included in evaluation")
+        ("maxduration", value<double>(&outMaxRefDuration)->default_value(std::numeric_limits<double>::infinity(), "inf"), "maximum duration the reference label is allowed to have to be included in evaluation")
         ("delay", value<double>(&outTimeDelay)->default_value(0.), "Add a time delay to the files to evaluate")
 		;
 
@@ -496,6 +496,11 @@ int main(int inNumOfArguments,char* inArguments[])
                                                          theChordEvaluation.getNumOfRefLabels());
         theLabels.resize(theChordEvaluation.getNumOfTestLabels());
         std::transform(theChordEvaluation.getLabels().begin(), theChordEvaluation.getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::ChordQM::str));
+        const size_t numChordTypes = theChordEvaluation.getNumOfRefLabels()/12;
+        vector<size_t> cardinalities(numChordTypes);
+        std::transform(theChordEvaluation.getLabels().begin(), theChordEvaluation.getLabels().begin()+numChordTypes, cardinalities.begin(), std::mem_fun_ref(&MusOO::Chord::cardinality));
+        const size_t maxCardinality = *std::max_element(cardinalities.begin(), cardinalities.end());
+        const size_t minCardinality = *std::min_element(cardinalities.begin(), cardinalities.end());
 
 		ofstream theCSVFile;
 		if (theVarMap.count("csv") > 0)
@@ -504,11 +509,25 @@ int main(int inNumOfArguments,char* inArguments[])
 			theCSVFile << theVarMap["chords"].as<string>() << endl;
 			theCSVFile << "File" 
 				<< theCSVSeparator << "Pairwise score (%)"
-				<< theCSVSeparator << "Duration (s)" 
-				<< theCSVSeparator << "All correct (%)" 
-				<< theCSVSeparator << "Root correct (%)" 
-				<< theCSVSeparator << "Type correct (%)" 
-				<< theCSVSeparator << "All wrong (%)"
+                << theCSVSeparator << "Duration (s)"
+                << theCSVSeparator << "Correct chords (%)"
+                << theCSVSeparator << "Substituted chords (%)"
+                << theCSVSeparator << "Deleted chords (%)"
+                << theCSVSeparator << "Inserted chords (%)"
+                << theCSVSeparator << "Correct no-chords (%)";
+            for (size_t iChordType = 0; iChordType < numChordTypes; ++iChordType)
+            {
+                theCSVFile << theCSVSeparator << theCSVQuotes << ChordTypeQM(theChordEvaluation.getLabels()[iChordType].type()) << " correct (%)" << theCSVQuotes << theCSVSeparator << theCSVQuotes << ChordTypeQM(theChordEvaluation.getLabels()[iChordType].type()) << " proportion (%)" << theCSVQuotes;
+            }
+            for (size_t iNumOfWrongChromas = 0; iNumOfWrongChromas <= maxCardinality; ++iNumOfWrongChromas)
+            {
+                theCSVFile << theCSVSeparator << iNumOfWrongChromas << " chroma" << (iNumOfWrongChromas==1?"":"s") << " wrong (%)";
+            }
+            theCSVFile
+				<< theCSVSeparator << "Both correct (%)"
+				<< theCSVSeparator << "Only root correct (%)"
+				<< theCSVSeparator << "Only type correct (%)"
+				<< theCSVSeparator << "Both wrong (%)"
 				<< theCSVSeparator << "Unique ref chords"
 				<< theCSVSeparator << "Unique test chords" << endl;
 			theCSVFile << std::fixed;
@@ -539,28 +558,43 @@ int main(int inNumOfArguments,char* inArguments[])
 			
 			if (theVarMap.count("csv") > 0)
 			{
+                theCSVFile << theCSVQuotes << *i << theCSVQuotes << theCSVSeparator;
 				ChordEvaluationStats theStats(theConfusionMatrix, theChordEvaluation.getLabels());
 				if (theDuration > 0.)
 				{
-					theCSVFile << theCSVQuotes << *i << theCSVQuotes << theCSVSeparator
-						<< 100*theChordEvaluation.getOverlapScore() << theCSVSeparator
-						<< theDuration << theCSVSeparator
-						<< 100*theStats.getCorrectChords()/theDuration << theCSVSeparator
-						<< 100*theStats.getOnlyRootCorrect()/theDuration << theCSVSeparator
-						<< 100*theStats.getOnlyTypeCorrect()/theDuration << theCSVSeparator
-						<< 100*theStats.getBothRootAndTypeWrong()/theDuration << theCSVSeparator;
+					theCSVFile << 100*theChordEvaluation.getOverlapScore() << theCSVSeparator << theDuration;
+                    theCSVFile
+                        << theCSVSeparator << 100*theStats.getCorrectChords()/theDuration
+                        << theCSVSeparator << 100*theStats.getChordSubstitutions()/theDuration
+                        << theCSVSeparator << 100*theStats.getChordDeletions()/theDuration
+                        << theCSVSeparator << 100*theStats.getChordInsertions()/theDuration
+                        << theCSVSeparator << 100*theStats.getCorrectNoChords()/theDuration;
+                    const Eigen::ArrayXXd theResultsPerType = theStats.getCorrectChordsPerType();
+                    for (size_t iChordType = 0; iChordType < numChordTypes; ++iChordType)
+                    {
+                        theCSVFile
+                            << theCSVSeparator << 100*theResultsPerType(iChordType,0)/theResultsPerType(iChordType,1)
+                            << theCSVSeparator << 100*theResultsPerType(iChordType,1)/theTotalDuration;
+                    }
+                    for (size_t iNumOfWrongChromas = 0; iNumOfWrongChromas <= maxCardinality; ++iNumOfWrongChromas)
+                    {
+                        theCSVFile << theCSVSeparator << 100*theStats.getChordsWithNWrong(iNumOfWrongChromas)/theTotalDuration;
+                    }
+                    theCSVFile
+                        << theCSVSeparator << 100*theStats.getCorrectChords()/theDuration
+						<< theCSVSeparator << 100*theStats.getOnlyRootCorrect()/theDuration
+						<< theCSVSeparator<< 100*theStats.getOnlyTypeCorrect()/theDuration
+						<< theCSVSeparator << 100*theStats.getBothRootAndTypeWrong()/theDuration;
 				}
 				else
 				{
-					theCSVFile << theCSVQuotes << *i << theCSVQuotes << theCSVSeparator 
-						<< "n/a" << theCSVSeparator
-						<< theDuration << theCSVSeparator
-						<< "n/a" << theCSVSeparator
-						<< "n/a" << theCSVSeparator
-						<< "n/a" << theCSVSeparator
-						<< "n/a" << theCSVSeparator;
+					theCSVFile << "n/a" << theCSVSeparator << theDuration;
+                    for (size_t i = 0; i < 9+2*numChordTypes+maxCardinality+1; ++i)
+                    {
+                        theCSVFile << theCSVSeparator << "n/a";
+                    }
 				}
-                theCSVFile << theStats.getNumOfUniquesInRef() << theCSVSeparator << theStats.getNumOfUniquesInTest() << endl;
+                theCSVFile << theCSVSeparator << theStats.getNumOfUniquesInRef() << theCSVSeparator << theStats.getNumOfUniquesInTest() << endl;
 			}
 		}
 		theCSVFile.close();
@@ -582,7 +616,6 @@ int main(int inNumOfArguments,char* inArguments[])
         
         theOutputFile << "\nResults per chord type\n" << "----------------------" << endl;
         const Eigen::ArrayXXd theResultsPerType = theGlobalStats.getCorrectChordsPerType();
-        const size_t numChordTypes = theResultsPerType.rows();
         for (size_t iChordType = 0; iChordType < numChordTypes; ++iChordType)
         {
             theOutputFile << ChordTypeQM(theChordEvaluation.getLabels()[iChordType].type()) << ": "
@@ -591,11 +624,9 @@ int main(int inNumOfArguments,char* inArguments[])
         }
         
         theOutputFile << "\nResults per number of chromas wrong\n" << "-----------------------------------" << endl;
-        vector<size_t> cardinalities(numChordTypes);
-        std::transform(theChordEvaluation.getLabels().begin(), theChordEvaluation.getLabels().begin()+numChordTypes, cardinalities.begin(), std::mem_fun_ref(&MusOO::Chord::cardinality));
-        const size_t maxCardinality = *std::max_element(cardinalities.begin(), cardinalities.end());
-        const size_t minCardinality = *std::min_element(cardinalities.begin(), cardinalities.end());
-        theOutputFile << "0 chromas wrong: " << printResultLine(theGlobalStats.getCorrectChords(), theTotalDuration, " s") << endl;
+        theOutputFile << "0 chromas wrong: " << printResultLine(theGlobalStats.getChordsWithNWrong(0), theTotalDuration, " s") << endl;
+        theOutputFile << "  of which root correct: " << printResultLine(theGlobalStats.getCorrectChords(), theTotalDuration, " s") << endl;
+        theOutputFile << "  of which root incorrect: " << printResultLine(theGlobalStats.getChordsWithNWrong(0)-theGlobalStats.getCorrectChords(), theTotalDuration, " s") << endl;
         for (size_t iNumOfWrongChromas = 1; iNumOfWrongChromas <= maxCardinality; ++iNumOfWrongChromas)
         {
             theOutputFile << iNumOfWrongChromas << " chroma" << (iNumOfWrongChromas==1?"":"s") << " wrong: " << printResultLine(theGlobalStats.getChordsWithNWrong(iNumOfWrongChromas), theTotalDuration, " s") << endl;
@@ -621,6 +652,11 @@ int main(int inNumOfArguments,char* inArguments[])
                     theOutputFile << "  of which " << iNumSubstitutions << " substitution" << (iNumSubstitutions==1?"":"s") << ", " << numDI << " insertion" << (numDI==1?"":"s") << ": " << printResultLine(theGlobalStats.getChordsWithSDI(iNumSubstitutions, 0, numDI), theTotalDuration, " s") << endl;
                 }
             }
+        }
+        const double unknownWrong = theGlobalStats.getChordsWithUnknownWrong();
+        if (unknownWrong > 0.)
+        {
+            theOutputFile << "unknown chromas wrong: " << printResultLine(unknownWrong, theTotalDuration, " s") << endl;
         }
         
         theOutputFile << "\nRoot/type results\n" << "-----------------" << endl;

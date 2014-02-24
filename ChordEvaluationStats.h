@@ -42,6 +42,7 @@ public:
     const Eigen::ArrayXXd getCorrectChordsPerType() const;
     const double getChordsWithNWrong(const size_t inNumOfWrongChromas) const;
     const double getChordsWithSDI(const size_t inNumOfSubstitutedChromas, const size_t inNumOfDeletedChromas, const size_t inNumOfInsertedChromas) const;
+    const double getChordsWithUnknownWrong() const;
 
 protected:
 
