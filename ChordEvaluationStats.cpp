@@ -11,6 +11,7 @@
 #include "ChordEvaluationStats.h"
 
 ChordEvaluationStats::ChordEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix,
+                                           const std::vector<MusOO::Chord> inChords,
 										   const size_t inNumOfChromas /*= 12*/)
 : m_ConfusionMatrix(inConfusionMatrix), m_NumOfChromas(inNumOfChromas), 
 m_NumOfChordTypes(inConfusionMatrix.cols()/inNumOfChromas),
@@ -18,8 +19,18 @@ m_NumOfChords(m_NumOfChordTypes * m_NumOfChromas),
 m_OnlyRoots(Eigen::ArrayXd::Zero(inNumOfChromas)), m_OnlyTypes(Eigen::ArrayXd::Zero(m_NumOfChordTypes)),
 m_ChordsMatrix(m_ConfusionMatrix.topLeftCorner(m_NumOfChords,m_NumOfChords)),
 m_HasTestCatchAllChords(inConfusionMatrix.rows() > m_NumOfChords+1),
-m_HasRefNoChord(inConfusionMatrix.cols() > m_NumOfChords)
+m_HasRefNoChord(inConfusionMatrix.cols() > m_NumOfChords),
+m_CardinalityDiff(m_NumOfChords, m_NumOfChords),
+m_NumOfWrongChromas(m_NumOfChords, m_NumOfChords)
 {
+    for (size_t iRefChord = 0; iRefChord < m_NumOfChords; ++iRefChord)
+    {
+        for (size_t iTestChord = 0; iTestChord < m_NumOfChords; ++iTestChord)
+        {
+            m_CardinalityDiff(iTestChord, iRefChord) = inChords[iTestChord].cardinality() - inChords[iRefChord].cardinality();
+            m_NumOfWrongChromas(iTestChord, iRefChord) = std::max(inChords[iRefChord].cardinality(), inChords[iTestChord].cardinality()) - inChords[iRefChord].commonChromas(inChords[iTestChord]).size();
+        }
+    }
 	for (int i = 0; i < m_NumOfChromas; ++i)
 	{
 		const Eigen::Block<const Eigen::ArrayXXd> theRootBlock =
@@ -43,22 +54,15 @@ m_HasRefNoChord(inConfusionMatrix.cols() > m_NumOfChords)
 			}
 		}
 	}
-	m_CorrectChords = m_ChordsMatrix.matrix().trace();
-	m_AllWrong = m_ChordsMatrix.sum() - m_CorrectChords - m_OnlyRoots.sum() - m_OnlyTypes.sum();
-    if (m_HasTestCatchAllChords)
-    {
-        m_AllWrong += m_ConfusionMatrix.block(m_NumOfChords+1, 0, m_NumOfChromas, m_NumOfChords).sum();
-    }
 }
 
 ChordEvaluationStats::~ChordEvaluationStats()
 {
-	// Nothing to do...
 }
 
 const double ChordEvaluationStats::getCorrectChords() const
 {
-	return m_CorrectChords;
+	return m_ChordsMatrix.matrix().trace();
 }
 
 const double ChordEvaluationStats::getCorrectNoChords() const
@@ -96,6 +100,16 @@ const double ChordEvaluationStats::getChordInsertions() const
     {
         return 0.;
     }
+}
+
+const double ChordEvaluationStats::getChordSubstitutions() const
+{
+    double chordSubstitutions = m_ChordsMatrix.sum() - m_ChordsMatrix.matrix().trace();
+    if (m_HasTestCatchAllChords)
+    {
+        chordSubstitutions += m_ConfusionMatrix.block(m_NumOfChords+1, 0, m_NumOfChromas, m_NumOfChords).sum();
+    }
+	return chordSubstitutions;
 }
 
 const size_t ChordEvaluationStats::getNumOfUniquesInRef() const
@@ -151,9 +165,9 @@ const double ChordEvaluationStats::getOnlyTypeCorrect() const
 	return m_OnlyTypes.sum();
 }
 
-const double ChordEvaluationStats::getAllWrong() const
+const double ChordEvaluationStats::getBothRootAndTypeWrong() const
 {
-	return m_AllWrong;
+	return getChordSubstitutions() - m_OnlyRoots.sum() - m_OnlyTypes.sum();
 }
 
 const Eigen::ArrayXXd ChordEvaluationStats::getCorrectChordsPerType() const
@@ -168,4 +182,14 @@ const Eigen::ArrayXXd ChordEvaluationStats::getCorrectChordsPerType() const
         }
     }
     return outCorrectChordsPerType;
+}
+
+const double ChordEvaluationStats::getChordsWithNWrong(const size_t inNumOfWrongChromas) const
+{
+    return (m_NumOfWrongChromas == inNumOfWrongChromas).select(m_ChordsMatrix, 0.).sum();
+}
+
+const double ChordEvaluationStats::getChordsWithSDI(const size_t inNumOfSubstitutedChromas, const size_t inNumOfDeletedChromas, const size_t inNumOfInsertedChromas) const
+{
+    return (m_NumOfWrongChromas == inNumOfSubstitutedChromas && m_CardinalityDiff == -inNumOfDeletedChromas+inNumOfInsertedChromas).select(m_ChordsMatrix, 0.).sum();
 }

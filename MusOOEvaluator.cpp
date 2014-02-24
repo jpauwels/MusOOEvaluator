@@ -539,7 +539,7 @@ int main(int inNumOfArguments,char* inArguments[])
 			
 			if (theVarMap.count("csv") > 0)
 			{
-				ChordEvaluationStats theStats(theConfusionMatrix);
+				ChordEvaluationStats theStats(theConfusionMatrix, theChordEvaluation.getLabels());
 				if (theDuration > 0.)
 				{
 					theCSVFile << theCSVQuotes << *i << theCSVQuotes << theCSVSeparator
@@ -548,7 +548,7 @@ int main(int inNumOfArguments,char* inArguments[])
 						<< 100*theStats.getCorrectChords()/theDuration << theCSVSeparator
 						<< 100*theStats.getOnlyRootCorrect()/theDuration << theCSVSeparator
 						<< 100*theStats.getOnlyTypeCorrect()/theDuration << theCSVSeparator
-						<< 100*theStats.getAllWrong()/theDuration << theCSVSeparator;
+						<< 100*theStats.getBothRootAndTypeWrong()/theDuration << theCSVSeparator;
 				}
 				else
 				{
@@ -570,26 +570,64 @@ int main(int inNumOfArguments,char* inArguments[])
 		theOutputFile << string(theChordMode.size()+11,'*') << "\n* Chords " << theChordMode << " *\n"
         << string(theChordMode.size()+11,'*') << endl;
 		theOutputFile << "Duration of evaluated chords: " << theTotalDuration << " s" << endl;
-		theOutputFile << "Average score: " << 100 * theWeightedScore / theTotalDuration << "%\n" << endl;
+		theOutputFile << "Average score: " << 100 * theWeightedScore / theTotalDuration << "%" << endl;
         
-		ChordEvaluationStats theGlobalStats(theGlobalConfusionMatrix);
+		ChordEvaluationStats theGlobalStats(theGlobalConfusionMatrix, theChordEvaluation.getLabels());
+        theOutputFile << "\nChord detection results\n" << "-----------------------" << endl;
 		theOutputFile << "Correct chords: " << printResultLine(theGlobalStats.getCorrectChords(), theTotalDuration, " s") << endl;
-		theOutputFile << "Only root correct: " << printResultLine(theGlobalStats.getOnlyRootCorrect(), theTotalDuration, " s") << endl;
-		theOutputFile << "Only type correct: " << printResultLine(theGlobalStats.getOnlyTypeCorrect(), theTotalDuration, " s") << endl;
-		theOutputFile << "All wrong: " << printResultLine(theGlobalStats.getAllWrong(), theTotalDuration, " s") << endl;
+		theOutputFile << "Substituted chords: " << printResultLine(theGlobalStats.getChordSubstitutions(), theTotalDuration, " s") << endl;
 		theOutputFile << "Deleted chords: " << printResultLine(theGlobalStats.getChordDeletions(), theTotalDuration, " s") << endl;
-        
-		theOutputFile << "\nCorrect no-chords: " << printResultLine(theGlobalStats.getCorrectNoChords(), theTotalDuration, " s") << endl;
 		theOutputFile << "Inserted chords: " << printResultLine(theGlobalStats.getChordInsertions(), theTotalDuration, " s") << endl;
+		theOutputFile << "Correct no-chords: " << printResultLine(theGlobalStats.getCorrectNoChords(), theTotalDuration, " s") << endl;
         
         theOutputFile << "\nResults per chord type\n" << "----------------------" << endl;
         const Eigen::ArrayXXd theResultsPerType = theGlobalStats.getCorrectChordsPerType();
-        for (size_t iChordType = 0; iChordType < theResultsPerType.rows(); ++iChordType)
+        const size_t numChordTypes = theResultsPerType.rows();
+        for (size_t iChordType = 0; iChordType < numChordTypes; ++iChordType)
         {
             theOutputFile << ChordTypeQM(theChordEvaluation.getLabels()[iChordType].type()) << ": "
                 << printResultLine(theResultsPerType(iChordType,0), theResultsPerType(iChordType,1), " s") << " of "
                 << printResultLine(theResultsPerType(iChordType,1), theTotalDuration, " s") << endl;
         }
+        
+        theOutputFile << "\nResults per number of chromas wrong\n" << "-----------------------------------" << endl;
+        vector<size_t> cardinalities(numChordTypes);
+        std::transform(theChordEvaluation.getLabels().begin(), theChordEvaluation.getLabels().begin()+numChordTypes, cardinalities.begin(), std::mem_fun_ref(&MusOO::Chord::cardinality));
+        const size_t maxCardinality = *std::max_element(cardinalities.begin(), cardinalities.end());
+        const size_t minCardinality = *std::min_element(cardinalities.begin(), cardinalities.end());
+        theOutputFile << "0 chromas wrong: " << printResultLine(theGlobalStats.getCorrectChords(), theTotalDuration, " s") << endl;
+        for (size_t iNumOfWrongChromas = 1; iNumOfWrongChromas <= maxCardinality; ++iNumOfWrongChromas)
+        {
+            theOutputFile << iNumOfWrongChromas << " chroma" << (iNumOfWrongChromas==1?"":"s") << " wrong: " << printResultLine(theGlobalStats.getChordsWithNWrong(iNumOfWrongChromas), theTotalDuration, " s") << endl;
+            theOutputFile << "  of which " << iNumOfWrongChromas << " substitution" << (iNumOfWrongChromas==1?"":"s") << ": " << printResultLine(theGlobalStats.getChordsWithSDI(iNumOfWrongChromas, 0, 0), theTotalDuration, " s") << endl;
+            //prune impossible combinations for this set of chord types
+            if (minCardinality + iNumOfWrongChromas <= maxCardinality)
+            {
+                theOutputFile << "  of which " << iNumOfWrongChromas << " deletion" << (iNumOfWrongChromas==1?"":"s") << ": " << printResultLine(theGlobalStats.getChordsWithSDI(0, iNumOfWrongChromas, 0), theTotalDuration, " s") << endl;
+            }
+            if (maxCardinality - iNumOfWrongChromas >= minCardinality)
+            {
+                theOutputFile << "  of which " << iNumOfWrongChromas << " insertion" << (iNumOfWrongChromas==1?"":"s") << ": " << printResultLine(theGlobalStats.getChordsWithSDI(0, 0, iNumOfWrongChromas), theTotalDuration, " s") << endl;
+            }
+            for (size_t iNumSubstitutions = iNumOfWrongChromas-1; iNumSubstitutions > 0; --iNumSubstitutions)
+            {
+                const size_t numDI = iNumOfWrongChromas-iNumSubstitutions;
+                if (minCardinality + numDI <= maxCardinality)
+                {
+                    theOutputFile << "  of which " << iNumSubstitutions << " substitution" << (iNumSubstitutions==1?"":"s") << ", " << numDI << " deletion" << (numDI==1?"":"s") << ": " << printResultLine(theGlobalStats.getChordsWithSDI(iNumSubstitutions, numDI, 0), theTotalDuration, " s") << endl;
+                }
+                if (maxCardinality - numDI >= minCardinality)
+                {
+                    theOutputFile << "  of which " << iNumSubstitutions << " substitution" << (iNumSubstitutions==1?"":"s") << ", " << numDI << " insertion" << (numDI==1?"":"s") << ": " << printResultLine(theGlobalStats.getChordsWithSDI(iNumSubstitutions, 0, numDI), theTotalDuration, " s") << endl;
+                }
+            }
+        }
+        
+        theOutputFile << "\nRoot/type results\n" << "-----------------" << endl;
+        theOutputFile << "Both correct: " << printResultLine(theGlobalStats.getCorrectChords(), theTotalDuration, " s") << endl;
+		theOutputFile << "Only root correct: " << printResultLine(theGlobalStats.getOnlyRootCorrect(), theTotalDuration, " s") << endl;
+		theOutputFile << "Only type correct: " << printResultLine(theGlobalStats.getOnlyTypeCorrect(), theTotalDuration, " s") << endl;
+		theOutputFile << "Both wrong: " << printResultLine(theGlobalStats.getBothRootAndTypeWrong(), theTotalDuration, " s") << endl;
 	}
 	/*********/
 	/* Notes */
