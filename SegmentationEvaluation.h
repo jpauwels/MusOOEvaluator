@@ -34,8 +34,8 @@ public:
 protected:
     
     void segmentationScores(const Eigen::ArrayXd& inRefTimeStamps, const Eigen::ArrayXd& inTestTimeStamps, Eigen::ArrayXd& outRecalls, Eigen::ArrayXd& outPrecisions);
-    const double underSegmentation(const Eigen::ArrayXd& inRefOnsets, const Eigen::ArrayXd& inRefOffsets, const Eigen::ArrayXd& inTestOnsets, const Eigen::ArrayXd& inTestOffsets);
-    const double overSegmentation(const Eigen::ArrayXd& inRefOnsets, const Eigen::ArrayXd& inRefOffsets, const Eigen::ArrayXd& inTestOnsets, const Eigen::ArrayXd& inTestOffsets);
+    const double missedBoundaries(const Eigen::ArrayXd& inRefOnsets, const Eigen::ArrayXd& inRefOffsets, const Eigen::ArrayXd& inTestOnsets, const Eigen::ArrayXd& inTestOffsets);
+    const double segmentFragmentation(const Eigen::ArrayXd& inRefOnsets, const Eigen::ArrayXd& inRefOffsets, const Eigen::ArrayXd& inTestOnsets, const Eigen::ArrayXd& inTestOffsets);
 
     const std::string m_Variant;
     const std::vector<double> m_Tolerances;
@@ -45,9 +45,8 @@ protected:
     std::vector<Eigen::ArrayXd> m_Recalls;
     std::vector<Eigen::ArrayXd> m_Precisions;
     std::vector<Eigen::ArrayXd> m_Fmeasures;
-    std::vector<double> m_UnderSegmentations;
-    std::vector<double> m_OverSegmentations;
-    std::vector<double> m_DirectionalHammingMeasures;
+    std::vector<double> m_MissedBoundaries;
+    std::vector<double> m_SegmentFragmentations;
     
 private:
     

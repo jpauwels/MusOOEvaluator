@@ -1,6 +1,6 @@
 //============================================================================
 /**
-    Implementation file for ChordFile.h
+    Implementation file for SegmentationEvaluation.h
  
  @author	Johan Pauwels
  @date		20131009
@@ -62,24 +62,23 @@ void SegmentationEvaluation::evaluate(const LabelSequence& inRefSequence, const 
     m_Recalls.push_back(recalls);
     m_Precisions.push_back(precisions);
     m_Fmeasures.push_back(2 * precisions * recalls / (precisions + recalls));
-    m_UnderSegmentations.push_back(underSegmentation(refOnsets, refOffsets, testOnsets, testOffsets));
-    m_OverSegmentations.push_back(overSegmentation(refOnsets, refOffsets, testOnsets, testOffsets));
-    m_DirectionalHammingMeasures.push_back(1. - std::max(m_UnderSegmentations.back(), m_OverSegmentations.back()));
+    m_MissedBoundaries.push_back(missedBoundaries(refOnsets, refOffsets, testOnsets, testOffsets));
+    m_SegmentFragmentations.push_back(segmentFragmentation(refOnsets, refOffsets, testOnsets, testOffsets));
 }
 
 const double SegmentationEvaluation::getUnderSegmentation() const
 {
-    return m_UnderSegmentations.back();
+    return 1. - m_MissedBoundaries.back();
 }
 
 const double SegmentationEvaluation::getOverSegmentation() const
 {
-    return m_OverSegmentations.back();
+    return 1. - m_SegmentFragmentations.back();
 }
 
 const double SegmentationEvaluation::getDirectionalHammingMeasure() const
 {
-    return m_DirectionalHammingMeasures.back();
+    return 1. - std::max(m_MissedBoundaries.back(), m_SegmentFragmentations.back());
 }
 
 void SegmentationEvaluation::segmentationScores(const Eigen::ArrayXd& inRefTimeStamps, const Eigen::ArrayXd& inTestTimeStamps, Eigen::ArrayXd& outRecalls, Eigen::ArrayXd& outPrecisions)
@@ -116,80 +115,51 @@ void SegmentationEvaluation::segmentationScores(const Eigen::ArrayXd& inRefTimeS
     }
 }
 
-const double SegmentationEvaluation::underSegmentation(const Eigen::ArrayXd& inRefOnsets, const Eigen::ArrayXd& inRefOffsets,
+const double SegmentationEvaluation::missedBoundaries(const Eigen::ArrayXd& inRefOnsets, const Eigen::ArrayXd& inRefOffsets,
                                                        const Eigen::ArrayXd& inTestOnsets, const Eigen::ArrayXd& inTestOffsets)
 {
     if (inTestOnsets.size() != 0)
     {
-        double retUnderSegmentation = 0.;
+        // directional Hamming distance / reference track duration
+        double dirHammingDist = 0.;
         for (Eigen::ArrayXd::Index iTestLabel = 0; iTestLabel < inTestOnsets.size(); ++iTestLabel)
         {
             Eigen::ArrayXd refOverlap = inRefOffsets.min(inTestOffsets(iTestLabel)) - inRefOnsets.max(inTestOnsets(iTestLabel));
             double maxOverlap = refOverlap.maxCoeff();
             if (maxOverlap > 0)
             {
-                retUnderSegmentation += (refOverlap > 0).select(refOverlap, 0).sum() - maxOverlap;
+                dirHammingDist += (refOverlap > 0).select(refOverlap, 0).sum() - maxOverlap;
             }
         }
-        retUnderSegmentation /= inRefOffsets(inRefOffsets.size()-1);
-        return retUnderSegmentation;
+        return dirHammingDist / inRefOffsets(inRefOffsets.size()-1);
     }
     else
     {
         return 1;
     }
 }
-//function outUnderSegmentation = underSegmentation(inRefOnsets_v, inRefOffsets_v, inEstOnsets_v, inEstOffsets_v)
-//    if ~isempty(inEstOnsets_v)
-//        outUnderSegmentation = 0;
-//        for iLabel = 1:length(inEstOnsets_v)
-//            refOverlap = min(inRefOffsets_v, inEstOffsets_v(iLabel)) - max(inRefOnsets_v, inEstOnsets_v(iLabel));
-//            maxOverlap = max(refOverlap);
-//            if maxOverlap > 0
-//                outUnderSegmentation = outUnderSegmentation + sum(refOverlap(refOverlap > 0)) - maxOverlap;
-//            end
-//        end
-//        outUnderSegmentation = outUnderSegmentation / inRefOffsets_v(end);
-//    else
-//        outUnderSegmentation = 1;
-//    end
-//end
 
-const double SegmentationEvaluation::overSegmentation(const Eigen::ArrayXd& inRefOnsets, const Eigen::ArrayXd& inRefOffsets,
+const double SegmentationEvaluation::segmentFragmentation(const Eigen::ArrayXd& inRefOnsets, const Eigen::ArrayXd& inRefOffsets,
                                                       const Eigen::ArrayXd& inTestOnsets, const Eigen::ArrayXd& inTestOffsets)
 {
     if (inRefOnsets.size() != 0)
     {
-        double retOverSegmentation = 0.;
+        // inverse directional Hamming distance / reference track duration
+        double invDirHammingDist = 0.;
         for (Eigen::ArrayXd::Index iRefLabel = 0; iRefLabel < inRefOnsets.size(); ++iRefLabel)
         {
             Eigen::ArrayXd testOverlap = inTestOffsets.min(inRefOffsets(iRefLabel)) - inTestOnsets.max(inRefOnsets(iRefLabel));
             double maxOverlap = testOverlap.maxCoeff();
             if (maxOverlap > 0)
             {
-                retOverSegmentation += (testOverlap > 0).select(testOverlap, 0).sum() - maxOverlap;
+                invDirHammingDist += (testOverlap > 0).select(testOverlap, 0).sum() - maxOverlap;
             }
         }
-        retOverSegmentation /= inRefOffsets(inRefOffsets.size()-1);
-        return retOverSegmentation;
+        return invDirHammingDist / inRefOffsets(inRefOffsets.size()-1);
     }
     else
     {
         return 1;
     }
 }
-//function outOverSegmentation = overSegmentation(inRefOnsets_v, inRefOffsets_v, inEstOnsets_v, inEstOffsets_v)
-//    if ~isempty(inRefOnsets_v)
-//        outOverSegmentation = 0;
-//        for iLabel = 1:length(inRefOnsets_v)
-//            estOverlap = min(inEstOffsets_v, inRefOffsets_v(iLabel)) - max(inEstOnsets_v, inRefOnsets_v(iLabel));
-//            maxOverlap = max(estOverlap);
-//            if maxOverlap > 0
-//                outOverSegmentation = outOverSegmentation + sum(estOverlap(estOverlap > 0)) - maxOverlap;
-//            end
-//        end
-//        outOverSegmentation = outOverSegmentation / inRefOffsets_v(end);
-//    else
-//        outOverSegmentation = 1;
-//    end
-//end
+

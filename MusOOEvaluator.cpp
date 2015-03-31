@@ -807,9 +807,9 @@ int main(int inNumOfArguments,char* inArguments[])
         string theSegmentationMode = theVarMap["segmentation"].as<string>();
 		theOutputFile << string(theSegmentationMode.size()+17,'*') << "\n* Segmentation " << theSegmentationMode << " *\n"
         << string(theSegmentationMode.size()+17,'*') << endl;
-        theOutputFile << "Directional Hamming measure: " << theDirectionalHammingSum / theListItems.size() << endl;
-        theOutputFile << "Under-segmentation: " << theUnderSegmentationSum / theListItems.size() << endl;
-        theOutputFile << "Over-segmentation: " << theOverSegmentationSum / theListItems.size() << endl;
+        theOutputFile << "Average directional Hamming measure: " << theDirectionalHammingSum / theListItems.size() << endl;
+        theOutputFile << "Average under-segmentation: " << theUnderSegmentationSum / theListItems.size() << endl;
+        theOutputFile << "Average over-segmentation: " << theOverSegmentationSum / theListItems.size() << endl;
     }
 
     /********************/
