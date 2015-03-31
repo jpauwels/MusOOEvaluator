@@ -26,7 +26,8 @@ public:
 	void evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence/*, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inDelay = 0.*/);
     const double getUnderSegmentation() const;
     const double getOverSegmentation() const;
-    const double getDirectionalHammingMeasure() const;
+    const double getCombinedHammingMeasureMaximum() const;
+    const double getCombinedHammingMeasureHarmonic() const;
 
 //	const double getScore() const;
 //	const double getTotalDuration() const;

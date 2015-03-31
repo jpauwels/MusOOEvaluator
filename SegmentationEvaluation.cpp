@@ -76,9 +76,14 @@ const double SegmentationEvaluation::getOverSegmentation() const
     return 1. - m_SegmentFragmentations.back();
 }
 
-const double SegmentationEvaluation::getDirectionalHammingMeasure() const
+const double SegmentationEvaluation::getCombinedHammingMeasureMaximum() const
 {
     return 1. - std::max(m_MissedBoundaries.back(), m_SegmentFragmentations.back());
+}
+
+const double SegmentationEvaluation::getCombinedHammingMeasureHarmonic() const
+{
+    return 2./(1./getUnderSegmentation() + 1./getOverSegmentation());
 }
 
 void SegmentationEvaluation::segmentationScores(const Eigen::ArrayXd& inRefTimeStamps, const Eigen::ArrayXd& inTestTimeStamps, Eigen::ArrayXd& outRecalls, Eigen::ArrayXd& outPrecisions)

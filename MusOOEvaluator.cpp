@@ -769,7 +769,8 @@ int main(int inNumOfArguments,char* inArguments[])
 			theCSVFile.open(path(theOutputPath).replace_extension("csv"));
 			theCSVFile << theVarMap["segmentation"].as<string>() << endl;
 			theCSVFile << "File"
-            << theCSVSeparator << "DirectionalHammingMeasure"
+            << theCSVSeparator << "CombinedHammingMeasureMaximum"
+            << theCSVSeparator << "CombinedHammingMeasureHarmonic"
             << theCSVSeparator << "UnderSegmentation"
             << theCSVSeparator << "OverSegmentation"
 //            << theCSVSeparator << "SegmentationRecall"
@@ -778,7 +779,8 @@ int main(int inNumOfArguments,char* inArguments[])
 			theCSVFile << std::fixed;
 		}
         
-        double theDirectionalHammingSum = 0.;
+        double theCombinedHammingMaximumSum = 0.;
+        double theCombinedHammingHarmonicSum = 0.;
         double theUnderSegmentationSum = 0.;
         double theOverSegmentationSum = 0.;
 		for (vector<string>::iterator i = theListItems.begin(); i != theListItems.end(); ++i)
@@ -789,14 +791,16 @@ int main(int inNumOfArguments,char* inArguments[])
 			LabFile<std::string> theRefFile(theRefPath.string(), true);
             LabFile<std::string> theTestFile(theTestPath.string(), true);
             theSegmentationEvaluation.evaluate(theRefFile.readAll(), theTestFile.readAll());
-			theDirectionalHammingSum += theSegmentationEvaluation.getDirectionalHammingMeasure();
+            theCombinedHammingMaximumSum += theSegmentationEvaluation.getCombinedHammingMeasureMaximum();
+            theCombinedHammingHarmonicSum += theSegmentationEvaluation.getCombinedHammingMeasureHarmonic();
             theUnderSegmentationSum += theSegmentationEvaluation.getUnderSegmentation();
             theOverSegmentationSum += theSegmentationEvaluation.getOverSegmentation();
             
 			if (theVarMap.count("csv") > 0)
 			{
-				theCSVFile << theCSVQuotes << *i << theCSVQuotes
-                << theCSVSeparator << theSegmentationEvaluation.getDirectionalHammingMeasure()
+                theCSVFile << theCSVQuotes << *i << theCSVQuotes
+                << theCSVSeparator << theSegmentationEvaluation.getCombinedHammingMeasureMaximum()
+                << theCSVSeparator << theSegmentationEvaluation.getCombinedHammingMeasureHarmonic()
                 << theCSVSeparator << theSegmentationEvaluation.getUnderSegmentation()
                 << theCSVSeparator << theSegmentationEvaluation.getOverSegmentation()
                 << endl;
@@ -807,7 +811,8 @@ int main(int inNumOfArguments,char* inArguments[])
         string theSegmentationMode = theVarMap["segmentation"].as<string>();
 		theOutputFile << string(theSegmentationMode.size()+17,'*') << "\n* Segmentation " << theSegmentationMode << " *\n"
         << string(theSegmentationMode.size()+17,'*') << endl;
-        theOutputFile << "Average directional Hamming measure: " << theDirectionalHammingSum / theListItems.size() << endl;
+        theOutputFile << "Average combined Hamming measure (maximum): " << theCombinedHammingMaximumSum / theListItems.size() << endl;
+        theOutputFile << "Average combined Hamming measure (harmonic): " << theCombinedHammingHarmonicSum / theListItems.size() << endl;
         theOutputFile << "Average under-segmentation: " << theUnderSegmentationSum / theListItems.size() << endl;
         theOutputFile << "Average over-segmentation: " << theOverSegmentationSum / theListItems.size() << endl;
     }
