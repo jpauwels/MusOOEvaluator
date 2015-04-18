@@ -26,7 +26,7 @@ SimilarityScoreNote::SimilarityScoreNote(const std::string& inScoreSelect)
 	}
 	else
 	{
-		throw std::invalid_argument("Unknown score selector: " + inScoreSelect);
+		throw std::invalid_argument("Unknown score selector '" + inScoreSelect + "'");
 	}
 	this->m_Labels.resize(this->m_NumOfRefLabels);
 	for (size_t i = 0; i+1 < this->m_NumOfRefLabels; ++i)

@@ -41,7 +41,7 @@ SimilarityScoreKey::SimilarityScoreKey(const std::string& inScoreSelect)
 	}
 	else
 	{
-		throw runtime_error("Unknown score selector: " + inScoreSelect);
+		throw runtime_error("Unknown score selector '" + inScoreSelect + "'");
 	}
 	this->m_NumOfRefLabels = 25;
 	this->m_NumOfTestLabels = 25;

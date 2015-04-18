@@ -178,7 +178,7 @@ SimilarityScoreChord::SimilarityScoreChord(const std::string& inPreset)
 	}
     else
 	{
-		throw runtime_error("Unknown score preset: " + inPreset);
+		throw runtime_error("Unknown score preset '" + inPreset + "'");
 	}
 }
 
@@ -305,7 +305,7 @@ void SimilarityScoreChord::initialize(const std::string& inMapping, const std::s
         }
         else
         {
-            throw runtime_error("Unknown mapping: " + m_Mapping);
+            throw runtime_error("Unknown mapping '" + m_Mapping + "'");
         }
     }
 
@@ -396,7 +396,7 @@ const double SimilarityScoreChord::score(const Chord& inRefChord, const Chord& i
              this->m_MappedTestLabel.type() == ChordType::power()) &&
             m_Mapping != "root" && m_Mapping != "bass" && m_Mapping != "none")
         {
-            throw invalid_argument("The chord " + ChordQM(inTestChord).str() + " in the test sequence cannot be mapped using the current evaluating rules");
+            throw invalid_argument("The chord '" + ChordQM(inTestChord).str() + "' in the test sequence cannot be mapped using the current evaluating rules");
         }
         
         if (m_Scoring == "exact")
@@ -481,7 +481,7 @@ const double SimilarityScoreChord::score(const Chord& inRefChord, const Chord& i
         }
         else
         {
-            throw runtime_error("Unknown scoring function: " + m_Scoring);
+            throw runtime_error("Unknown scoring function '" + m_Scoring + "'");
         }
     }
     else
@@ -557,7 +557,7 @@ const ChordType SimilarityScoreChord::calcMappedChordType(const ChordType& inCho
     }
     else
     {
-        throw runtime_error("Unknown mapping: " + m_Mapping);
+        throw runtime_error("Unknown mapping '" + m_Mapping + "'");
     }
 }
 

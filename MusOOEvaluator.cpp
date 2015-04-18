@@ -60,6 +60,7 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
 	options_description theGeneralOptions("General options");
 	theGeneralOptions.add_options()
 		("help,h", "produce this help message")
+		("output", value<path>(&outOutputFilePath), "path to the output file")
 		("chords", value<string>(), "select chords mode")
 		("keys", value<string>(), "select keys mode")
 		("globalkey", value<string>(), "select global key mode")
@@ -67,7 +68,6 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
         ("segmentation", value<string>(), "select segmentation mode")
         ("refformat", value<string>(&outRefFormat)->default_value("auto"), "format of the reference file(s)")
         ("testformat", value<string>(&outTestFormat)->default_value("auto"), "format of the file(s) under test")
-        ("output", value<path>(&outOutputFilePath), "path to the output file")
 		("csv", "Print results for individual files to file in comma separated format")
         ("confusion", value<path>(), "path to resulting global confusion matrix")
         ("verbose", "Write comparison file for each individual file")
@@ -127,13 +127,13 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
         // One list mode
         if (!is_regular_file(outListPath))
         {
-            throw invalid_argument(outListPath.string() + " is not an existing file");
+            throw invalid_argument("'" + outListPath.string() + "' is not an existing file");
         }
         if (outVarMap.count("refdir") > 0)
         {
              if(!is_directory(outRefPath))
             {
-                throw invalid_argument(outRefPath.string() + " is not an existing directory");
+                throw invalid_argument("'" + outRefPath.string() + "' is not an existing directory");
             }
         }
         else
@@ -144,7 +144,7 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
         {
             if (!is_directory(outTestPath))
             {
-                throw invalid_argument(outTestPath.string() + " is not an existing directory");
+                throw invalid_argument("'" + outTestPath.string() + "' is not an existing directory");
             }
         }
         else
@@ -153,7 +153,7 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
         }
         if (outVarMap.count("timingdir") > 0 && !is_directory(outVarMap["timingdir"].as<path>()))
         {
-            throw invalid_argument(outVarMap["timingdir"].as<path>().string() + " is not an existing directory");
+            throw invalid_argument("'" + outVarMap["timingdir"].as<path>().string() + "' is not an existing directory");
         }
     }
     else
@@ -163,7 +163,7 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
         {
             if (!is_regular_file(outRefPath))
             {
-                throw invalid_argument(outRefPath.string() + " is not an existing file");
+                throw invalid_argument("'" + outRefPath.string() + "' is not an existing file");
             }
         }
         else
@@ -174,7 +174,7 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
         {
             if (!is_regular_file(outTestPath))
             {
-                throw invalid_argument(outTestPath.string() + " is not an existing file");
+                throw invalid_argument("'" + outTestPath.string() + "' is not an existing file");
             }
         }
         else
@@ -183,7 +183,7 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
         }
         if (outVarMap.count("timingfile") > 0 && !is_regular_file(outVarMap["timingfile"].as<path>()))
         {
-            throw invalid_argument(outVarMap["timingfile"].as<path>().string() + " is not an existing file");
+            throw invalid_argument("'" + outVarMap["timingfile"].as<path>().string() + "' is not an existing file");
         }
     }
 }
@@ -201,7 +201,7 @@ const std::vector<std::string> readList(const path& inListPath)
 
         if(!theListIn.is_open())
         {
-            throw runtime_error("Could not open list " + inListPath.string());
+            throw runtime_error("Could not open list '" + inListPath.string() + "'");
         }
         std::stringstream theFileStream;
         normaliseLineEndings(theListIn, theFileStream);
@@ -276,7 +276,7 @@ void constructPaths(std::string& ioBaseName, const path& theRefDirName, const st
         boost::filesystem::ifstream theTimingFile(theTimingPath);
         if (!theTimingFile.is_open())
         {
-            throw runtime_error("Could not open file " + theTimingPath.string() + " for reading.");
+            throw runtime_error("Could not open file '" + theTimingPath.string() + "' for reading.");
         }
         theTimingFile >> outBegin >> outEnd;
     }
@@ -335,7 +335,7 @@ int main(int inNumOfArguments,char* inArguments[])
 	ofstream theOutputFile(theOutputPath);
 	if (!theOutputFile.is_open())
 	{
-		throw runtime_error("Could not open output file " + theOutputPath.string());
+		throw runtime_error("Could not open output file '" + theOutputPath.string() + "'");
 	}
     if (!theListPath.empty())
     {
@@ -822,8 +822,8 @@ int main(int inNumOfArguments,char* inArguments[])
 		ofstream theConfusionMatrixFile(theVarMap["confusion"].as<path>());
 		if (!theConfusionMatrixFile.is_open())
 		{
-			throw runtime_error("Could not open confusion matrix file " + 
-				theVarMap["confusion"].as<path>().string());
+			throw runtime_error("Could not open confusion matrix file '" +
+				theVarMap["confusion"].as<path>().string() + "'");
 		}
 		printConfusionMatrix(theConfusionMatrixFile, theGlobalConfusionMatrix, theLabels);
 	}

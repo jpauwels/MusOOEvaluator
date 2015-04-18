@@ -56,7 +56,7 @@ void SegmentationEvaluation::evaluate(const LabelSequence& inRefSequence, const 
     }
     else
     {
-        throw std::runtime_error("Unknown segmentation variant: " + m_Variant);
+        throw std::runtime_error("Unknown segmentation variant '" + m_Variant + "'");
     }
     
     m_Recalls.push_back(recalls);
