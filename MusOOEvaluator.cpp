@@ -203,15 +203,12 @@ const std::vector<std::string> readList(const path& inListPath)
         {
             throw runtime_error("Could not open list " + inListPath.string());
         }
+        std::stringstream theFileStream;
+        normaliseLineEndings(theListIn, theFileStream);
         //run over all files in the list
         string theListItem;
-        while(getline(theListIn, theListItem))
+        while(getline(theFileStream, theListItem))
         {
-            // handle windows files under unix
-            if (theListItem[theListItem.size()-1] == '\r')
-            {
-                theListItem.erase(theListItem.size()-1);
-            }
             theListItems.push_back(theListItem);
         }
         return theListItems;
