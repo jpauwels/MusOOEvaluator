@@ -59,10 +59,15 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
                       string& outTestFormat, double& outBegin, double& outEnd, double& outMinRefDuration, double& outMaxRefDuration, double& outTimeDelay,
                       variables_map& outVarMap)
 {
+	string theOutputFilePath;
+	string theListPath;
+	string theRefPath;
+	string theTestPath;
+
 	options_description theGeneralOptions("General options");
 	theGeneralOptions.add_options()
 		("help,h", "produce this help message")
-		("output", value<path>(&outOutputFilePath), "path to the output file")
+		("output", value<string>(&theOutputFilePath), "path to the output file")
 		("chords", value<string>(), "select chords mode")
 		("keys", value<string>(), "select keys mode")
 		("globalkey", value<string>(), "select global key mode")
@@ -71,7 +76,7 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
         ("refformat", value<string>(&outRefFormat)->default_value("auto"), "format of the reference file(s)")
         ("testformat", value<string>(&outTestFormat)->default_value("auto"), "format of the file(s) under test")
 		("csv", "Print results for individual files to file in comma separated format")
-        ("confusion", value<path>(), "path to resulting global confusion matrix")
+        ("confusion", value<string>(), "path to resulting global confusion matrix")
         ("verbose", "Write comparison file for each individual file")
         ("begin", value<double>(&outBegin)->default_value(0.), "the start time in seconds")
         ("end", value<double>(&outEnd)->default_value(0., "file end"), "the end time in seconds")
@@ -82,19 +87,19 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
 
 	options_description theRelativeListOptions("Relative list options");
 	theRelativeListOptions.add_options()
-		("list", value<path>(&outListPath), "list with base file names")
-        ("refdir", value<path>(&outRefPath), "directory with reference annotations")
+		("list", value<string>(&theListPath), "list with base file names")
+        ("refdir", value<string>(&theRefPath), "directory with reference annotations")
         ("refext", value<string>(&outRefExt), "extension of the reference annotations")
-		("testdir", value<path>(&outTestPath), "directory with files to evaluate")
+		("testdir", value<string>(&theTestPath), "directory with files to evaluate")
 		("testext", value<string>(&outTestExt), "extension of the files to evaluate")
-		("timingdir", value<path>(), "directory with files with start and end times")
+		("timingdir", value<string>(), "directory with files with start and end times")
 		("timingext", value<string>()->default_value("-timing.txt"), "extension of the files with start and end times")
 		;
     
 	options_description theSingleFileOptions("Single file options");
 	theSingleFileOptions.add_options()
-        ("reffile", value<path>(&outRefPath), "file with reference annotation")
-        ("testfile", value<path>(&outTestPath), "file to evaluate")
+        ("reffile", value<string>(&theRefPath), "file with reference annotation")
+        ("testfile", value<string>(&theTestPath), "file to evaluate")
         ("timingfile", value<path>(), "file with start and end times")
         ;
 
@@ -119,6 +124,11 @@ void parseCommandLine(int inNumOfArguments, char* inArguments[], path& outOutput
 	{
 		throw invalid_argument("Please select a single 'chords', 'keys', 'globalkey', 'notes' or 'segmentation' mode");
 	}
+
+	outOutputFilePath = path(theOutputFilePath);
+	outListPath = path(theListPath);
+	outRefPath = path(theRefPath);
+	outTestPath = path(theTestPath);
 	if (!exists(absolute(outOutputFilePath.parent_path())))
 	{
 		create_directories(outOutputFilePath.parent_path());
