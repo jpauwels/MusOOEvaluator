@@ -15,8 +15,6 @@
 SegmentationEvaluation::SegmentationEvaluation(const std::string& inVariant, const std::vector<double>& inTolerances)
 : m_Variant(inVariant)
 , m_Tolerances(inTolerances)
-//, m_TotalScore(0.)
-//, m_TotalDuration(0.)
 {
 }
 
@@ -100,6 +98,11 @@ void SegmentationEvaluation::evaluate(const LabelSequence& inRefSequence, const 
     m_SegmentFragmentations.push_back(segmentFragmentation(refOnsets, refOffsets, testOnsets, testOffsets));
 }
 
+const double SegmentationEvaluation::getDuration() const
+{
+    return m_Durations.back();
+}
+
 const Eigen::ArrayXd::Index SegmentationEvaluation::getNumRefSegments() const
 {
     return m_NumRefSegments.back();
@@ -128,6 +131,11 @@ const double SegmentationEvaluation::getCombinedHammingMeasureMaximum() const
 const double SegmentationEvaluation::getCombinedHammingMeasureHarmonic() const
 {
     return 2./(1./getUnderSegmentation() + 1./getOverSegmentation());
+}
+
+const double SegmentationEvaluation::calcTotalDuration() const
+{
+    return std::accumulate(m_Durations.begin(), m_Durations.end(), 0.);
 }
 
 const double SegmentationEvaluation::calcAverageNumRefSegments() const

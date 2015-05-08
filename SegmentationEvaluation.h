@@ -24,6 +24,9 @@ public:
     
     void reset();
 	void evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence/*, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inDelay = 0.*/);
+    
+    // Get results of last file
+    const double getDuration() const;
     const Eigen::ArrayXd::Index getNumRefSegments() const;
     const Eigen::ArrayXd::Index getNumTestSegments() const;
     const double getUnderSegmentation() const;
@@ -31,11 +34,11 @@ public:
     const double getCombinedHammingMeasureMaximum() const;
     const double getCombinedHammingMeasureHarmonic() const;
     
+    // Reductions over data set
+    const double calcTotalDuration() const;
     const double calcAverageNumRefSegments() const;
     const double calcAverageNumTestSegments() const;
 
-//	const double getScore() const;
-//	const double getTotalDuration() const;
     
 protected:
     
@@ -45,9 +48,8 @@ protected:
 
     const std::string m_Variant;
     const std::vector<double> m_Tolerances;
-//	double m_TotalScore;
-//    double m_TotalDuration;
     
+    std::vector<double> m_Durations;
     std::vector<Eigen::ArrayXd::Index> m_NumRefSegments;
     std::vector<Eigen::ArrayXd::Index> m_NumTestSegments;
     std::vector<Eigen::ArrayXd> m_Recalls;
