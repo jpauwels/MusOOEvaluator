@@ -766,6 +766,8 @@ int main(int inNumOfArguments,char* inArguments[])
 			theCSVFile.open(path(theOutputPath).replace_extension("csv"));
 			theCSVFile << theVarMap["segmentation"].as<string>() << endl;
 			theCSVFile << "File"
+            << theCSVSeparator << "NumRefSegments"
+            << theCSVSeparator << "NumTestSegments"
             << theCSVSeparator << "CombinedHammingMeasureMaximum"
             << theCSVSeparator << "CombinedHammingMeasureHarmonic"
             << theCSVSeparator << "UnderSegmentation"
@@ -796,6 +798,8 @@ int main(int inNumOfArguments,char* inArguments[])
 			if (theVarMap.count("csv") > 0)
 			{
                 theCSVFile << theCSVQuotes << *i << theCSVQuotes
+                << theCSVSeparator << theSegmentationEvaluation.getNumRefSegments()
+                << theCSVSeparator << theSegmentationEvaluation.getNumTestSegments()
                 << theCSVSeparator << theSegmentationEvaluation.getCombinedHammingMeasureMaximum()
                 << theCSVSeparator << theSegmentationEvaluation.getCombinedHammingMeasureHarmonic()
                 << theCSVSeparator << theSegmentationEvaluation.getUnderSegmentation()
@@ -808,6 +812,8 @@ int main(int inNumOfArguments,char* inArguments[])
         string theSegmentationMode = theVarMap["segmentation"].as<string>();
 		theOutputFile << string(theSegmentationMode.size()+17,'*') << "\n* Segmentation " << theSegmentationMode << " *\n"
         << string(theSegmentationMode.size()+17,'*') << endl;
+        theOutputFile << "Average number of reference segments: " << theSegmentationEvaluation.calcAverageNumRefSegments() << endl;
+        theOutputFile << "Average number of test segments: " << theSegmentationEvaluation.calcAverageNumTestSegments() << endl;
         theOutputFile << "Average combined Hamming measure (maximum): " << theCombinedHammingMaximumSum / theListItems.size() << endl;
         theOutputFile << "Average combined Hamming measure (harmonic): " << theCombinedHammingHarmonicSum / theListItems.size() << endl;
         theOutputFile << "Average under-segmentation: " << theUnderSegmentationSum / theListItems.size() << endl;

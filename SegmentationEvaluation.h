@@ -24,10 +24,15 @@ public:
     
     void reset();
 	void evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence/*, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inDelay = 0.*/);
+    const Eigen::ArrayXd::Index getNumRefSegments() const;
+    const Eigen::ArrayXd::Index getNumTestSegments() const;
     const double getUnderSegmentation() const;
     const double getOverSegmentation() const;
     const double getCombinedHammingMeasureMaximum() const;
     const double getCombinedHammingMeasureHarmonic() const;
+    
+    const double calcAverageNumRefSegments() const;
+    const double calcAverageNumTestSegments() const;
 
 //	const double getScore() const;
 //	const double getTotalDuration() const;
@@ -43,6 +48,8 @@ protected:
 //	double m_TotalScore;
 //    double m_TotalDuration;
     
+    std::vector<Eigen::ArrayXd::Index> m_NumRefSegments;
+    std::vector<Eigen::ArrayXd::Index> m_NumTestSegments;
     std::vector<Eigen::ArrayXd> m_Recalls;
     std::vector<Eigen::ArrayXd> m_Precisions;
     std::vector<Eigen::ArrayXd> m_Fmeasures;
