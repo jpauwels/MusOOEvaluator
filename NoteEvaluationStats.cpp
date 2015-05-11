@@ -23,7 +23,7 @@ NoteEvaluationStats::~NoteEvaluationStats()
 
 const double NoteEvaluationStats::getCorrectNotes() const
 {
-	return m_NotesMatrix.matrix().diagonal().sum();
+	return m_NotesMatrix.matrix().trace();
 }
 
 const double NoteEvaluationStats::getCorrectNoNotes() const
@@ -33,12 +33,12 @@ const double NoteEvaluationStats::getCorrectNoNotes() const
 
 const double NoteEvaluationStats::getNoteDeletions() const
 {
-	return m_ConfusionMatrix.bottomRows<1>().head(m_NumOfNotes).sum();
+	return m_ConfusionMatrix.rightCols<1>().head(m_NumOfNotes).sum();
 }
 
 const double NoteEvaluationStats::getNoteInsertions() const
 {
-	return m_ConfusionMatrix.rightCols<1>().head(m_NumOfNotes).sum();
+	return m_ConfusionMatrix.bottomRows<1>().head(m_NumOfNotes).sum();
 }
 
 const double NoteEvaluationStats::getOctaveErrors() const

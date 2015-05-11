@@ -27,7 +27,7 @@ KeyEvaluationStats::~KeyEvaluationStats()
 
 const double KeyEvaluationStats::getCorrectKeys() const
 {
-	return  m_ConfusionMatrix.matrix().diagonal().head(m_NumOfKeys).sum();
+	return  m_KeysMatrix.matrix().trace();
 }
 
 const double KeyEvaluationStats::getCorrectNoKeys() const
@@ -37,12 +37,12 @@ const double KeyEvaluationStats::getCorrectNoKeys() const
 
 const double KeyEvaluationStats::getKeyDeletions() const
 {
-	return m_ConfusionMatrix.bottomRows<1>().head(m_NumOfKeys).sum();
+	return m_ConfusionMatrix.rightCols<1>().head(m_NumOfKeys).sum();
 }
 
 const double KeyEvaluationStats::getKeyInsertions() const
 {
-	return m_ConfusionMatrix.rightCols<1>().head(m_NumOfKeys).sum();
+	return m_ConfusionMatrix.bottomRows<1>().head(m_NumOfKeys).sum();
 }
 
 const double KeyEvaluationStats::getAdjacentKeys() const
@@ -60,22 +60,22 @@ const double KeyEvaluationStats::getRelativeKeys() const
 		throw std::invalid_argument("Relative keys are only defined for major-minor mode pairs");
 	}
 	double theRelKeyDuration = 0.;
-	Eigen::ArrayXd theMajorSuperDiag = m_KeysMatrix.matrix().diagonal(m_NumOfKeys-3*m_NumOfModes-1);
-	Eigen::ArrayXd theMajorSubDiag = m_KeysMatrix.matrix().diagonal(-3*m_NumOfModes-1);
-	Eigen::ArrayXd theMinorSuperDiag = m_KeysMatrix.matrix().diagonal(3*m_NumOfModes+1);
-	Eigen::ArrayXd theMinorSubDiag = m_KeysMatrix.matrix().diagonal(-m_NumOfKeys+3*m_NumOfModes+1);
-	for (Eigen::ArrayXXd::Index i = 0; i < theMajorSuperDiag.size(); ++i)
+	Eigen::ArrayXd theRefMajorSuperDiag = m_KeysMatrix.matrix().diagonal(3*m_NumOfModes+1);
+    Eigen::ArrayXd theRefMajorSubDiag = m_KeysMatrix.matrix().diagonal(-m_NumOfKeys+3*m_NumOfModes+1);
+    Eigen::ArrayXd theRefMinorSuperDiag = m_KeysMatrix.matrix().diagonal(m_NumOfKeys-3*m_NumOfModes-1);
+    Eigen::ArrayXd theRefMinorSubDiag = m_KeysMatrix.matrix().diagonal(-3*m_NumOfModes-1);
+	for (Eigen::ArrayXXd::Index i = 0; i < theRefMinorSuperDiag.size(); ++i)
 	{
-		if (i % 2 == 1)
+		if (i % 2 == 1) //sum over odd indices
 		{
-			theRelKeyDuration += theMajorSuperDiag[i] + theMinorSubDiag[i];
+			theRelKeyDuration += theRefMajorSubDiag[i] + theRefMinorSuperDiag[i];
 		}
 	}
-	for (Eigen::ArrayXXd::Index i = 0; i < theMajorSubDiag.size(); ++i)
+	for (Eigen::ArrayXXd::Index i = 0; i < theRefMinorSubDiag.size(); ++i)
 	{
-		if (i % 2 == 0)
+		if (i % 2 == 0) //sum over even indices
 		{
-			theRelKeyDuration += theMajorSubDiag[i] + theMinorSuperDiag[i];
+			theRelKeyDuration += theRefMajorSuperDiag[i] + theRefMinorSubDiag[i];
 		}
 	}
 	return theRelKeyDuration;
@@ -98,12 +98,12 @@ const double KeyEvaluationStats::getParallelKeys() const
 
 const size_t KeyEvaluationStats::getNumOfUniquesInRef() const
 {
-	return (m_KeysMatrix > 0.).colwise().any().count();
+	return (m_KeysMatrix > 0.).rowwise().any().count();
 }
 
 const size_t KeyEvaluationStats::getNumOfUniquesInTest() const
 {
-	return (m_KeysMatrix > 0.).rowwise().any().count();
+	return (m_KeysMatrix > 0.).colwise().any().count();
 }
 
 const Eigen::ArrayXXd KeyEvaluationStats::getCorrectKeysPerMode() const
@@ -113,8 +113,10 @@ const Eigen::ArrayXXd KeyEvaluationStats::getCorrectKeysPerMode() const
     {
         for (size_t iChroma = 0; iChroma < m_NumOfChromas; ++iChroma)
         {
+            // Correct keys per mode
             outCorrectKeysPerMode(iMode,0) += m_ConfusionMatrix(iChroma*m_NumOfModes+iMode, iChroma*m_NumOfModes+iMode);
-            outCorrectKeysPerMode(iMode,1) += m_ConfusionMatrix.col(iChroma*m_NumOfModes+iMode).sum();
+            // Total duration per mode
+            outCorrectKeysPerMode(iMode,1) += m_ConfusionMatrix.row(iChroma*m_NumOfModes+iMode).sum();
         }
     }
     return outCorrectKeysPerMode;

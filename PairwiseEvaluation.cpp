@@ -27,7 +27,7 @@ PairwiseEvaluation<Key>::PairwiseEvaluation(const std::string& inScoreSelect)
 	m_Score = new SimilarityScoreKey(inScoreSelect);
 	m_NumOfRefLabels = m_Score->getNumOfRefLabels();
     m_NumOfTestLabels = m_Score->getNumOfTestLabels();
-	m_ConfusionMatrix = Eigen::ArrayXXd(m_NumOfTestLabels, m_NumOfRefLabels);
+	m_ConfusionMatrix = Eigen::ArrayXXd(m_NumOfRefLabels, m_NumOfTestLabels);
 }
 
 template <>
@@ -37,7 +37,7 @@ PairwiseEvaluation<Chord>::PairwiseEvaluation(const std::string& inScoreSelect)
 	m_Score = new SimilarityScoreChord(inScoreSelect);
 	m_NumOfRefLabels = m_Score->getNumOfRefLabels();
     m_NumOfTestLabels = m_Score->getNumOfTestLabels();
-	m_ConfusionMatrix = Eigen::ArrayXXd::Zero(m_NumOfTestLabels, m_NumOfRefLabels);
+	m_ConfusionMatrix = Eigen::ArrayXXd::Zero(m_NumOfRefLabels, m_NumOfTestLabels);
 }
 
 template <>
@@ -47,7 +47,7 @@ PairwiseEvaluation<Note>::PairwiseEvaluation(const std::string& inScoreSelect)
 	m_Score = new SimilarityScoreNote(inScoreSelect);
 	m_NumOfRefLabels = m_Score->getNumOfRefLabels();
     m_NumOfTestLabels = m_Score->getNumOfTestLabels();
-	m_ConfusionMatrix = Eigen::ArrayXXd::Zero(m_NumOfTestLabels, m_NumOfRefLabels);
+	m_ConfusionMatrix = Eigen::ArrayXXd::Zero(m_NumOfRefLabels, m_NumOfTestLabels);
 }
 
 template <>
@@ -90,7 +90,7 @@ void printConfusionMatrix(std::ostream& inOutputStream, const Eigen::ArrayXXd& i
 						  const std::vector<std::string>& inLabels, const std::string inSeparator /*= ","*/,
                           const std::string inQuote /*= "\""*/)
 {
-	inOutputStream << inSeparator << inQuote;
+	inOutputStream << "reference\test" << inSeparator << inQuote;
 	copy(inLabels.begin(), inLabels.begin()+inConfusionMatrix.cols()-1, std::ostream_iterator<std::string>(inOutputStream, (inQuote+inSeparator+inQuote).c_str()));
 	inOutputStream << inLabels[inConfusionMatrix.cols()-1] << inQuote << endl;
 	for (int i = 0; i < inConfusionMatrix.rows(); ++i)

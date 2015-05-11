@@ -187,7 +187,7 @@ void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const L
             //        }
             if (theScore >= 0)
             {
-                m_ConfusionMatrix(m_Score->getTestIndex(),m_Score->getRefIndex()) += theSegmentLength;
+                m_ConfusionMatrix(m_Score->getRefIndex(), m_Score->getTestIndex()) += theSegmentLength;
                 m_TotalScore += theScore * theSegmentLength;
             }
             /******************/

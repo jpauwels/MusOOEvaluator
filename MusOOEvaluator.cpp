@@ -360,9 +360,7 @@ int main(int inNumOfArguments,char* inArguments[])
 		{
 			theKeyEvaluation = new PairwiseEvaluation<Key>(theVarMap["globalkey"].as<string>());
 		}
-		theGlobalConfusionMatrix = 
-			Eigen::ArrayXXd::Zero(theKeyEvaluation->getNumOfTestLabels(),
-			theKeyEvaluation->getNumOfRefLabels());
+		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theKeyEvaluation->getNumOfRefLabels(), theKeyEvaluation->getNumOfTestLabels());
         theLabels.resize(theKeyEvaluation->getNumOfTestLabels());
         std::transform(theKeyEvaluation->getLabels().begin(), theKeyEvaluation->getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::KeyQM::str));
 
@@ -430,8 +428,7 @@ int main(int inNumOfArguments,char* inArguments[])
 				double theScore = theSimilarityScoreKey.score(theGlobalRefKey, theGlobalTestKey);
 				theWeightedScore += theScore;
 				++theTotalDuration;
-				++theGlobalConfusionMatrix(theSimilarityScoreKey.getTestIndex(),
-					theSimilarityScoreKey.getRefIndex());
+				++theGlobalConfusionMatrix(theSimilarityScoreKey.getRefIndex(), theSimilarityScoreKey.getTestIndex());
 				if (theVarMap.count("csv") > 0)
 				{
 					theCSVFile << theCSVQuotes << *i << theCSVQuotes << theCSVSeparator 
@@ -489,8 +486,7 @@ int main(int inNumOfArguments,char* inArguments[])
 	else if (theVarMap.count("chords") > 0)
 	{
 		PairwiseEvaluation<Chord> theChordEvaluation(theVarMap["chords"].as<string>());
-		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theChordEvaluation.getNumOfTestLabels(),
-                                                         theChordEvaluation.getNumOfRefLabels());
+		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theChordEvaluation.getNumOfRefLabels(), theChordEvaluation.getNumOfTestLabels());
         theLabels.resize(theChordEvaluation.getNumOfTestLabels());
         std::transform(theChordEvaluation.getLabels().begin(), theChordEvaluation.getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::ChordQM::str));
         const size_t numChordTypes = theChordEvaluation.getNumOfRefLabels()/12;
@@ -668,8 +664,7 @@ int main(int inNumOfArguments,char* inArguments[])
 	else if (theVarMap.count("notes") > 0)
 	{
 		PairwiseEvaluation<Note> theNoteEvaluation(theVarMap["notes"].as<string>());
-		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theNoteEvaluation.getNumOfTestLabels(),
-                                                         theNoteEvaluation.getNumOfRefLabels());
+		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theNoteEvaluation.getNumOfRefLabels(), theNoteEvaluation.getNumOfTestLabels());
         theLabels.resize(theNoteEvaluation.getNumOfTestLabels());
         std::transform(theNoteEvaluation.getLabels().begin(), theNoteEvaluation.getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::NoteMidi::str));
 
