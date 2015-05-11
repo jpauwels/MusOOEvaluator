@@ -23,7 +23,7 @@ public:
 	SegmentationEvaluation(const std::string& inVariant, const std::vector<double>& inTolerances);
     
     void reset();
-	void evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence/*, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inDelay = 0.*/);
+	void addSequencePair(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence/*, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inDelay = 0.*/);
     
     // Get results of last file
     const double getDuration() const;
@@ -31,13 +31,21 @@ public:
     const Eigen::ArrayXd::Index getNumTestSegments() const;
     const double getUnderSegmentation() const;
     const double getOverSegmentation() const;
-    const double getCombinedHammingMeasureMaximum() const;
+    const double getCombinedHammingMeasureWorst() const;
     const double getCombinedHammingMeasureHarmonic() const;
     
     // Reductions over data set
     const double calcTotalDuration() const;
     const double calcAverageNumRefSegments() const;
     const double calcAverageNumTestSegments() const;
+    const double calcAverageUnderSegmentation() const;
+    const double calcWeightedAverageUnderSegmentation() const;
+    const double calcAverageOverSegmentation() const;
+    const double calcWeightedAverageOverSegmentation() const;
+    const double calcAverageCombinedHammingMeasureWorst() const;
+    const double calcWeightedAverageCombinedHammingMeasureWorst() const;
+    const double calcAverageCombinedHammingMeasureHarmonic() const;
+    const double calcWeightedAverageCombinedHammingMeasureHarmonic() const;
 
     
 protected:
@@ -57,6 +65,8 @@ protected:
     std::vector<Eigen::ArrayXd> m_Fmeasures;
     std::vector<double> m_MissedBoundaries;
     std::vector<double> m_SegmentFragmentations;
+    std::vector<double> m_CombinedHammingMeasureWorst;
+    std::vector<double> m_CombinedHammingMeasureHarmonic;
     
 private:
     
