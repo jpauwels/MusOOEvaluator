@@ -10,13 +10,15 @@
 	@date		20100913
 */
 //============================================================================
+
+#include "MusOO/TimedLabel.h"
+#include <Eigen/Core>
 #include <vector>
 #include <set>
 #include <iostream>
 #include <iterator>
 #include <limits>
-#include <Eigen/Core>
-#include "MusOO/TimedLabel.h"
+#include <numeric>
 
 template<typename T>
 class SimilarityScore;
@@ -30,27 +32,37 @@ public:
 
 	/** Default constructor. */
 	PairwiseEvaluation(const std::string& inScoreSelect);
+    
+    /** Destructor. */
+    virtual ~PairwiseEvaluation();
 
-	void evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inMinRefDuration = 0., const double inMaxRefDuration = std::numeric_limits<double>::infinity(), const double inDelay = 0.);
+	void addSequencePair(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inMinRefDuration = 0., const double inMaxRefDuration = std::numeric_limits<double>::infinity(), const double inDelay = 0.);
 
-	const double getOverlapScore() const;
-	const Eigen::ArrayXXd& getConfusionMatrix() const;
-	const double getTotalDuration() const;
 	const std::vector<T>& getLabels() const;
-	const size_t getNumOfRefLabels() const;
-	const size_t getNumOfTestLabels() const;
+	const Eigen::ArrayXXd::Index getNumOfRefLabels() const;
+	const Eigen::ArrayXXd::Index getNumOfTestLabels() const;
 
-	/** Destructor. */
-	virtual ~PairwiseEvaluation();
-
+    // Get results of last file
+    const double getDuration() const;
+    const double getScore() const;
+    const Eigen::ArrayXXd& getConfusionMatrix() const;
+    
+    // Reductions over data set
+    const double calcTotalDuration() const;
+    const Eigen::ArrayXXd calcTotalConfusionMatrix() const;
+    const double calcAverageScore() const;
+    const double calcWeightedAverageScore() const;
+    
 protected:
     void printVerboseOutput(std::ostream& inVerboseOStream, const double theStartTime, const double theEndTime, const T& theRefLabel, const T& theTestLabel, const T& theMappedRefLabel, const T& theMappedTestLabel, const double theScore, const double theSegmentLength) const;
 	
-	SimilarityScore<T>* m_Score;
-	size_t m_NumOfRefLabels;
-    size_t m_NumOfTestLabels;
-	Eigen::ArrayXXd m_ConfusionMatrix;
-	double m_TotalScore;
+	SimilarityScore<T>* m_SimilarityScore;
+    Eigen::ArrayXXd::Index m_NumOfRefLabels;
+    Eigen::ArrayXXd::Index m_NumOfTestLabels;
+    
+    std::vector<double> m_Durations;
+    std::vector<double> m_Scores;
+    std::vector<Eigen::ArrayXXd> m_ConfusionMatrices;
 
 private:
 
@@ -64,18 +76,20 @@ void printConfusionMatrix(std::ostream& inOutputStream, const Eigen::ArrayXXd& i
 template <typename T>
 PairwiseEvaluation<T>::~PairwiseEvaluation()
 {
-	delete m_Score;
+	delete m_SimilarityScore;
 }
 
 template <typename T>
-void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inMinRefDuration /*= 0.*/, const double inMaxRefDuration /*= std::numeric_limits<double>::infinity()*/, const double inDelay /*= 0.*/)
+void PairwiseEvaluation<T>::addSequencePair(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inMinRefDuration /*= 0.*/, const double inMaxRefDuration /*= std::numeric_limits<double>::infinity()*/, const double inDelay /*= 0.*/)
 {
-    m_ConfusionMatrix.setZero();
-	m_TotalScore = 0.;
+    m_ConfusionMatrices.push_back(Eigen::ArrayXXd::Zero(m_NumOfRefLabels, m_NumOfTestLabels));
+    Eigen::ArrayXXd& curConfusionMatrix = m_ConfusionMatrices.back();
+	m_Scores.push_back(0.);
+    double& curScore = m_Scores.back();
 	double theCurTime = inStartTime;
 	double thePrevTime;
 	double theSegmentLength;
-	size_t theRefIndex = 0;
+    size_t theRefIndex = 0;
 	size_t theTestIndex = 0;
     
 	//set end time of test and reference sequence
@@ -179,69 +193,97 @@ void PairwiseEvaluation<T>::evaluate(const LabelSequence& inRefSequence, const L
         
         if (theRefDuration >= inMinRefDuration && theRefDuration <= inMaxRefDuration)
         {
-            double theScore = m_Score->score(theRefLabel, theTestLabel);
+            double theSegmentScore = m_SimilarityScore->score(theRefLabel, theTestLabel);
             // NemaEval implementation errors recreation
             //        if (theCurTime > theTestEndTime || theCurTime <= inTestSequence[theTestIndex].onset()-inDelay || theCurTime <= inRefSequence[theRefIndex].onset())
             //        {
             //            theScore = 0.;
             //        }
-            if (theScore >= 0)
+            if (theSegmentScore >= 0)
             {
-                m_ConfusionMatrix(m_Score->getRefIndex(), m_Score->getTestIndex()) += theSegmentLength;
-                m_TotalScore += theScore * theSegmentLength;
+                curConfusionMatrix(m_SimilarityScore->getRefIndex(), m_SimilarityScore->getTestIndex()) += theSegmentLength;
+                curScore += theSegmentScore * theSegmentLength;
             }
             /******************/
             /* Verbose output */
             /******************/
             if (inVerboseOStream.good())
             {
-                printVerboseOutput(inVerboseOStream, thePrevTime, theCurTime, theRefLabel, theTestLabel, m_Score->getMappedRefLabel(), m_Score->getMappedTestLabel(), theScore, theSegmentLength);
+                printVerboseOutput(inVerboseOStream, thePrevTime, theCurTime, theRefLabel, theTestLabel, m_SimilarityScore->getMappedRefLabel(), m_SimilarityScore->getMappedTestLabel(), theSegmentScore, theSegmentLength);
             }
         }
 	}
-}
-
-template <typename T>
-const double PairwiseEvaluation<T>::getOverlapScore() const
-{
-	if (m_ConfusionMatrix.sum() > 0.)
-	{
-		return m_TotalScore / m_ConfusionMatrix.sum();
-	}
-	else
-	{
-		return 0.;
-	}
-}
-
-template <typename T>
-const Eigen::ArrayXXd& PairwiseEvaluation<T>::getConfusionMatrix() const
-{
-	return m_ConfusionMatrix;
-}
-
-template <typename T>
-const double PairwiseEvaluation<T>::getTotalDuration() const
-{
-	return m_ConfusionMatrix.sum();
+    m_Durations.push_back(curConfusionMatrix.sum());
+    const double& curDuration = m_Durations.back();
+    if (curDuration > 0.)
+    {
+        curScore /= curDuration;
+    }
 }
 
 template <typename T>
 const std::vector<T>& PairwiseEvaluation<T>::getLabels() const
 {
-	return m_Score->getLabels();
+	return m_SimilarityScore->getLabels();
 }
 
 template <typename T>
-const size_t PairwiseEvaluation<T>::getNumOfRefLabels() const
+const Eigen::ArrayXXd::Index PairwiseEvaluation<T>::getNumOfRefLabels() const
 {
 	return m_NumOfRefLabels;
 }
 
 template <typename T>
-const size_t PairwiseEvaluation<T>::getNumOfTestLabels() const
+const Eigen::ArrayXXd::Index PairwiseEvaluation<T>::getNumOfTestLabels() const
 {
 	return m_NumOfTestLabels;
+}
+
+template <typename T>
+const double PairwiseEvaluation<T>::getDuration() const
+{
+    return m_Durations.back();
+}
+
+template <typename T>
+const double PairwiseEvaluation<T>::getScore() const
+{
+    return m_Scores.back();
+}
+
+template <typename T>
+const Eigen::ArrayXXd& PairwiseEvaluation<T>::getConfusionMatrix() const
+{
+    return m_ConfusionMatrices.back();
+}
+
+template <typename T>
+const double PairwiseEvaluation<T>::calcTotalDuration() const
+{
+    return std::accumulate(m_Durations.begin(), m_Durations.end(), 0.);
+}
+
+template <typename T>
+const Eigen::ArrayXXd PairwiseEvaluation<T>::calcTotalConfusionMatrix() const
+{
+    Eigen::ArrayXXd retTotalConfusionMatrix(Eigen::ArrayXXd::Zero(m_NumOfRefLabels, m_NumOfTestLabels));
+    for (std::vector<Eigen::ArrayXXd>::const_iterator iConfMat = m_ConfusionMatrices.begin(); iConfMat !=m_ConfusionMatrices.end(); ++iConfMat)
+    {
+        retTotalConfusionMatrix += *iConfMat;
+    }
+    return retTotalConfusionMatrix;
+}
+
+template <typename T>
+const double PairwiseEvaluation<T>::calcAverageScore() const
+{
+    return std::accumulate(m_Scores.begin(), m_Scores.end(), 0.) / static_cast<double>(m_Scores.size());
+}
+
+template <typename T>
+const double PairwiseEvaluation<T>::calcWeightedAverageScore() const
+{
+    return std::inner_product(m_Durations.begin(), m_Durations.end(), m_Scores.begin(), 0.) / calcTotalDuration();
 }
 
 #endif	// #ifndef PairwiseEvaluation_h

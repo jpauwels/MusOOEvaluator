@@ -325,8 +325,7 @@ int main(int inNumOfArguments,char* inArguments[])
     
     path theRefPath;
     path theTestPath;
-	double theTotalDuration = 0.;
-	double theWeightedScore = 0.;
+	double theTotalDuration;
 	Eigen::ArrayXXd theGlobalConfusionMatrix;
 	vector<string> theLabels;
     
@@ -360,7 +359,6 @@ int main(int inNumOfArguments,char* inArguments[])
 		{
 			theKeyEvaluation = new PairwiseEvaluation<Key>(theVarMap["globalkey"].as<string>());
 		}
-		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theKeyEvaluation->getNumOfRefLabels(), theKeyEvaluation->getNumOfTestLabels());
         theLabels.resize(theKeyEvaluation->getNumOfTestLabels());
         std::transform(theKeyEvaluation->getLabels().begin(), theKeyEvaluation->getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::KeyQM::str));
 
@@ -386,7 +384,9 @@ int main(int inNumOfArguments,char* inArguments[])
 			}
 			theCSVFile << std::fixed;
 		}
-
+        
+        theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theKeyEvaluation->getNumOfRefLabels(), theKeyEvaluation->getNumOfTestLabels());
+        double theGlobalKeyScore = 0.;
 		for (vector<string>::iterator i = theListItems.begin(); i != theListItems.end(); ++i)
 		{
             constructPaths(*i, theRefDirPath, theRefExt, theTestDirPath, theTestExt, theVarMap, theRefPath, theTestPath, theBegin, theEnd);
@@ -403,19 +403,14 @@ int main(int inNumOfArguments,char* inArguments[])
                     path theVerbosePath = theOutputPath.parent_path() / path(*i + ".csv");
                     theVerboseStream.open(theVerbosePath);
                 }
-				theKeyEvaluation->evaluate(theRefKeys, theTestKeys, theBegin, theEnd, theVerboseStream, theMinRefDuration, theMaxRefDuration, theDelay);
-				double theDuration = theKeyEvaluation->getTotalDuration();
-				theTotalDuration += theDuration;
-				theWeightedScore += theKeyEvaluation->getOverlapScore() * theKeyEvaluation->getTotalDuration();
-				Eigen::ArrayXXd theConfusionMatrix = theKeyEvaluation->getConfusionMatrix();
-				theGlobalConfusionMatrix += theConfusionMatrix;
+				theKeyEvaluation->addSequencePair(theRefKeys, theTestKeys, theBegin, theEnd, theVerboseStream, theMinRefDuration, theMaxRefDuration, theDelay);
 
 				if (theVarMap.count("csv") > 0)
 				{
-					KeyEvaluationStats theStats(theConfusionMatrix);
+					KeyEvaluationStats theStats(theKeyEvaluation->getConfusionMatrix());
 					theCSVFile << theCSVQuotes << *i << theCSVQuotes << theCSVSeparator 
-						<< 100*theKeyEvaluation->getOverlapScore() << theCSVSeparator
-						<< theDuration << theCSVSeparator
+						<< 100*theKeyEvaluation->getScore() << theCSVSeparator
+						<< theKeyEvaluation->getDuration() << theCSVSeparator
 						<< theStats.getNumOfUniquesInRef() << theCSVSeparator
 						<< theStats.getNumOfUniquesInTest() << endl;
 				}
@@ -426,15 +421,14 @@ int main(int inNumOfArguments,char* inArguments[])
 				Key theGlobalRefKey = findLongestKey(theRefKeys);
 				Key theGlobalTestKey = findLongestKey(theTestKeys);
 				double theScore = theSimilarityScoreKey.score(theGlobalRefKey, theGlobalTestKey);
-				theWeightedScore += theScore;
-				++theTotalDuration;
+                theGlobalKeyScore += theScore;
 				++theGlobalConfusionMatrix(theSimilarityScoreKey.getRefIndex(), theSimilarityScoreKey.getTestIndex());
 				if (theVarMap.count("csv") > 0)
 				{
 					theCSVFile << theCSVQuotes << *i << theCSVQuotes << theCSVSeparator 
 						<< theScore << theCSVSeparator
-						<< KeyElis(theGlobalRefKey).str() << theCSVSeparator
-						<< KeyElis(theGlobalTestKey).str() << endl;
+						<< KeyQM(theGlobalRefKey).str() << theCSVSeparator
+						<< KeyQM(theGlobalTestKey).str() << endl;
 				}
 			}
  		}
@@ -444,18 +438,22 @@ int main(int inNumOfArguments,char* inArguments[])
 		if (theVarMap.count("keys") > 0)
 		{
             theUnit = " s";
+            theTotalDuration = theKeyEvaluation->calcTotalDuration();
+            theGlobalConfusionMatrix = theKeyEvaluation->calcTotalConfusionMatrix();
 			string theKeyMode = theVarMap["keys"].as<string>();
 			theOutputFile << string(theKeyMode.size()+9,'*') << "\n* Keys " << theKeyMode << " *\n" << string(theKeyMode.size()+9,'*') << endl;
-			theOutputFile << "Duration of evaluated keys: " << theTotalDuration << " s" << endl;
+            theOutputFile << "Duration of evaluated keys: " << theTotalDuration << " s" << endl;
+            theOutputFile << "Average score: " << 100 * theKeyEvaluation->calcWeightedAverageScore() << "%\n" << endl;
 		}
 		else
-		{
+        {
+            theTotalDuration = theListItems.size();
+            theGlobalKeyScore /= theTotalDuration;
 			string theGlobalKeyMode = theVarMap["globalkey"].as<string>();
 			theOutputFile << string(theGlobalKeyMode.size()+15,'*') << "\n* Global key " << theGlobalKeyMode << " *\n" << string(theGlobalKeyMode.size()+15,'*') << endl;
-			theOutputFile << "Number of evaluated files: " << theTotalDuration << endl;
+            theOutputFile << "Number of evaluated files: " << theTotalDuration << endl;
+            theOutputFile << "Average score: " << 100 * theGlobalKeyScore << "%\n" << endl;
 		}
-        
-		theOutputFile << "Average score: " << 100 * theWeightedScore / theTotalDuration << "%\n" << endl;
         
 		KeyEvaluationStats theGlobalStats(theGlobalConfusionMatrix);
         theOutputFile << "Correct keys: " << printResultLine(theGlobalStats.getCorrectKeys(), theTotalDuration, theUnit) << endl;
@@ -486,7 +484,6 @@ int main(int inNumOfArguments,char* inArguments[])
 	else if (theVarMap.count("chords") > 0)
 	{
 		PairwiseEvaluation<Chord> theChordEvaluation(theVarMap["chords"].as<string>());
-		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theChordEvaluation.getNumOfRefLabels(), theChordEvaluation.getNumOfTestLabels());
         theLabels.resize(theChordEvaluation.getNumOfTestLabels());
         std::transform(theChordEvaluation.getLabels().begin(), theChordEvaluation.getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::ChordQM::str));
         const size_t numChordTypes = theChordEvaluation.getNumOfRefLabels()/12;
@@ -541,21 +538,16 @@ int main(int inNumOfArguments,char* inArguments[])
                 theVerboseStream.open(theVerbosePath);
                 theVerboseStream << "Start" << theCSVSeparator << "End" << theCSVSeparator << "RefLabel" << theCSVSeparator << "TestLabel" << theCSVSeparator << "Score" << theCSVSeparator << "Duration" << theCSVSeparator << "MappedRefLabel" << theCSVSeparator << "MappedTestLabel" << theCSVSeparator << "RefChromas" << theCSVSeparator << "TestChromas" << theCSVSeparator << "NumCommonChromas" << theCSVSeparator << "RefBass" << theCSVSeparator << "TestBass" << endl;
             }
-			theChordEvaluation.evaluate(theRefChords, theTestChords, theBegin, theEnd, theVerboseStream, theMinRefDuration, theMaxRefDuration, theDelay);
-			double theDuration = theChordEvaluation.getTotalDuration();
-			theTotalDuration += theDuration;
-			theWeightedScore += theChordEvaluation.getOverlapScore() * theDuration;
-			Eigen::ArrayXXd theConfusionMatrix = theChordEvaluation.getConfusionMatrix();
-			theGlobalConfusionMatrix += theConfusionMatrix;
-
+			theChordEvaluation.addSequencePair(theRefChords, theTestChords, theBegin, theEnd, theVerboseStream, theMinRefDuration, theMaxRefDuration, theDelay);
 			
 			if (theVarMap.count("csv") > 0)
 			{
                 theCSVFile << theCSVQuotes << *i << theCSVQuotes << theCSVSeparator;
-				ChordEvaluationStats theStats(theConfusionMatrix, theChordEvaluation.getLabels());
+                ChordEvaluationStats theStats(theChordEvaluation.getConfusionMatrix(), theChordEvaluation.getLabels());
+                double theDuration = theChordEvaluation.getDuration();
 				if (theDuration > 0.)
 				{
-					theCSVFile << 100*theChordEvaluation.getOverlapScore() << theCSVSeparator << theDuration;
+					theCSVFile << 100*theChordEvaluation.getScore() << theCSVSeparator << theDuration;
                     theCSVFile
                         << theCSVSeparator << 100*theStats.getCorrectChords()/theDuration
                         << theCSVSeparator << 100*theStats.getChordSubstitutions()/theDuration
@@ -567,11 +559,11 @@ int main(int inNumOfArguments,char* inArguments[])
                     {
                         theCSVFile
                             << theCSVSeparator << 100*theResultsPerType(iChordType,0)/theResultsPerType(iChordType,1)
-                            << theCSVSeparator << 100*theResultsPerType(iChordType,1)/theTotalDuration;
+                            << theCSVSeparator << 100*theResultsPerType(iChordType,1)/theDuration;
                     }
                     for (size_t iNumOfWrongChromas = 0; iNumOfWrongChromas <= maxCardinality; ++iNumOfWrongChromas)
                     {
-                        theCSVFile << theCSVSeparator << 100*theStats.getChordsWithNWrong(iNumOfWrongChromas)/theTotalDuration;
+                        theCSVFile << theCSVSeparator << 100*theStats.getChordsWithNWrong(iNumOfWrongChromas)/theDuration;
                     }
                     theCSVFile
                         << theCSVSeparator << 100*theStats.getCorrectChords()/theDuration
@@ -593,12 +585,14 @@ int main(int inNumOfArguments,char* inArguments[])
 		theCSVFile.close();
         
         // Global output file
+        theTotalDuration = theChordEvaluation.calcTotalDuration();
 		string theChordMode = theVarMap["chords"].as<string>();
 		theOutputFile << string(theChordMode.size()+11,'*') << "\n* Chords " << theChordMode << " *\n"
         << string(theChordMode.size()+11,'*') << endl;
 		theOutputFile << "Duration of evaluated chords: " << theTotalDuration << " s" << endl;
-		theOutputFile << "Average score: " << 100 * theWeightedScore / theTotalDuration << "%" << endl;
+		theOutputFile << "Average score: " << 100 * theChordEvaluation.calcWeightedAverageScore() << "%" << endl;
         
+        theGlobalConfusionMatrix = theChordEvaluation.calcTotalConfusionMatrix();
 		ChordEvaluationStats theGlobalStats(theGlobalConfusionMatrix, theChordEvaluation.getLabels());
         theOutputFile << "\nChord detection results\n" << "-----------------------" << endl;
 		theOutputFile << "Correct chords: " << printResultLine(theGlobalStats.getCorrectChords(), theTotalDuration, " s") << endl;
@@ -664,7 +658,6 @@ int main(int inNumOfArguments,char* inArguments[])
 	else if (theVarMap.count("notes") > 0)
 	{
 		PairwiseEvaluation<Note> theNoteEvaluation(theVarMap["notes"].as<string>());
-		theGlobalConfusionMatrix = Eigen::ArrayXXd::Zero(theNoteEvaluation.getNumOfRefLabels(), theNoteEvaluation.getNumOfTestLabels());
         theLabels.resize(theNoteEvaluation.getNumOfTestLabels());
         std::transform(theNoteEvaluation.getLabels().begin(), theNoteEvaluation.getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::NoteMidi::str));
 
@@ -704,18 +697,14 @@ int main(int inNumOfArguments,char* inArguments[])
                 path theVerbosePath = theOutputPath.parent_path() / path(*i + ".csv");
                 theVerboseStream.open(theVerbosePath);
             }
-			theNoteEvaluation.evaluate(theRefNotes, theTestNotes, theBegin, theEnd, theVerboseStream, theMinRefDuration, theMaxRefDuration, theDelay);
-			double theDuration = theNoteEvaluation.getTotalDuration();
-			theTotalDuration += theDuration;
-			theWeightedScore += theNoteEvaluation.getOverlapScore() * theDuration;
-			Eigen::ArrayXXd theConfusionMatrix = theNoteEvaluation.getConfusionMatrix();
-			theGlobalConfusionMatrix += theConfusionMatrix;
+			theNoteEvaluation.addSequencePair(theRefNotes, theTestNotes, theBegin, theEnd, theVerboseStream, theMinRefDuration, theMaxRefDuration, theDelay);
 
 			if (theVarMap.count("csv") > 0)
-			{
-				NoteEvaluationStats theStats(theConfusionMatrix);
+            {
+                NoteEvaluationStats theStats(theNoteEvaluation.getConfusionMatrix());
+                double theDuration = theNoteEvaluation.getDuration();
 				theCSVFile << theCSVQuotes << *i << theCSVQuotes << theCSVSeparator
-					<< 100*theNoteEvaluation.getOverlapScore() << theCSVSeparator
+					<< 100*theNoteEvaluation.getScore() << theCSVSeparator
 					<< theDuration << theCSVSeparator
 					<< 100*theStats.getCorrectNotes()/theDuration << theCSVSeparator
 					<< 100*theStats.getOctaveErrors()/theDuration << theCSVSeparator
@@ -730,12 +719,14 @@ int main(int inNumOfArguments,char* inArguments[])
 		theCSVFile.close();
         
         // Global output file
+        theTotalDuration = theNoteEvaluation.calcTotalDuration();
 		string theNoteMode = theVarMap["notes"].as<string>();
 		theOutputFile << string(theNoteMode.size()+10,'*') << "\n* Notes " << theNoteMode << " *\n"
         << string(theNoteMode.size()+10,'*') << endl;
 		theOutputFile << "Duration of evaluated notes: " << theTotalDuration << " s" << endl;
-		theOutputFile << "Average score: " << 100 * theWeightedScore / theTotalDuration << "%\n" << endl;
+		theOutputFile << "Average score: " << 100 * theNoteEvaluation.calcWeightedAverageScore() << "%\n" << endl;
         
+        theGlobalConfusionMatrix = theNoteEvaluation.calcTotalConfusionMatrix();
 		NoteEvaluationStats theGlobalStats(theGlobalConfusionMatrix);
 		theOutputFile << "Correct notes: " << printResultLine(theGlobalStats.getCorrectNotes(), theTotalDuration, " s") << endl;
 		theOutputFile << "Octave errors: " << printResultLine(theGlobalStats.getOctaveErrors(), theTotalDuration, " s") << endl;

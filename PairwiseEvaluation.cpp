@@ -22,32 +22,26 @@ using namespace MusOO;
 
 template <>
 PairwiseEvaluation<Key>::PairwiseEvaluation(const std::string& inScoreSelect)
-: m_TotalScore(0.)
 {
-	m_Score = new SimilarityScoreKey(inScoreSelect);
-	m_NumOfRefLabels = m_Score->getNumOfRefLabels();
-    m_NumOfTestLabels = m_Score->getNumOfTestLabels();
-	m_ConfusionMatrix = Eigen::ArrayXXd(m_NumOfRefLabels, m_NumOfTestLabels);
+	m_SimilarityScore = new SimilarityScoreKey(inScoreSelect);
+	m_NumOfRefLabels = m_SimilarityScore->getNumOfRefLabels();
+    m_NumOfTestLabels = m_SimilarityScore->getNumOfTestLabels();
 }
 
 template <>
 PairwiseEvaluation<Chord>::PairwiseEvaluation(const std::string& inScoreSelect)
-: m_TotalScore(0.)
 {
-	m_Score = new SimilarityScoreChord(inScoreSelect);
-	m_NumOfRefLabels = m_Score->getNumOfRefLabels();
-    m_NumOfTestLabels = m_Score->getNumOfTestLabels();
-	m_ConfusionMatrix = Eigen::ArrayXXd::Zero(m_NumOfRefLabels, m_NumOfTestLabels);
+	m_SimilarityScore = new SimilarityScoreChord(inScoreSelect);
+	m_NumOfRefLabels = m_SimilarityScore->getNumOfRefLabels();
+    m_NumOfTestLabels = m_SimilarityScore->getNumOfTestLabels();
 }
 
 template <>
 PairwiseEvaluation<Note>::PairwiseEvaluation(const std::string& inScoreSelect)
-: m_TotalScore(0.)
 {
-	m_Score = new SimilarityScoreNote(inScoreSelect);
-	m_NumOfRefLabels = m_Score->getNumOfRefLabels();
-    m_NumOfTestLabels = m_Score->getNumOfTestLabels();
-	m_ConfusionMatrix = Eigen::ArrayXXd::Zero(m_NumOfRefLabels, m_NumOfTestLabels);
+	m_SimilarityScore = new SimilarityScoreNote(inScoreSelect);
+	m_NumOfRefLabels = m_SimilarityScore->getNumOfRefLabels();
+    m_NumOfTestLabels = m_SimilarityScore->getNumOfTestLabels();
 }
 
 template <>
