@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="MusOOEvaluator"
-	ProjectGUID="{B711CC21-A5C7-EC87-5837-44341CEE525F}"
+	ProjectGUID="{98D7C03E-8522-CAF1-F2E9-5A83837F3DAA}"
 	RootNamespace="MusOOEvaluator"
 	Keyword="Win32Proj"
 	>
@@ -185,6 +185,78 @@
 	<References>
 	</References>
 	<Files>
+		<File
+			RelativePath="..\..\ChordEvaluationStats.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\ChordEvaluationStats.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\KeyEvaluationStats.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\KeyEvaluationStats.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\MusOOEvaluator.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\NoteEvaluationStats.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\NoteEvaluationStats.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\PairwiseEvaluation.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\PairwiseEvaluation.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SegmentationEvaluation.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SegmentationEvaluation.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SimilarityScore.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SimilarityScoreChord.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SimilarityScoreChord.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SimilarityScoreKey.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SimilarityScoreKey.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SimilarityScoreNote.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\SimilarityScoreNote.h"
+			>
+		</File>
 		<Filter
 			Name="libMusOO"
 			Filter=""
@@ -194,7 +266,15 @@
 				Filter=""
 				>
 				<File
+					RelativePath="..\..\libMusOO\MusOO\Chord.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOO\Chord.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOO\ChordProsemus.cpp"
 					>
 				</File>
 				<File
@@ -202,7 +282,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOO\ChordQM.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOO\ChordQM.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOO\ChordQuaero.cpp"
 					>
 				</File>
 				<File
@@ -210,7 +298,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOO\ChordType.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOO\ChordType.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOO\Chroma.cpp"
 					>
 				</File>
 				<File
@@ -218,7 +314,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOO\ChromaSolfege.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOO\ChromaSolfege.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOO\Interval.cpp"
 					>
 				</File>
 				<File
@@ -226,7 +330,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOO\IntervalClassSet.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOO\IntervalClassSet.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOO\Key.cpp"
 					>
 				</File>
 				<File
@@ -234,7 +346,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOO\KeyElis.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOO\KeyElis.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOO\KeyQM.cpp"
 					>
 				</File>
 				<File
@@ -242,7 +362,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOO\KeyQuaero.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOO\KeyQuaero.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOO\Mode.cpp"
 					>
 				</File>
 				<File
@@ -250,11 +378,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOO\Note.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOO\Note.h"
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOO\NoteMidi.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOO\NoteMidi.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOO\RelativeChord.cpp"
 					>
 				</File>
 				<File
@@ -277,79 +417,15 @@
 					RelativePath="..\..\libMusOO\MusOO\TimedNote.h"
 					>
 				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\Chord.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\ChordProsemus.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\ChordQM.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\ChordQuaero.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\ChordType.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\Chroma.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\ChromaSolfege.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\Interval.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\IntervalClassSet.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\Key.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\KeyElis.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\KeyQM.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\KeyQuaero.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\Mode.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\Note.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\NoteMidi.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOO\RelativeChord.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="MusOOFile"
 				Filter=""
 				>
+				<File
+					RelativePath="..\..\libMusOO\MusOOFile\ChordFile.cpp"
+					>
+				</File>
 				<File
 					RelativePath="..\..\libMusOO\MusOOFile\ChordFile.h"
 					>
@@ -359,7 +435,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOOFile\ChordFileProsemus.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOOFile\ChordFileProsemus.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOOFile\ChordFileQM.cpp"
 					>
 				</File>
 				<File
@@ -375,7 +459,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOOFile\KeyFile.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOOFile\KeyFile.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOOFile\KeyFileElis.cpp"
 					>
 				</File>
 				<File
@@ -387,7 +479,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOOFile\KeyFileProsemus.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOOFile\KeyFileProsemus.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOOFile\KeyFileQM.cpp"
 					>
 				</File>
 				<File
@@ -403,47 +503,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\libMusOO\MusOOFile\NoteFile.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOOFile\NoteFileMaps.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOOFile\ChordFile.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOOFile\ChordFileProsemus.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOOFile\ChordFileQM.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOOFile\KeyFile.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOOFile\KeyFileElis.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOOFile\KeyFileProsemus.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\libMusOO\MusOOFile\KeyFileQM.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\libMusOO\MusOOFile\NoteFile.cpp"
 					>
 				</File>
 				<File
+					RelativePath="..\..\libMusOO\MusOOFile\NoteFile.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\libMusOO\MusOOFile\NoteFileMaps.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\libMusOO\MusOOFile\NoteFileMaps.h"
 					>
 				</File>
 			</Filter>
@@ -457,78 +529,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath="..\..\ChordEvaluationStats.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\KeyEvaluationStats.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\NoteEvaluationStats.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\PairwiseEvaluation.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\SegmentationEvaluation.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\SimilarityScore.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\SimilarityScoreChord.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\SimilarityScoreKey.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\SimilarityScoreNote.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\ChordEvaluationStats.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\KeyEvaluationStats.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\MusOOEvaluator.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\NoteEvaluationStats.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\PairwiseEvaluation.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\SegmentationEvaluation.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\SimilarityScoreChord.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\SimilarityScoreKey.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\SimilarityScoreNote.cpp"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

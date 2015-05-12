@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MusOOEvaluator", "MusOOEvaluator.vcxproj", "{6427580A-AD70-86F9-6385-A34F6C09388F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MusOOEvaluator", "MusOOEvaluator.vcxproj", "{EEBF1049-01FC-FE96-E784-7963FCBD6127}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Debug|Win32 = Debug|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6427580A-AD70-86F9-6385-A34F6C09388F}.Release|Win32.ActiveCfg = Release|Win32
-		{6427580A-AD70-86F9-6385-A34F6C09388F}.Release|Win32.Build.0 = Release|Win32
-		{6427580A-AD70-86F9-6385-A34F6C09388F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{6427580A-AD70-86F9-6385-A34F6C09388F}.Debug|Win32.Build.0 = Debug|Win32
+		{EEBF1049-01FC-FE96-E784-7963FCBD6127}.Release|Win32.ActiveCfg = Release|Win32
+		{EEBF1049-01FC-FE96-E784-7963FCBD6127}.Release|Win32.Build.0 = Release|Win32
+		{EEBF1049-01FC-FE96-E784-7963FCBD6127}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EEBF1049-01FC-FE96-E784-7963FCBD6127}.Debug|Win32.Build.0 = Debug|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

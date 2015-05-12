@@ -43,6 +43,12 @@ solution "MusOOEvaluator"
 		 
 		configuration "vs*"
 			defines {"_CRT_SECURE_NO_WARNINGS", "_SCL_SECURE_NO_WARNINGS"}
+			targetname("$(ProjectName)")
+			
+		configuration "vs2008"
 			targetdir("$(SolutionDir)$(ConfigurationName)")
 			objdir("$(ConfigurationName)")
-			targetname("$(ProjectName)")
+
+		configuration "vs2010"
+			targetdir("$(SolutionDir)$(Configuration)\\")
+			objdir("$(Configuration)\\")

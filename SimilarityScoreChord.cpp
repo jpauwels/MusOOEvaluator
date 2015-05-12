@@ -8,17 +8,18 @@
 //============================================================================
 
 // Includes
-#include <vector>
-	using std::vector;
-#include <algorithm>
-#include <stdexcept>
-	using std::runtime_error;
-	using std::invalid_argument;
 #include "SimilarityScoreChord.h"
 #include "MusOO/ChordQM.h"
+#include <vector>
+#include <algorithm>
+#include <stdexcept>
+#include <iterator>
 
 using std::string;
 using std::set;
+using std::vector;
+using std::runtime_error;
+using std::invalid_argument;
 
 using namespace MusOO;
 

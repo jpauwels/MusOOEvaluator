@@ -19,6 +19,7 @@
 #include <iterator>
 #include <limits>
 #include <numeric>
+#include <algorithm>
 
 template<typename T>
 class SimilarityScore;
