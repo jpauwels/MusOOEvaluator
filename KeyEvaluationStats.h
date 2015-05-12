@@ -16,7 +16,7 @@ class KeyEvaluationStats
 public:
 
 	/** Default constructor. */
-	KeyEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix, const size_t inNumOfChromas = 12);
+	KeyEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix, const Eigen::ArrayXXd::Index inNumOfChromas = 12);
 
 	/** Destructor. */
 	virtual ~KeyEvaluationStats();
@@ -30,8 +30,8 @@ public:
 	const double getRelativeKeys() const;
 	const double getParallelKeys() const;
 
-	const size_t getNumOfUniquesInRef() const;
-	const size_t getNumOfUniquesInTest() const;
+	const Eigen::ArrayXXd::Index getNumOfUniquesInRef() const;
+	const Eigen::ArrayXXd::Index getNumOfUniquesInTest() const;
     
     const Eigen::ArrayXXd getCorrectKeysPerMode() const;
 

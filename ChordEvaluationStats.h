@@ -18,7 +18,7 @@ class ChordEvaluationStats
 public:
 
 	/** Default constructor. */
-	ChordEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix, const std::vector<MusOO::Chord> inChords, const size_t inNumOfChromas = 12);
+	ChordEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix, const std::vector<MusOO::Chord> inChords, const Eigen::ArrayXXd::Index inNumOfChromas = 12);
 
 	/** Destructor. */
 	virtual ~ChordEvaluationStats();
@@ -33,15 +33,15 @@ public:
 	const double getOnlyTypeCorrect() const;
 	const double getBothRootAndTypeWrong() const;
 
-	const size_t getNumOfUniquesInRef() const;
-	const size_t getNumOfUniquesInTest() const;
+	const Eigen::ArrayXXd::Index getNumOfUniquesInRef() const;
+	const Eigen::ArrayXXd::Index getNumOfUniquesInTest() const;
 
 	const double getRefChordsDuration() const;
 	const double getRefNoChordsDuration() const;
     
     const Eigen::ArrayXXd getCorrectChordsPerType() const;
-    const double getChordsWithNWrong(const size_t inNumOfWrongChromas) const;
-    const double getChordsWithSDI(const size_t inNumOfSubstitutedChromas, const size_t inNumOfDeletedChromas, const size_t inNumOfInsertedChromas) const;
+    const double getChordsWithNWrong(const Eigen::ArrayXXd::Index inNumOfWrongChromas) const;
+    const double getChordsWithSDI(const Eigen::ArrayXXd::Index inNumOfSubstitutedChromas, const Eigen::ArrayXXd::Index inNumOfDeletedChromas, const Eigen::ArrayXXd::Index inNumOfInsertedChromas) const;
     const double getChordsWithUnknownWrong() const;
 
 protected:
@@ -50,9 +50,9 @@ protected:
 private:
 
 	const Eigen::ArrayXXd m_ConfusionMatrix;
-	const size_t m_NumOfChromas;
-	const size_t m_NumOfChordTypes;
-	const size_t m_NumOfChords;
+	const Eigen::ArrayXXd::Index m_NumOfChromas;
+	const Eigen::ArrayXXd::Index m_NumOfChordTypes;
+	const Eigen::ArrayXXd::Index m_NumOfChords;
 
 	Eigen::ArrayXd m_OnlyRoots;
 	Eigen::ArrayXd m_OnlyTypes;

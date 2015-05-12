@@ -470,7 +470,7 @@ int main(int inNumOfArguments,char* inArguments[])
         
         theOutputFile << "\nResults per mode\n" << "----------------" << endl;
         const Eigen::ArrayXXd theResultsPerMode = theGlobalStats.getCorrectKeysPerMode();
-        for (size_t iMode = 0; iMode < theResultsPerMode.rows(); ++iMode)
+        for (Eigen::ArrayXXd::Index iMode = 0; iMode < theResultsPerMode.rows(); ++iMode)
         {
             theOutputFile << ModeQM(theKeyEvaluation->getLabels()[iMode].mode()) << ": "
                 << printResultLine(theResultsPerMode(iMode,0), theResultsPerMode(iMode,1), theUnit) << " of "
@@ -555,7 +555,7 @@ int main(int inNumOfArguments,char* inArguments[])
                         << theCSVSeparator << 100*theStats.getChordInsertions()/theDuration
                         << theCSVSeparator << 100*theStats.getCorrectNoChords()/theDuration;
                     const Eigen::ArrayXXd theResultsPerType = theStats.getCorrectChordsPerType();
-                    for (size_t iChordType = 0; iChordType < numChordTypes; ++iChordType)
+                    for (Eigen::ArrayXXd::Index iChordType = 0; iChordType < theResultsPerType.rows(); ++iChordType)
                     {
                         theCSVFile
                             << theCSVSeparator << 100*theResultsPerType(iChordType,0)/theResultsPerType(iChordType,1)
@@ -603,7 +603,7 @@ int main(int inNumOfArguments,char* inArguments[])
         
         theOutputFile << "\nResults per chord type\n" << "----------------------" << endl;
         const Eigen::ArrayXXd theResultsPerType = theGlobalStats.getCorrectChordsPerType();
-        for (size_t iChordType = 0; iChordType < numChordTypes; ++iChordType)
+        for (Eigen::ArrayXXd::Index iChordType = 0; iChordType < theResultsPerType.rows(); ++iChordType)
         {
             theOutputFile << ChordTypeQM(theChordEvaluation.getLabels()[iChordType].type()) << ": "
                 << printResultLine(theResultsPerType(iChordType,0), theResultsPerType(iChordType,1), " s") << " of "

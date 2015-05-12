@@ -12,7 +12,7 @@
 #include "KeyEvaluationStats.h"
 
 KeyEvaluationStats::KeyEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix,
-									   const size_t inNumOfChromas /*= 12*/)
+									   const Eigen::ArrayXXd::Index inNumOfChromas /*= 12*/)
 : m_ConfusionMatrix(inConfusionMatrix), m_NumOfChromas(inNumOfChromas), 
   m_NumOfModes((inConfusionMatrix.rows()-1)/inNumOfChromas), 
   m_NumOfKeys(m_NumOfModes * m_NumOfChromas),
@@ -96,12 +96,12 @@ const double KeyEvaluationStats::getParallelKeys() const
 	return theParKeyDuration;
 }
 
-const size_t KeyEvaluationStats::getNumOfUniquesInRef() const
+const Eigen::ArrayXXd::Index KeyEvaluationStats::getNumOfUniquesInRef() const
 {
 	return (m_KeysMatrix > 0.).rowwise().any().count();
 }
 
-const size_t KeyEvaluationStats::getNumOfUniquesInTest() const
+const Eigen::ArrayXXd::Index KeyEvaluationStats::getNumOfUniquesInTest() const
 {
 	return (m_KeysMatrix > 0.).colwise().any().count();
 }
@@ -109,9 +109,9 @@ const size_t KeyEvaluationStats::getNumOfUniquesInTest() const
 const Eigen::ArrayXXd KeyEvaluationStats::getCorrectKeysPerMode() const
 {
     Eigen::ArrayXXd outCorrectKeysPerMode = Eigen::ArrayXXd::Zero(m_NumOfModes, 2);
-    for (size_t iMode = 0; iMode < m_NumOfModes; ++iMode)
+    for (Eigen::ArrayXXd::Index iMode = 0; iMode < m_NumOfModes; ++iMode)
     {
-        for (size_t iChroma = 0; iChroma < m_NumOfChromas; ++iChroma)
+        for (Eigen::ArrayXXd::Index iChroma = 0; iChroma < m_NumOfChromas; ++iChroma)
         {
             // Correct keys per mode
             outCorrectKeysPerMode(iMode,0) += m_ConfusionMatrix(iChroma*m_NumOfModes+iMode, iChroma*m_NumOfModes+iMode);

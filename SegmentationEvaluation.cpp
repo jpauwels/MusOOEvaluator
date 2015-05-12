@@ -167,7 +167,7 @@ const double SegmentationEvaluation::calcAverageNumTestSegments() const
 
 const double SegmentationEvaluation::calcAverageUnderSegmentation() const
 {
-    return std::accumulate(m_MissedBoundaries.begin(), m_MissedBoundaries.end(), m_MissedBoundaries.size(), std::minus<double>()) / m_MissedBoundaries.size();
+    return std::accumulate(m_MissedBoundaries.begin(), m_MissedBoundaries.end(), static_cast<double>(m_MissedBoundaries.size()), std::minus<double>()) / m_MissedBoundaries.size();
 }
 
 const double SegmentationEvaluation::calcWeightedAverageUnderSegmentation() const
@@ -178,7 +178,7 @@ const double SegmentationEvaluation::calcWeightedAverageUnderSegmentation() cons
 
 const double SegmentationEvaluation::calcAverageOverSegmentation() const
 {
-    return std::accumulate(m_SegmentFragmentations.begin(), m_SegmentFragmentations.end(), m_SegmentFragmentations.size(), std::minus<double>()) / m_SegmentFragmentations.size();
+    return std::accumulate(m_SegmentFragmentations.begin(), m_SegmentFragmentations.end(), static_cast<double>(m_SegmentFragmentations.size()), std::minus<double>()) / m_SegmentFragmentations.size();
 }
 
 const double SegmentationEvaluation::calcWeightedAverageOverSegmentation() const
