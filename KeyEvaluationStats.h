@@ -28,7 +28,8 @@ public:
 
 	const double getAdjacentKeys() const;
 	const double getRelativeKeys() const;
-	const double getParallelKeys() const;
+    const double getParallelKeys() const;
+    const double getChromaticKeys() const;
 
 	const Eigen::ArrayXXd::Index getNumOfUniquesInRef() const;
 	const Eigen::ArrayXXd::Index getNumOfUniquesInTest() const;

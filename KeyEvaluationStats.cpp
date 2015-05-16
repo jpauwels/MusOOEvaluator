@@ -96,6 +96,15 @@ const double KeyEvaluationStats::getParallelKeys() const
 	return theParKeyDuration;
 }
 
+
+const double KeyEvaluationStats::getChromaticKeys() const
+{
+    return m_KeysMatrix.matrix().diagonal(5*m_NumOfModes).sum() +
+        m_KeysMatrix.matrix().diagonal(-5*m_NumOfModes).sum() +
+        m_KeysMatrix.matrix().diagonal(m_NumOfKeys-5*m_NumOfModes).sum() +
+        m_KeysMatrix.matrix().diagonal(-m_NumOfKeys+5*m_NumOfModes).sum();
+}
+
 const Eigen::ArrayXXd::Index KeyEvaluationStats::getNumOfUniquesInRef() const
 {
 	return (m_KeysMatrix > 0.).rowwise().any().count();

@@ -372,7 +372,12 @@ int main(int inNumOfArguments,char* inArguments[])
 				theCSVFile << "File" << theCSVSeparator << "Pairwise score (%)"
 					<< theCSVSeparator << "Duration (s)"
 					<< theCSVSeparator << "Unique ref keys"
-					<< theCSVSeparator << "Unique test keys" << endl;
+                    << theCSVSeparator << "Unique test keys"
+                    << theCSVSeparator << "Correct keys"
+                    << theCSVSeparator << "Adjacent keys"
+                    << theCSVSeparator << "Relative keys"
+                    << theCSVSeparator << "Parallel keys"
+                    << theCSVSeparator << "Chromatic keys" << endl;
 			}
 			else
 			{
@@ -413,7 +418,12 @@ int main(int inNumOfArguments,char* inArguments[])
 						<< 100*theKeyEvaluation->getScore() << theCSVSeparator
 						<< theKeyEvaluation->getDuration() << theCSVSeparator
 						<< theStats.getNumOfUniquesInRef() << theCSVSeparator
-						<< theStats.getNumOfUniquesInTest() << endl;
+                        << theStats.getNumOfUniquesInTest() << theCSVSeparator
+                        << theStats.getCorrectKeys() << theCSVSeparator
+                        << theStats.getAdjacentKeys() << theCSVSeparator
+                        << theStats.getRelativeKeys() << theCSVSeparator
+                        << theStats.getParallelKeys() << theCSVSeparator
+                        << theStats.getChromaticKeys() << endl;
 				}
 			}
 			else
@@ -461,6 +471,7 @@ int main(int inNumOfArguments,char* inArguments[])
         theOutputFile << "Adjacent keys: " << printResultLine(theGlobalStats.getAdjacentKeys(), theTotalDuration, theUnit) << endl;
         theOutputFile << "Relative keys: " << printResultLine(theGlobalStats.getRelativeKeys(), theTotalDuration, theUnit) << endl;
         theOutputFile << "Parallel keys: " << printResultLine(theGlobalStats.getParallelKeys(), theTotalDuration, theUnit) << endl;
+        theOutputFile << "Chromatic keys: " << printResultLine(theGlobalStats.getChromaticKeys(), theTotalDuration, theUnit) << endl;
         
 		if (theVarMap.count("keys") > 0)
 		{
