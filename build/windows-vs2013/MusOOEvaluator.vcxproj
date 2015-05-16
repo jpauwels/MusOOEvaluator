@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BE80E3DF-A989-EF8D-8CC4-439DF52CE45F}</ProjectGuid>
+    <RootNamespace>MusOOEvaluator</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\</OutDir>
+    <IntDir>obj\Release\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <TargetExt>.exe</TargetExt>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\</OutDir>
+    <IntDir>obj\Debug\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <TargetExt>.exe</TargetExt>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\..;..\..\libMusOO;..\..\third-party\eigen;$(COMPILED_LIBRARIES_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader></PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..;..\..\libMusOO;..\..\third-party\eigen;$(COMPILED_LIBRARIES_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(COMPILED_LIBRARIES_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..;..\..\libMusOO;..\..\third-party\eigen;$(COMPILED_LIBRARIES_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader></PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>DEBUG;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..;..\..\libMusOO;..\..\third-party\eigen;$(COMPILED_LIBRARIES_INCLUDE);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(COMPILED_LIBRARIES_LIB);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ChordEvaluationStats.h" />
+    <ClInclude Include="..\..\KeyEvaluationStats.h" />
+    <ClInclude Include="..\..\NoteEvaluationStats.h" />
+    <ClInclude Include="..\..\PairwiseEvaluation.h" />
+    <ClInclude Include="..\..\SegmentationEvaluation.h" />
+    <ClInclude Include="..\..\SimilarityScore.h" />
+    <ClInclude Include="..\..\SimilarityScoreChord.h" />
+    <ClInclude Include="..\..\SimilarityScoreKey.h" />
+    <ClInclude Include="..\..\SimilarityScoreNote.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\Chord.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\ChordProsemus.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\ChordQM.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\ChordQuaero.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\ChordType.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\Chroma.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\ChromaSolfege.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\Interval.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\IntervalClassSet.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\Key.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\KeyElis.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\KeyQM.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\KeyQuaero.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\Mode.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\Note.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\NoteMidi.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\RelativeChord.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\TimedChord.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\TimedKey.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\TimedLabel.h" />
+    <ClInclude Include="..\..\libMusOO\MusOO\TimedNote.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\ChordFile.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\ChordFileMuDesc.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\ChordFileProsemus.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\ChordFileQM.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\ChordFileSonicAnnotatorCSV.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\ChordFileUtil.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\KeyFile.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\KeyFileElis.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\KeyFileMuDesc.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\KeyFileProsemus.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\KeyFileQM.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\KeyFileUtil.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\LabFile.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\NoteFile.h" />
+    <ClInclude Include="..\..\libMusOO\MusOOFile\NoteFileMaps.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\ChordEvaluationStats.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\KeyEvaluationStats.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\MusOOEvaluator.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\NoteEvaluationStats.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\PairwiseEvaluation.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\SegmentationEvaluation.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\SimilarityScoreChord.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\SimilarityScoreKey.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\SimilarityScoreNote.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\Chord.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\ChordProsemus.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\ChordQM.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\ChordQuaero.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\ChordType.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\Chroma.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\ChromaSolfege.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\Interval.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\IntervalClassSet.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\Key.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\KeyElis.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\KeyQM.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\KeyQuaero.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\Mode.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\Note.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\NoteMidi.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOO\RelativeChord.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOOFile\ChordFile.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOOFile\ChordFileProsemus.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOOFile\ChordFileQM.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOOFile\KeyFile.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOOFile\KeyFileElis.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOOFile\KeyFileProsemus.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOOFile\KeyFileQM.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOOFile\NoteFile.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\MusOOFile\NoteFileMaps.cpp">
+    </ClCompile>
+    <ClCompile Include="..\..\libMusOO\tinyxml2\tinyxml2.cpp">
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
