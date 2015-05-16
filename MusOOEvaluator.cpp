@@ -402,6 +402,7 @@ int main(int inNumOfArguments,char* inArguments[])
                 {
                     path theVerbosePath = theOutputPath.parent_path() / path(*i + ".csv");
                     theVerboseStream.open(theVerbosePath);
+                    theVerboseStream << "Start" << theCSVSeparator << "End" << theCSVSeparator << "RefLabel" << theCSVSeparator << "TestLabel" << theCSVSeparator << "Score" << theCSVSeparator << "Duration" << endl;
                 }
 				theKeyEvaluation->addSequencePair(theRefKeys, theTestKeys, theBegin, theEnd, theVerboseStream, theMinRefDuration, theMaxRefDuration, theDelay);
 

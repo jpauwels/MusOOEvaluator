@@ -64,10 +64,9 @@ const double SimilarityScoreKey::score(const Key& inRefKey, const Key& inTestKey
 	this->m_RefIndex = calcKeyIndex(inRefKey);
 	this->m_TestIndex = calcKeyIndex(inTestKey);
 
-	if ((this->m_RefIndex == 24 || this->m_TestIndex == 24) &&
-		this->m_RefIndex != this->m_TestIndex)
+	if (this->m_RefIndex == 24 || this->m_TestIndex == 24)
 	{
-		return 0.;
+        return (this->m_RefIndex == this->m_TestIndex)?1.:0.;
 	}
 	else
 	{
