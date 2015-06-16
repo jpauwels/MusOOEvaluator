@@ -165,6 +165,11 @@ const double SegmentationEvaluation::calcAverageNumTestSegments() const
     return std::accumulate(m_NumTestSegments.begin(), m_NumTestSegments.end(), 0.) / static_cast<double>(m_NumTestSegments.size());
 }
 
+const double SegmentationEvaluation::calcAverageSegmentsRatio() const
+{
+    return std::inner_product(m_NumTestSegments.begin(), m_NumTestSegments.end(), m_NumRefSegments.begin(), 0., std::plus<double>(), std::divides<double>()) / static_cast<double>(m_NumTestSegments.size());
+}
+
 const double SegmentationEvaluation::calcAverageUnderSegmentation() const
 {
     return std::accumulate(m_MissedBoundaries.begin(), m_MissedBoundaries.end(), static_cast<double>(m_MissedBoundaries.size()), std::minus<double>()) / m_MissedBoundaries.size();

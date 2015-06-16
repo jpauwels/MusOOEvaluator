@@ -38,6 +38,7 @@ public:
     const double calcTotalDuration() const;
     const double calcAverageNumRefSegments() const;
     const double calcAverageNumTestSegments() const;
+    const double calcAverageSegmentsRatio() const;
     const double calcAverageUnderSegmentation() const;
     const double calcWeightedAverageUnderSegmentation() const;
     const double calcAverageOverSegmentation() const;

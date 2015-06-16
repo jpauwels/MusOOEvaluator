@@ -808,6 +808,7 @@ int main(int inNumOfArguments,char* inArguments[])
         theOutputFile << "Duration of evaluated segments: " << theSegmentationEvaluation.calcTotalDuration() << " s" << endl;
         theOutputFile << "Average number of reference segments: " << theSegmentationEvaluation.calcAverageNumRefSegments() << endl;
         theOutputFile << "Average number of test segments: " << theSegmentationEvaluation.calcAverageNumTestSegments() << endl;
+        theOutputFile << "Average ratio of number of segments: " << theSegmentationEvaluation.calcAverageSegmentsRatio() << endl;
         theOutputFile << "Average combined Hamming measure (worst): " << theSegmentationEvaluation.calcAverageCombinedHammingMeasureWorst() << endl;
         theOutputFile << "Average combined Hamming measure (harmonic): " << theSegmentationEvaluation.calcAverageCombinedHammingMeasureHarmonic() << endl;
         theOutputFile << "Average under-segmentation: " << theSegmentationEvaluation.calcAverageUnderSegmentation() << endl;
