@@ -499,6 +499,11 @@ const size_t SimilarityScoreChord::calcChordIndex(const MusOO::Chord& inChord, M
         outMappedChord = Chord::none();
 		return m_NumOfTrueChords;
 	}
+    else if (inChord == Chord::undefined())
+    {
+        outMappedChord = Chord::undefined();
+        return this->m_NumOfTestLabels;
+    }
     else if (m_Mapping == "bass")
     {
         outMappedChord = Chord(inChord.bass(true), ChordType::rootOnly());
