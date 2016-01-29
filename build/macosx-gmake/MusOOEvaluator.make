@@ -28,8 +28,8 @@ ifeq ($(config),release)
   CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -O2
   CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -Wl,-x -undefined dynamic_lookup -L$(COMPILED_LIBRARIES_LIB)
-  LIBS      += -lboost_filesystem -lboost_program_options -lboost_system
+  LDFLAGS   += $(shell test ${COMPILED_LIBRARIES_LIB} && echo ${COMPILED_LIBRARIES_LIB} || echo $(shell brew --prefix)/lib)/libboost_filesystem.a $(shell test ${COMPILED_LIBRARIES_LIB} && echo ${COMPILED_LIBRARIES_LIB} || echo $(shell brew --prefix)/lib)/libboost_program_options.a $(shell test ${COMPILED_LIBRARIES_LIB} && echo ${COMPILED_LIBRARIES_LIB} || echo $(shell brew --prefix)/lib)/libboost_system.a
+  LIBS      += 
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += 
   LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
@@ -50,8 +50,8 @@ ifeq ($(config),debug)
   CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -g
   CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -undefined dynamic_lookup -L$(COMPILED_LIBRARIES_LIB)
-  LIBS      += -lboost_filesystem -lboost_program_options -lboost_system
+  LDFLAGS   += $(shell test ${COMPILED_LIBRARIES_LIB} && echo ${COMPILED_LIBRARIES_LIB} || echo $(shell brew --prefix)/lib)/libboost_filesystem.a $(shell test ${COMPILED_LIBRARIES_LIB} && echo ${COMPILED_LIBRARIES_LIB} || echo $(shell brew --prefix)/lib)/libboost_program_options.a $(shell test ${COMPILED_LIBRARIES_LIB} && echo ${COMPILED_LIBRARIES_LIB} || echo $(shell brew --prefix)/lib)/libboost_system.a
+  LIBS      += 
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += 
   LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)

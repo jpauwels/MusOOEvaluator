@@ -28,7 +28,7 @@ ifeq ($(config),release)
   CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -O2
   CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -s -L$(COMPILED_LIBRARIES_LIB)
+  LDFLAGS   += -s  -static $(shell test ${COMPILED_LIBRARIES_LIB} && echo -L${COMPILED_LIBRARIES_LIB})
   LIBS      += -lboost_filesystem -lboost_program_options -lboost_system
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += 
@@ -50,7 +50,7 @@ ifeq ($(config),debug)
   CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -g
   CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -L$(COMPILED_LIBRARIES_LIB)
+  LDFLAGS   +=  -static $(shell test ${COMPILED_LIBRARIES_LIB} && echo -L${COMPILED_LIBRARIES_LIB})
   LIBS      += -lboost_filesystem -lboost_program_options -lboost_system
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += 
