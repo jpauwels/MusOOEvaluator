@@ -18,6 +18,8 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/program_options.hpp>
 #include <Eigen/Core>
+#include "MusOO/ModeQMUL.h"
+#include "MusOO/ChordTypeQMUL.h"
 #include "MusOOFile/KeyFileUtil.h"
 #include "MusOOFile/ChordFileUtil.h"
 #include "MusOOFile/NoteFileMaps.h"
@@ -209,7 +211,15 @@ const std::vector<std::string> readList(const path& inListPath)
         string theListItem;
         while(getline(theFileStream, theListItem))
         {
-            theListItems.push_back(theListItem);
+            if (!theListItem.empty() && theListItem[0] != '#')
+            {
+                if ((theListItem[0] == '"' && *(theListItem.end()-1) == '"') || (theListItem[0] == '\'' && *(theListItem.end()-1) == '\''))
+                {
+                    theListItem.erase(theListItem.begin());
+                    theListItem.erase(theListItem.end()-1);
+                }
+                theListItems.push_back(theListItem);
+            }
         }
         return theListItems;
     }
@@ -360,7 +370,7 @@ int main(int inNumOfArguments,char* inArguments[])
 			theKeyEvaluation = new PairwiseEvaluation<Key>(theVarMap["globalkey"].as<string>());
 		}
         theLabels.resize(theKeyEvaluation->getNumOfTestLabels());
-        std::transform(theKeyEvaluation->getLabels().begin(), theKeyEvaluation->getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::KeyQM::str));
+        std::transform(theKeyEvaluation->getLabels().begin(), theKeyEvaluation->getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::KeyQMUL::str));
 
 		ofstream theCSVFile;
 		if (theVarMap.count("csv") > 0)
@@ -438,8 +448,8 @@ int main(int inNumOfArguments,char* inArguments[])
 				{
 					theCSVFile << theCSVQuotes << *i << theCSVQuotes << theCSVSeparator 
 						<< theScore << theCSVSeparator
-						<< KeyQM(theGlobalRefKey).str() << theCSVSeparator
-						<< KeyQM(theGlobalTestKey).str() << endl;
+						<< KeyQMUL(theGlobalRefKey).str() << theCSVSeparator
+						<< KeyQMUL(theGlobalTestKey).str() << endl;
 				}
 			}
  		}
@@ -484,7 +494,7 @@ int main(int inNumOfArguments,char* inArguments[])
         const Eigen::ArrayXXd theResultsPerMode = theGlobalStats.getCorrectKeysPerMode();
         for (Eigen::ArrayXXd::Index iMode = 0; iMode < theResultsPerMode.rows(); ++iMode)
         {
-            theOutputFile << ModeQM(theKeyEvaluation->getLabels()[iMode].mode()) << ": "
+            theOutputFile << ModeQMUL(theKeyEvaluation->getLabels()[iMode].mode()) << ": "
                 << printResultLine(theResultsPerMode(iMode,0), theResultsPerMode(iMode,1), theUnit) << " of "
                 << printResultLine(theResultsPerMode(iMode,1), theTotalDuration, theUnit) << endl;
         }
@@ -497,7 +507,7 @@ int main(int inNumOfArguments,char* inArguments[])
 	{
 		PairwiseEvaluation<Chord> theChordEvaluation(theVarMap["chords"].as<string>());
         theLabels.resize(theChordEvaluation.getNumOfTestLabels());
-        std::transform(theChordEvaluation.getLabels().begin(), theChordEvaluation.getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::ChordQM::str));
+        std::transform(theChordEvaluation.getLabels().begin(), theChordEvaluation.getLabels().end(), theLabels.begin(), std::mem_fun_ref(&MusOO::ChordQMUL::str));
         const size_t numChordTypes = theChordEvaluation.getNumOfRefLabels()/12;
         vector<size_t> cardinalities(numChordTypes);
         std::transform(theChordEvaluation.getLabels().begin(), theChordEvaluation.getLabels().begin()+numChordTypes, cardinalities.begin(), std::mem_fun_ref(&MusOO::Chord::cardinality));
@@ -519,7 +529,7 @@ int main(int inNumOfArguments,char* inArguments[])
                 << theCSVSeparator << "Correct no-chords (%)";
             for (size_t iChordType = 0; iChordType < numChordTypes; ++iChordType)
             {
-                theCSVFile << theCSVSeparator << theCSVQuotes << ChordTypeQM(theChordEvaluation.getLabels()[iChordType].type()) << " correct (%)" << theCSVQuotes << theCSVSeparator << theCSVQuotes << ChordTypeQM(theChordEvaluation.getLabels()[iChordType].type()) << " proportion (%)" << theCSVQuotes;
+                theCSVFile << theCSVSeparator << theCSVQuotes << ChordTypeQMUL(theChordEvaluation.getLabels()[iChordType].type()) << " correct (%)" << theCSVQuotes << theCSVSeparator << theCSVQuotes << ChordTypeQMUL(theChordEvaluation.getLabels()[iChordType].type()) << " proportion (%)" << theCSVQuotes;
             }
             for (size_t iNumOfWrongChromas = 0; iNumOfWrongChromas <= maxCardinality; ++iNumOfWrongChromas)
             {
@@ -617,7 +627,7 @@ int main(int inNumOfArguments,char* inArguments[])
         const Eigen::ArrayXXd theResultsPerType = theGlobalStats.getCorrectChordsPerType();
         for (Eigen::ArrayXXd::Index iChordType = 0; iChordType < theResultsPerType.rows(); ++iChordType)
         {
-            theOutputFile << ChordTypeQM(theChordEvaluation.getLabels()[iChordType].type()) << ": "
+            theOutputFile << ChordTypeQMUL(theChordEvaluation.getLabels()[iChordType].type()) << ": "
                 << printResultLine(theResultsPerType(iChordType,0), theResultsPerType(iChordType,1), " s") << " of "
                 << printResultLine(theResultsPerType(iChordType,1), theTotalDuration, " s") << endl;
         }

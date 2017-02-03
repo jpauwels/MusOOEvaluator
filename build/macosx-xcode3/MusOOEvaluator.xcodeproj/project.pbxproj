@@ -9,8 +9,16 @@
 /* Begin PBXBuildFile section */
 		027964C15C125E492CF72B3D /* ChordEvaluationStats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 36F952B657CA1FA6553A7A88 /* ChordEvaluationStats.cpp */; };
 		0404468829431B4D734B6C69 /* NoteFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03651A3B243C6AE71D100C56 /* NoteFile.cpp */; };
+		04AD7F511E44FA43004B9E27 /* ChordChordino.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04AD7F4F1E44FA43004B9E27 /* ChordChordino.cpp */; };
+		04AD7F581E44FA5A004B9E27 /* ChordTypeProsemus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04AD7F521E44FA5A004B9E27 /* ChordTypeProsemus.cpp */; };
+		04AD7F591E44FA5A004B9E27 /* ChordTypeQMUL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04AD7F541E44FA5A004B9E27 /* ChordTypeQMUL.cpp */; };
+		04AD7F5A1E44FA5A004B9E27 /* ChordTypeQuaero.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04AD7F561E44FA5A004B9E27 /* ChordTypeQuaero.cpp */; };
+		04AD7F611E44FA78004B9E27 /* ModeElis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04AD7F5B1E44FA78004B9E27 /* ModeElis.cpp */; };
+		04AD7F621E44FA78004B9E27 /* ModeQMUL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04AD7F5D1E44FA78004B9E27 /* ModeQMUL.cpp */; };
+		04AD7F631E44FA78004B9E27 /* ModeQuaero.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04AD7F5F1E44FA78004B9E27 /* ModeQuaero.cpp */; };
+		04AD7F661E44FA91004B9E27 /* RelativeChordQMUL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04AD7F641E44FA91004B9E27 /* RelativeChordQMUL.cpp */; };
 		05F545807BAD582B01E577D1 /* ChromaSolfege.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6DAD7EDF717E3AFD6585397E /* ChromaSolfege.cpp */; };
-		09CD2E0E36C1782D7605653C /* KeyFileQM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722D0FB360FC6E3504665E54 /* KeyFileQM.cpp */; };
+		09CD2E0E36C1782D7605653C /* KeyFileQMUL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722D0FB360FC6E3504665E54 /* KeyFileQMUL.cpp */; };
 		0FAE69272D764DD56699762B /* SimilarityScoreNote.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FA17FD52904637112532941 /* SimilarityScoreNote.cpp */; };
 		14CC1960228153FC46835C89 /* KeyFileElis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E427DC059E76D071A3805C0 /* KeyFileElis.cpp */; };
 		1C2177FD38E42E49739B6646 /* Interval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 537744600AB666F82BC94D03 /* Interval.cpp */; };
@@ -33,10 +41,9 @@
 		5913043D6D8146860E3F0729 /* NoteMidi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43457AB513DA0EB726C37E2B /* NoteMidi.cpp */; };
 		5AEF1B0103B84EF779353DB2 /* ChordQuaero.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37D10876012667F31ED14E67 /* ChordQuaero.cpp */; };
 		5C65090325C15ACE17AA3B7E /* MusOOEvaluator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 307E4E433C9D6A416BB27AC9 /* MusOOEvaluator.cpp */; };
-		5F88075165E6140F688469A6 /* ChordFileQM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC17F407026709960EE6339 /* ChordFileQM.cpp */; };
-		669623EF339124CF2497701D /* ChordQM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BE63CAF35327DE43622224C /* ChordQM.cpp */; };
+		669623EF339124CF2497701D /* ChordQMUL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1BE63CAF35327DE43622224C /* ChordQMUL.cpp */; };
 		68A61D2F333510DA74CC2D18 /* IntervalClassSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06E13BE82719125253BD2243 /* IntervalClassSet.cpp */; };
-		6AA267112A14489E33310EEA /* KeyQM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4B8B4D78309543985CB733FF /* KeyQM.cpp */; };
+		6AA267112A14489E33310EEA /* KeyQMUL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4B8B4D78309543985CB733FF /* KeyQMUL.cpp */; };
 		746067C351EB41F7733C7F70 /* SimilarityScoreKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BE4FDF4E0D589477983993 /* SimilarityScoreKey.cpp */; };
 		76B84B7442393CFF49836BFE /* Chroma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 777600DF6D327DC074875DA4 /* Chroma.cpp */; };
 		78D31BA452DF67DE603D6673 /* KeyElis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25E7184A35E57DA827D13EF3 /* KeyElis.cpp */; };
@@ -47,6 +54,22 @@
 
 /* Begin PBXFileReference section */
 		03651A3B243C6AE71D100C56 /* NoteFile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NoteFile.cpp; sourceTree = "<group>"; };
+		04AD7F4F1E44FA43004B9E27 /* ChordChordino.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordChordino.cpp; sourceTree = "<group>"; };
+		04AD7F501E44FA43004B9E27 /* ChordChordino.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChordChordino.h; sourceTree = "<group>"; };
+		04AD7F521E44FA5A004B9E27 /* ChordTypeProsemus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordTypeProsemus.cpp; sourceTree = "<group>"; };
+		04AD7F531E44FA5A004B9E27 /* ChordTypeProsemus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChordTypeProsemus.h; sourceTree = "<group>"; };
+		04AD7F541E44FA5A004B9E27 /* ChordTypeQMUL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordTypeQMUL.cpp; sourceTree = "<group>"; };
+		04AD7F551E44FA5A004B9E27 /* ChordTypeQMUL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChordTypeQMUL.h; sourceTree = "<group>"; };
+		04AD7F561E44FA5A004B9E27 /* ChordTypeQuaero.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChordTypeQuaero.cpp; sourceTree = "<group>"; };
+		04AD7F571E44FA5A004B9E27 /* ChordTypeQuaero.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChordTypeQuaero.h; sourceTree = "<group>"; };
+		04AD7F5B1E44FA78004B9E27 /* ModeElis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModeElis.cpp; sourceTree = "<group>"; };
+		04AD7F5C1E44FA78004B9E27 /* ModeElis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModeElis.h; sourceTree = "<group>"; };
+		04AD7F5D1E44FA78004B9E27 /* ModeQMUL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModeQMUL.cpp; sourceTree = "<group>"; };
+		04AD7F5E1E44FA78004B9E27 /* ModeQMUL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModeQMUL.h; sourceTree = "<group>"; };
+		04AD7F5F1E44FA78004B9E27 /* ModeQuaero.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModeQuaero.cpp; sourceTree = "<group>"; };
+		04AD7F601E44FA78004B9E27 /* ModeQuaero.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModeQuaero.h; sourceTree = "<group>"; };
+		04AD7F641E44FA91004B9E27 /* RelativeChordQMUL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RelativeChordQMUL.cpp; sourceTree = "<group>"; };
+		04AD7F651E44FA91004B9E27 /* RelativeChordQMUL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RelativeChordQMUL.h; sourceTree = "<group>"; };
 		06E13BE82719125253BD2243 /* IntervalClassSet.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IntervalClassSet.cpp; sourceTree = "<group>"; };
 		076A46F925F85F5E51C43119 /* NoteEvaluationStats.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NoteEvaluationStats.h; path = ../../NoteEvaluationStats.h; sourceTree = "<group>"; };
 		080D3CC007F4559B55F9021A /* ChordType.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ChordType.cpp; sourceTree = "<group>"; };
@@ -60,7 +83,7 @@
 		174821F5610666212AC70AEE /* SimilarityScoreKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimilarityScoreKey.h; path = ../../SimilarityScoreKey.h; sourceTree = "<group>"; };
 		1B11072C0E7D59A518AC4E98 /* Chroma.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Chroma.h; sourceTree = "<group>"; };
 		1B4B61A474835E006651556A /* KeyElis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyElis.h; sourceTree = "<group>"; };
-		1BE63CAF35327DE43622224C /* ChordQM.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ChordQM.cpp; sourceTree = "<group>"; };
+		1BE63CAF35327DE43622224C /* ChordQMUL.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ChordQMUL.cpp; sourceTree = "<group>"; };
 		1D5B6BB35BC42F3A19803098 /* Chord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Chord.h; sourceTree = "<group>"; };
 		1DF162E46BE73C9024E822B5 /* TimedKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimedKey.h; sourceTree = "<group>"; };
 		1E2329655A7A3D7635A82A71 /* KeyFileProsemus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyFileProsemus.h; sourceTree = "<group>"; };
@@ -73,10 +96,9 @@
 		26E7187E1ED82D843FE30474 /* ChordFileMuDesc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChordFileMuDesc.h; sourceTree = "<group>"; };
 		28AA71937D4000D965E00458 /* SimilarityScoreNote.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimilarityScoreNote.h; path = ../../SimilarityScoreNote.h; sourceTree = "<group>"; };
 		2A6A44A75BD8744B0E7B5814 /* RelativeChord.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RelativeChord.cpp; sourceTree = "<group>"; };
-		2E9E0E097F662BCD22946163 /* ChordQM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChordQM.h; sourceTree = "<group>"; };
+		2E9E0E097F662BCD22946163 /* ChordQMUL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChordQMUL.h; sourceTree = "<group>"; };
 		302C41BB793F52DB4A1605EC /* KeyFileUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyFileUtil.h; sourceTree = "<group>"; };
 		307E4E433C9D6A416BB27AC9 /* MusOOEvaluator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MusOOEvaluator.cpp; path = ../../MusOOEvaluator.cpp; sourceTree = "<group>"; };
-		35EC3975431C7DE76A840BFC /* ChordFileQM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChordFileQM.h; sourceTree = "<group>"; };
 		36C405F7531334D06D7C249D /* TimedLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimedLabel.h; sourceTree = "<group>"; };
 		36F952B657CA1FA6553A7A88 /* ChordEvaluationStats.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ChordEvaluationStats.cpp; path = ../../ChordEvaluationStats.cpp; sourceTree = "<group>"; };
 		37D10876012667F31ED14E67 /* ChordQuaero.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ChordQuaero.cpp; sourceTree = "<group>"; };
@@ -91,7 +113,7 @@
 		437A28550D1169B64D856342 /* TimedChord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimedChord.h; sourceTree = "<group>"; };
 		443F29AB48B03ED256835141 /* NoteMidi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NoteMidi.h; sourceTree = "<group>"; };
 		47D11D494E366B5E7E287E26 /* SimilarityScoreChord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimilarityScoreChord.h; path = ../../SimilarityScoreChord.h; sourceTree = "<group>"; };
-		4B8B4D78309543985CB733FF /* KeyQM.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyQM.cpp; sourceTree = "<group>"; };
+		4B8B4D78309543985CB733FF /* KeyQMUL.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyQMUL.cpp; sourceTree = "<group>"; };
 		4C36210037F075A81B9C3B63 /* ChordFileProsemus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChordFileProsemus.h; sourceTree = "<group>"; };
 		4E427DC059E76D071A3805C0 /* KeyFileElis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFileElis.cpp; sourceTree = "<group>"; };
 		4EA608BE1FFD486369F70DB2 /* KeyQuaero.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyQuaero.h; sourceTree = "<group>"; };
@@ -100,7 +122,7 @@
 		553F3D7174794DA8005D76C6 /* ChordEvaluationStats.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChordEvaluationStats.h; path = ../../ChordEvaluationStats.h; sourceTree = "<group>"; };
 		55A4411372A40BB148B43E06 /* Mode.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Mode.cpp; sourceTree = "<group>"; };
 		58A023AB6C83453749F03CCD /* ChordType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChordType.h; sourceTree = "<group>"; };
-		58E06CBD25814DFB49B92609 /* KeyQM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyQM.h; sourceTree = "<group>"; };
+		58E06CBD25814DFB49B92609 /* KeyQMUL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyQMUL.h; sourceTree = "<group>"; };
 		5BE32B5A28D54680249E2E40 /* Key.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Key.cpp; sourceTree = "<group>"; };
 		5DD753AD3D3713506FE401CD /* TimedNote.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimedNote.h; sourceTree = "<group>"; };
 		5DF33D3237FB5FFE284B5ECD /* KeyFileProsemus.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFileProsemus.cpp; sourceTree = "<group>"; };
@@ -116,16 +138,15 @@
 		6CFA241D0090261817E077C4 /* ChordFileSonicAnnotatorCSV.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChordFileSonicAnnotatorCSV.h; sourceTree = "<group>"; };
 		6DAD7EDF717E3AFD6585397E /* ChromaSolfege.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ChromaSolfege.cpp; sourceTree = "<group>"; };
 		6E50566E09F807D747F21CA5 /* NoteEvaluationStats.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = NoteEvaluationStats.cpp; path = ../../NoteEvaluationStats.cpp; sourceTree = "<group>"; };
-		6EC17F407026709960EE6339 /* ChordFileQM.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ChordFileQM.cpp; sourceTree = "<group>"; };
 		701900E41F221D3941250D8F /* ChordFileProsemus.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ChordFileProsemus.cpp; sourceTree = "<group>"; };
-		722D0FB360FC6E3504665E54 /* KeyFileQM.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFileQM.cpp; sourceTree = "<group>"; };
+		722D0FB360FC6E3504665E54 /* KeyFileQMUL.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFileQMUL.cpp; sourceTree = "<group>"; };
 		72BE4FDF4E0D589477983993 /* SimilarityScoreKey.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SimilarityScoreKey.cpp; path = ../../SimilarityScoreKey.cpp; sourceTree = "<group>"; };
 		777600DF6D327DC074875DA4 /* Chroma.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Chroma.cpp; sourceTree = "<group>"; };
 		779D6C9A332A21B83DFE1B81 /* SegmentationEvaluation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SegmentationEvaluation.h; path = ../../SegmentationEvaluation.h; sourceTree = "<group>"; };
 		77DA3E2116BC38036C2C6DB3 /* Mode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mode.h; sourceTree = "<group>"; };
 		7A1D0B7B3D7B6A4E533B7504 /* ChordQuaero.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChordQuaero.h; sourceTree = "<group>"; };
 		7C2F1E1D2E0D149F541F7521 /* NoteFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NoteFile.h; sourceTree = "<group>"; };
-		7CB778D63C0300BE52921BC3 /* KeyFileQM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyFileQM.h; sourceTree = "<group>"; };
+		7CB778D63C0300BE52921BC3 /* KeyFileQMUL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyFileQMUL.h; sourceTree = "<group>"; };
 		7D8D7094430671FA7E63279E /* LabFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LabFile.h; sourceTree = "<group>"; };
 		7DC2727E472F203F16515E1F /* NoteFileMaps.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NoteFileMaps.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -173,14 +194,22 @@
 			children = (
 				5EEB3CED1078718F12F51B1D /* Chord.cpp */,
 				1D5B6BB35BC42F3A19803098 /* Chord.h */,
+				04AD7F4F1E44FA43004B9E27 /* ChordChordino.cpp */,
+				04AD7F501E44FA43004B9E27 /* ChordChordino.h */,
 				63265FBA553C051152517AAB /* ChordProsemus.cpp */,
 				3ADE702110DE64CF59D20207 /* ChordProsemus.h */,
-				1BE63CAF35327DE43622224C /* ChordQM.cpp */,
-				2E9E0E097F662BCD22946163 /* ChordQM.h */,
+				1BE63CAF35327DE43622224C /* ChordQMUL.cpp */,
+				2E9E0E097F662BCD22946163 /* ChordQMUL.h */,
 				37D10876012667F31ED14E67 /* ChordQuaero.cpp */,
 				7A1D0B7B3D7B6A4E533B7504 /* ChordQuaero.h */,
 				080D3CC007F4559B55F9021A /* ChordType.cpp */,
 				58A023AB6C83453749F03CCD /* ChordType.h */,
+				04AD7F521E44FA5A004B9E27 /* ChordTypeProsemus.cpp */,
+				04AD7F531E44FA5A004B9E27 /* ChordTypeProsemus.h */,
+				04AD7F541E44FA5A004B9E27 /* ChordTypeQMUL.cpp */,
+				04AD7F551E44FA5A004B9E27 /* ChordTypeQMUL.h */,
+				04AD7F561E44FA5A004B9E27 /* ChordTypeQuaero.cpp */,
+				04AD7F571E44FA5A004B9E27 /* ChordTypeQuaero.h */,
 				777600DF6D327DC074875DA4 /* Chroma.cpp */,
 				1B11072C0E7D59A518AC4E98 /* Chroma.h */,
 				6DAD7EDF717E3AFD6585397E /* ChromaSolfege.cpp */,
@@ -193,18 +222,26 @@
 				668B575D57D227E961C444AC /* Key.h */,
 				25E7184A35E57DA827D13EF3 /* KeyElis.cpp */,
 				1B4B61A474835E006651556A /* KeyElis.h */,
-				4B8B4D78309543985CB733FF /* KeyQM.cpp */,
-				58E06CBD25814DFB49B92609 /* KeyQM.h */,
+				4B8B4D78309543985CB733FF /* KeyQMUL.cpp */,
+				58E06CBD25814DFB49B92609 /* KeyQMUL.h */,
 				38095EA2767E4DBB41663654 /* KeyQuaero.cpp */,
 				4EA608BE1FFD486369F70DB2 /* KeyQuaero.h */,
 				55A4411372A40BB148B43E06 /* Mode.cpp */,
 				77DA3E2116BC38036C2C6DB3 /* Mode.h */,
+				04AD7F5B1E44FA78004B9E27 /* ModeElis.cpp */,
+				04AD7F5C1E44FA78004B9E27 /* ModeElis.h */,
+				04AD7F5D1E44FA78004B9E27 /* ModeQMUL.cpp */,
+				04AD7F5E1E44FA78004B9E27 /* ModeQMUL.h */,
+				04AD7F5F1E44FA78004B9E27 /* ModeQuaero.cpp */,
+				04AD7F601E44FA78004B9E27 /* ModeQuaero.h */,
 				3F042879403976FF6FB83822 /* Note.cpp */,
 				25700DBB06926DA9201037C4 /* Note.h */,
 				43457AB513DA0EB726C37E2B /* NoteMidi.cpp */,
 				443F29AB48B03ED256835141 /* NoteMidi.h */,
 				2A6A44A75BD8744B0E7B5814 /* RelativeChord.cpp */,
 				64EA4E285E4E135D5883257D /* RelativeChord.h */,
+				04AD7F641E44FA91004B9E27 /* RelativeChordQMUL.cpp */,
+				04AD7F651E44FA91004B9E27 /* RelativeChordQMUL.h */,
 				437A28550D1169B64D856342 /* TimedChord.h */,
 				1DF162E46BE73C9024E822B5 /* TimedKey.h */,
 				36C405F7531334D06D7C249D /* TimedLabel.h */,
@@ -232,8 +269,6 @@
 				26E7187E1ED82D843FE30474 /* ChordFileMuDesc.h */,
 				701900E41F221D3941250D8F /* ChordFileProsemus.cpp */,
 				4C36210037F075A81B9C3B63 /* ChordFileProsemus.h */,
-				6EC17F407026709960EE6339 /* ChordFileQM.cpp */,
-				35EC3975431C7DE76A840BFC /* ChordFileQM.h */,
 				6CFA241D0090261817E077C4 /* ChordFileSonicAnnotatorCSV.h */,
 				13C16C7061A67C9D5C556CC0 /* ChordFileUtil.h */,
 				655134D06B4A7A44391F2575 /* KeyFile.cpp */,
@@ -243,8 +278,8 @@
 				5FEF6EDE60B07DD342CA17A1 /* KeyFileMuDesc.h */,
 				5DF33D3237FB5FFE284B5ECD /* KeyFileProsemus.cpp */,
 				1E2329655A7A3D7635A82A71 /* KeyFileProsemus.h */,
-				722D0FB360FC6E3504665E54 /* KeyFileQM.cpp */,
-				7CB778D63C0300BE52921BC3 /* KeyFileQM.h */,
+				722D0FB360FC6E3504665E54 /* KeyFileQMUL.cpp */,
+				7CB778D63C0300BE52921BC3 /* KeyFileQMUL.h */,
 				302C41BB793F52DB4A1605EC /* KeyFileUtil.h */,
 				7D8D7094430671FA7E63279E /* LabFile.h */,
 				03651A3B243C6AE71D100C56 /* NoteFile.cpp */,
@@ -342,31 +377,38 @@
 				0FAE69272D764DD56699762B /* SimilarityScoreNote.cpp in Sources */,
 				2ACC6DDF05D164C40327114A /* Chord.cpp in Sources */,
 				2E82177A53DA1DAE1CDA5E8A /* ChordProsemus.cpp in Sources */,
-				669623EF339124CF2497701D /* ChordQM.cpp in Sources */,
+				669623EF339124CF2497701D /* ChordQMUL.cpp in Sources */,
+				04AD7F511E44FA43004B9E27 /* ChordChordino.cpp in Sources */,
 				5AEF1B0103B84EF779353DB2 /* ChordQuaero.cpp in Sources */,
 				7D6A79D719B355A34C585BE5 /* ChordType.cpp in Sources */,
+				04AD7F611E44FA78004B9E27 /* ModeElis.cpp in Sources */,
 				76B84B7442393CFF49836BFE /* Chroma.cpp in Sources */,
 				05F545807BAD582B01E577D1 /* ChromaSolfege.cpp in Sources */,
 				1C2177FD38E42E49739B6646 /* Interval.cpp in Sources */,
 				68A61D2F333510DA74CC2D18 /* IntervalClassSet.cpp in Sources */,
 				296956273A5151080B207842 /* Key.cpp in Sources */,
 				78D31BA452DF67DE603D6673 /* KeyElis.cpp in Sources */,
-				6AA267112A14489E33310EEA /* KeyQM.cpp in Sources */,
+				04AD7F5A1E44FA5A004B9E27 /* ChordTypeQuaero.cpp in Sources */,
+				6AA267112A14489E33310EEA /* KeyQMUL.cpp in Sources */,
 				58C90E7752DF66812ACB13CE /* KeyQuaero.cpp in Sources */,
 				29382DC16A0A4B501D135534 /* Mode.cpp in Sources */,
 				79DC0C7577CD70DF4B93309B /* Note.cpp in Sources */,
 				5913043D6D8146860E3F0729 /* NoteMidi.cpp in Sources */,
 				2DDD11017BA8789B125C66F3 /* RelativeChord.cpp in Sources */,
 				2AC439B119825B8708A0578D /* ChordFile.cpp in Sources */,
+				04AD7F581E44FA5A004B9E27 /* ChordTypeProsemus.cpp in Sources */,
 				38C408B766A85CBC54532001 /* ChordFileProsemus.cpp in Sources */,
-				5F88075165E6140F688469A6 /* ChordFileQM.cpp in Sources */,
 				5384189E604D78A74D3D66FD /* KeyFile.cpp in Sources */,
+				04AD7F631E44FA78004B9E27 /* ModeQuaero.cpp in Sources */,
 				14CC1960228153FC46835C89 /* KeyFileElis.cpp in Sources */,
 				211E392670745170382C08EF /* KeyFileProsemus.cpp in Sources */,
-				09CD2E0E36C1782D7605653C /* KeyFileQM.cpp in Sources */,
+				09CD2E0E36C1782D7605653C /* KeyFileQMUL.cpp in Sources */,
 				0404468829431B4D734B6C69 /* NoteFile.cpp in Sources */,
 				4F96146C70CC7C6E48B768FA /* NoteFileMaps.cpp in Sources */,
 				391D1F3829B348B25BD3089C /* tinyxml2.cpp in Sources */,
+				04AD7F661E44FA91004B9E27 /* RelativeChordQMUL.cpp in Sources */,
+				04AD7F591E44FA5A004B9E27 /* ChordTypeQMUL.cpp in Sources */,
+				04AD7F621E44FA78004B9E27 /* ModeQMUL.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

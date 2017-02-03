@@ -9,7 +9,7 @@
 
 // Includes
 #include "SimilarityScoreChord.h"
-#include "MusOO/ChordQM.h"
+#include "MusOO/ChordQMUL.h"
 #include <vector>
 #include <algorithm>
 #include <stdexcept>
@@ -397,7 +397,7 @@ const double SimilarityScoreChord::score(const Chord& inRefChord, const Chord& i
              this->m_MappedTestLabel.type() == ChordType::power()) &&
             m_Mapping != "root" && m_Mapping != "bass" && m_Mapping != "none")
         {
-            throw invalid_argument("The chord '" + ChordQM(inTestChord).str() + "' in the test sequence cannot be mapped using the current evaluating rules");
+            throw invalid_argument("The chord '" + ChordQMUL(inTestChord).str() + "' in the test sequence cannot be mapped using the current evaluating rules");
         }
         
         if (m_Scoring == "exact")

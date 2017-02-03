@@ -9,8 +9,8 @@
 
 // Includes
 #include <iomanip>
-#include "MusOO/KeyQM.h"
-#include "MusOO/ChordQM.h"
+#include "MusOO/KeyQMUL.h"
+#include "MusOO/ChordQMUL.h"
 #include "PairwiseEvaluation.h"
 #include "SimilarityScoreChord.h"
 #include "SimilarityScoreKey.h"
@@ -47,13 +47,13 @@ PairwiseEvaluation<Note>::PairwiseEvaluation(const std::string& inScoreSelect)
 template <>
 void PairwiseEvaluation<Key>::printVerboseOutput(std::ostream& inVerboseOStream, const double theStartTime, const double theEndTime, const Key& theRefLabel, const Key& theTestLabel, const Key& theMappedRefLabel, const Key& theMappedTestLabel, const double theScore, const double theSegmentLength) const
 {
-    inVerboseOStream << theStartTime << "," << theEndTime << "," << KeyQM(theRefLabel) << "," << KeyQM(theTestLabel) << "," << theScore << "," << theSegmentLength << "\n";
+    inVerboseOStream << theStartTime << "," << theEndTime << "," << KeyQMUL(theRefLabel) << "," << KeyQMUL(theTestLabel) << "," << theScore << "," << theSegmentLength << "\n";
 }
 
 template <>
 void PairwiseEvaluation<Chord>::printVerboseOutput(std::ostream& inVerboseOStream, const double theStartTime, const double theEndTime, const Chord& theRefLabel, const Chord& theTestLabel, const Chord& theMappedRefLabel, const Chord& theMappedTestLabel, const double theScore, const double theSegmentLength) const
 {
-    inVerboseOStream << theStartTime << "," << theEndTime << ",\"" << ChordQM(theRefLabel) << "\",\"" << ChordQM(theTestLabel) << "\"," << theScore << "," << theSegmentLength << ",\"" << ChordQM(theMappedRefLabel) << "\",\"" << ChordQM(theMappedTestLabel) << "\",[ ";
+    inVerboseOStream << theStartTime << "," << theEndTime << ",\"" << ChordQMUL(theRefLabel) << "\",\"" << ChordQMUL(theTestLabel) << "\"," << theScore << "," << theSegmentLength << ",\"" << ChordQMUL(theMappedRefLabel) << "\",\"" << ChordQMUL(theMappedTestLabel) << "\",[ ";
     set<Chroma> refChromas = theRefLabel.chromas();
     set<Chroma> testChromas = theTestLabel.chromas();
     for (set<Chroma>::const_iterator it = refChromas.begin(); it != refChromas.end(); ++it)

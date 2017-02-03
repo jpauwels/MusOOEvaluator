@@ -64,41 +64,48 @@ ifeq ($(config),debug)
 endif
 
 OBJECTS := \
-	$(OBJDIR)/ChordEvaluationStats.o \
-	$(OBJDIR)/KeyEvaluationStats.o \
-	$(OBJDIR)/MusOOEvaluator.o \
-	$(OBJDIR)/NoteEvaluationStats.o \
-	$(OBJDIR)/PairwiseEvaluation.o \
-	$(OBJDIR)/SegmentationEvaluation.o \
-	$(OBJDIR)/SimilarityScoreChord.o \
 	$(OBJDIR)/SimilarityScoreKey.o \
+	$(OBJDIR)/SegmentationEvaluation.o \
+	$(OBJDIR)/ChordEvaluationStats.o \
+	$(OBJDIR)/SimilarityScoreChord.o \
+	$(OBJDIR)/NoteEvaluationStats.o \
+	$(OBJDIR)/KeyEvaluationStats.o \
 	$(OBJDIR)/SimilarityScoreNote.o \
+	$(OBJDIR)/PairwiseEvaluation.o \
+	$(OBJDIR)/MusOOEvaluator.o \
+	$(OBJDIR)/KeyQMUL.o \
 	$(OBJDIR)/Chord.o \
-	$(OBJDIR)/ChordProsemus.o \
-	$(OBJDIR)/ChordQM.o \
+	$(OBJDIR)/ChordTypeProsemus.o \
 	$(OBJDIR)/ChordQuaero.o \
-	$(OBJDIR)/ChordType.o \
-	$(OBJDIR)/Chroma.o \
-	$(OBJDIR)/ChromaSolfege.o \
-	$(OBJDIR)/Interval.o \
-	$(OBJDIR)/IntervalClassSet.o \
-	$(OBJDIR)/Key.o \
-	$(OBJDIR)/KeyElis.o \
-	$(OBJDIR)/KeyQM.o \
-	$(OBJDIR)/KeyQuaero.o \
-	$(OBJDIR)/Mode.o \
-	$(OBJDIR)/Note.o \
+	$(OBJDIR)/ChordTypeQuaero.o \
 	$(OBJDIR)/NoteMidi.o \
+	$(OBJDIR)/ModeQuaero.o \
+	$(OBJDIR)/Key.o \
+	$(OBJDIR)/Note.o \
+	$(OBJDIR)/Mode.o \
+	$(OBJDIR)/Chroma.o \
+	$(OBJDIR)/KeyElis.o \
+	$(OBJDIR)/ModeQMUL.o \
+	$(OBJDIR)/ModeElis.o \
+	$(OBJDIR)/ChromaSolfege.o \
+	$(OBJDIR)/ChordType.o \
 	$(OBJDIR)/RelativeChord.o \
-	$(OBJDIR)/ChordFile.o \
-	$(OBJDIR)/ChordFileProsemus.o \
-	$(OBJDIR)/ChordFileQM.o \
+	$(OBJDIR)/IntervalClassSet.o \
+	$(OBJDIR)/ChordProsemus.o \
+	$(OBJDIR)/ChordQMUL.o \
+	$(OBJDIR)/KeyQuaero.o \
+	$(OBJDIR)/Interval.o \
+	$(OBJDIR)/ChordChordino.o \
+	$(OBJDIR)/RelativeChordQMUL.o \
+	$(OBJDIR)/ChordTypeQMUL.o \
+	$(OBJDIR)/KeyFileQMUL.o \
 	$(OBJDIR)/KeyFile.o \
-	$(OBJDIR)/KeyFileElis.o \
-	$(OBJDIR)/KeyFileProsemus.o \
-	$(OBJDIR)/KeyFileQM.o \
+	$(OBJDIR)/ChordFileProsemus.o \
 	$(OBJDIR)/NoteFile.o \
 	$(OBJDIR)/NoteFileMaps.o \
+	$(OBJDIR)/KeyFileProsemus.o \
+	$(OBJDIR)/ChordFile.o \
+	$(OBJDIR)/KeyFileElis.o \
 	$(OBJDIR)/tinyxml2.o \
 
 RESOURCES := \
@@ -160,109 +167,130 @@ $(GCH): $(PCH)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 endif
 
-$(OBJDIR)/ChordEvaluationStats.o: ../../ChordEvaluationStats.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/KeyEvaluationStats.o: ../../KeyEvaluationStats.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/MusOOEvaluator.o: ../../MusOOEvaluator.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/NoteEvaluationStats.o: ../../NoteEvaluationStats.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/PairwiseEvaluation.o: ../../PairwiseEvaluation.cpp
+$(OBJDIR)/SimilarityScoreKey.o: ../../SimilarityScoreKey.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/SegmentationEvaluation.o: ../../SegmentationEvaluation.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/ChordEvaluationStats.o: ../../ChordEvaluationStats.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/SimilarityScoreChord.o: ../../SimilarityScoreChord.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/SimilarityScoreKey.o: ../../SimilarityScoreKey.cpp
+$(OBJDIR)/NoteEvaluationStats.o: ../../NoteEvaluationStats.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/KeyEvaluationStats.o: ../../KeyEvaluationStats.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/SimilarityScoreNote.o: ../../SimilarityScoreNote.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/PairwiseEvaluation.o: ../../PairwiseEvaluation.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/MusOOEvaluator.o: ../../MusOOEvaluator.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/KeyQMUL.o: ../../libMusOO/MusOO/KeyQMUL.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/Chord.o: ../../libMusOO/MusOO/Chord.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/ChordProsemus.o: ../../libMusOO/MusOO/ChordProsemus.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/ChordQM.o: ../../libMusOO/MusOO/ChordQM.cpp
+$(OBJDIR)/ChordTypeProsemus.o: ../../libMusOO/MusOO/ChordTypeProsemus.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/ChordQuaero.o: ../../libMusOO/MusOO/ChordQuaero.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/ChordType.o: ../../libMusOO/MusOO/ChordType.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/Chroma.o: ../../libMusOO/MusOO/Chroma.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/ChromaSolfege.o: ../../libMusOO/MusOO/ChromaSolfege.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/Interval.o: ../../libMusOO/MusOO/Interval.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/IntervalClassSet.o: ../../libMusOO/MusOO/IntervalClassSet.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/Key.o: ../../libMusOO/MusOO/Key.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/KeyElis.o: ../../libMusOO/MusOO/KeyElis.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/KeyQM.o: ../../libMusOO/MusOO/KeyQM.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/KeyQuaero.o: ../../libMusOO/MusOO/KeyQuaero.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/Mode.o: ../../libMusOO/MusOO/Mode.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/Note.o: ../../libMusOO/MusOO/Note.cpp
+$(OBJDIR)/ChordTypeQuaero.o: ../../libMusOO/MusOO/ChordTypeQuaero.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/NoteMidi.o: ../../libMusOO/MusOO/NoteMidi.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/ModeQuaero.o: ../../libMusOO/MusOO/ModeQuaero.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/Key.o: ../../libMusOO/MusOO/Key.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/Note.o: ../../libMusOO/MusOO/Note.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/Mode.o: ../../libMusOO/MusOO/Mode.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/Chroma.o: ../../libMusOO/MusOO/Chroma.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/KeyElis.o: ../../libMusOO/MusOO/KeyElis.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/ModeQMUL.o: ../../libMusOO/MusOO/ModeQMUL.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/ModeElis.o: ../../libMusOO/MusOO/ModeElis.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/ChromaSolfege.o: ../../libMusOO/MusOO/ChromaSolfege.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/ChordType.o: ../../libMusOO/MusOO/ChordType.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/RelativeChord.o: ../../libMusOO/MusOO/RelativeChord.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/ChordFile.o: ../../libMusOO/MusOOFile/ChordFile.cpp
+$(OBJDIR)/IntervalClassSet.o: ../../libMusOO/MusOO/IntervalClassSet.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/ChordFileProsemus.o: ../../libMusOO/MusOOFile/ChordFileProsemus.cpp
+$(OBJDIR)/ChordProsemus.o: ../../libMusOO/MusOO/ChordProsemus.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/ChordFileQM.o: ../../libMusOO/MusOOFile/ChordFileQM.cpp
+$(OBJDIR)/ChordQMUL.o: ../../libMusOO/MusOO/ChordQMUL.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/KeyQuaero.o: ../../libMusOO/MusOO/KeyQuaero.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/Interval.o: ../../libMusOO/MusOO/Interval.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/ChordChordino.o: ../../libMusOO/MusOO/ChordChordino.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/RelativeChordQMUL.o: ../../libMusOO/MusOO/RelativeChordQMUL.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/ChordTypeQMUL.o: ../../libMusOO/MusOO/ChordTypeQMUL.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/KeyFileQMUL.o: ../../libMusOO/MusOOFile/KeyFileQMUL.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/KeyFile.o: ../../libMusOO/MusOOFile/KeyFile.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/KeyFileElis.o: ../../libMusOO/MusOOFile/KeyFileElis.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/KeyFileProsemus.o: ../../libMusOO/MusOOFile/KeyFileProsemus.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-$(OBJDIR)/KeyFileQM.o: ../../libMusOO/MusOOFile/KeyFileQM.cpp
+$(OBJDIR)/ChordFileProsemus.o: ../../libMusOO/MusOOFile/ChordFileProsemus.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/NoteFile.o: ../../libMusOO/MusOOFile/NoteFile.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/NoteFileMaps.o: ../../libMusOO/MusOOFile/NoteFileMaps.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/KeyFileProsemus.o: ../../libMusOO/MusOOFile/KeyFileProsemus.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/ChordFile.o: ../../libMusOO/MusOOFile/ChordFile.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/KeyFileElis.o: ../../libMusOO/MusOOFile/KeyFileElis.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/tinyxml2.o: ../../libMusOO/tinyxml2/tinyxml2.cpp
