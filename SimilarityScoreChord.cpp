@@ -402,8 +402,9 @@ const double SimilarityScoreChord::score(const Chord& inRefChord, const Chord& i
         
         if (m_Scoring == "exact")
         {
-            if (this->m_RefIndex == this->m_TestIndex)
+            if (inRefChord.root() == inTestChord.root() && calcMappedChordType(inRefChord.type().withoutSpelling()) == calcMappedChordType(inTestChord.type().withoutSpelling()))
             {
+                this->m_TestIndex = this->m_RefIndex; //in case unspelled original chord gets mapped to a different chord than the spelled original
                 return 1.;
             }
             else
