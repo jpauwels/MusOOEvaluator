@@ -518,13 +518,13 @@ const size_t SimilarityScoreChord::calcChordIndex(const MusOO::Chord& inChord, M
 		// Check whether the type belongs to the mapped set
 		if (theTypeIt != m_MappedTypes.end())
 		{
-            int theRootIndex = Interval(s_firstChroma, inChord.root()).circleStepsCW();
+            ptrdiff_t theRootIndex = Interval(s_firstChroma, inChord.root()).circleStepsCW();
 			return theRootIndex * m_NumOfMappedTypes + distance(m_MappedTypes.begin(), theTypeIt);
 		}
         else if (theMappedChordType != ChordType::rootOnly() && theMappedChordType != ChordType::power())
         {
             // A mappable chord that is not part of the mapped set
-            int theRootIndex = Interval(s_firstChroma, inChord.root()).circleStepsCW();
+            ptrdiff_t theRootIndex = Interval(s_firstChroma, inChord.root()).circleStepsCW();
             return m_NumOfTrueChords + theRootIndex + 1;
         }
 		else

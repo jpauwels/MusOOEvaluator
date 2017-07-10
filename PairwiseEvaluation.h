@@ -40,8 +40,8 @@ public:
 	void addSequencePair(const LabelSequence& inRefSequence, const LabelSequence& inTestSequence, double inStartTime, double inEndTime, std::ostream& inVerboseOStream, const double inMinRefDuration = 0., const double inMaxRefDuration = std::numeric_limits<double>::infinity(), const double inDelay = 0.);
 
 	const std::vector<T>& getLabels() const;
-	const Eigen::ArrayXXd::Index getNumOfRefLabels() const;
-	const Eigen::ArrayXXd::Index getNumOfTestLabels() const;
+	const Eigen::Index getNumOfRefLabels() const;
+	const Eigen::Index getNumOfTestLabels() const;
 
     // Get results of last file
     const double getDuration() const;
@@ -58,8 +58,8 @@ protected:
     void printVerboseOutput(std::ostream& inVerboseOStream, const double theStartTime, const double theEndTime, const T& theRefLabel, const T& theTestLabel, const T& theMappedRefLabel, const T& theMappedTestLabel, const double theScore, const double theSegmentLength) const;
 	
 	SimilarityScore<T>* m_SimilarityScore;
-    Eigen::ArrayXXd::Index m_NumOfRefLabels;
-    Eigen::ArrayXXd::Index m_NumOfTestLabels;
+    Eigen::Index m_NumOfRefLabels;
+    Eigen::Index m_NumOfTestLabels;
     
     std::vector<double> m_Durations;
     std::vector<double> m_Scores;
@@ -229,13 +229,13 @@ const std::vector<T>& PairwiseEvaluation<T>::getLabels() const
 }
 
 template <typename T>
-const Eigen::ArrayXXd::Index PairwiseEvaluation<T>::getNumOfRefLabels() const
+const Eigen::Index PairwiseEvaluation<T>::getNumOfRefLabels() const
 {
 	return m_NumOfRefLabels;
 }
 
 template <typename T>
-const Eigen::ArrayXXd::Index PairwiseEvaluation<T>::getNumOfTestLabels() const
+const Eigen::Index PairwiseEvaluation<T>::getNumOfTestLabels() const
 {
 	return m_NumOfTestLabels;
 }

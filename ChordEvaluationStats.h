@@ -18,7 +18,7 @@ class ChordEvaluationStats
 public:
 
 	/** Default constructor. */
-	ChordEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix, const std::vector<MusOO::Chord> inChords, const Eigen::ArrayXXd::Index inNumOfChromas = 12);
+	ChordEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix, const std::vector<MusOO::Chord>& inChords, const Eigen::Index inNumOfChromas = 12);
 
 	/** Destructor. */
 	virtual ~ChordEvaluationStats();
@@ -33,15 +33,15 @@ public:
 	const double getOnlyTypeCorrect() const;
 	const double getBothRootAndTypeWrong() const;
 
-	const Eigen::ArrayXXd::Index getNumOfUniquesInRef() const;
-	const Eigen::ArrayXXd::Index getNumOfUniquesInTest() const;
+	const Eigen::Index getNumOfUniquesInRef() const;
+	const Eigen::Index getNumOfUniquesInTest() const;
 
 	const double getRefChordsDuration() const;
 	const double getRefNoChordsDuration() const;
     
     const Eigen::ArrayXXd getCorrectChordsPerType() const;
-    const double getChordsWithNWrong(const Eigen::ArrayXXd::Index inNumOfWrongChromas) const;
-    const double getChordsWithSDI(const Eigen::ArrayXXd::Index inNumOfSubstitutedChromas, const Eigen::ArrayXXd::Index inNumOfDeletedChromas, const Eigen::ArrayXXd::Index inNumOfInsertedChromas) const;
+    const double getChordsWithNWrong(const Eigen::Index inNumOfWrongChromas) const;
+    const double getChordsWithSDI(const Eigen::Index inNumOfSubstitutedChromas, const Eigen::Index inNumOfDeletedChromas, const Eigen::Index inNumOfInsertedChromas) const;
     const double getChordsWithUnknownWrong() const;
 
 protected:
@@ -50,9 +50,9 @@ protected:
 private:
 
 	const Eigen::ArrayXXd m_ConfusionMatrix;
-	const Eigen::ArrayXXd::Index m_NumOfChromas;
-	const Eigen::ArrayXXd::Index m_NumOfChordTypes;
-	const Eigen::ArrayXXd::Index m_NumOfChords;
+	const Eigen::Index m_NumOfChromas;
+	const Eigen::Index m_NumOfChordTypes;
+	const Eigen::Index m_NumOfChords;
 
 	Eigen::ArrayXd m_OnlyRoots;
 	Eigen::ArrayXd m_OnlyTypes;
@@ -61,8 +61,8 @@ private:
     const bool m_HasTestCatchAllChords;
     const bool m_HasRefNoChord;
     
-    Eigen::ArrayXXi m_CardinalityDiff;
-    Eigen::ArrayXXi m_NumOfWrongChromas;
+    Eigen::Array<Eigen::Index, Eigen::Dynamic, Eigen::Dynamic> m_CardinalityDiff;
+    Eigen::Array<Eigen::Index, Eigen::Dynamic, Eigen::Dynamic> m_NumOfWrongChromas;
 };
 
 #endif	// #ifndef ChordEvaluationStats_h

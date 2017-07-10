@@ -42,7 +42,7 @@ protected:
 private:
 
 	Eigen::ArrayXXd m_ConfusionMatrix;
-	Eigen::ArrayXXd::Index m_NumOfNotes;
+	Eigen::Index m_NumOfNotes;
 	Eigen::Block<Eigen::ArrayXXd> m_NotesMatrix;
 
 };

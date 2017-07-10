@@ -44,7 +44,7 @@ const double NoteEvaluationStats::getNoteInsertions() const
 const double NoteEvaluationStats::getOctaveErrors() const
 {
 	double theOctaveDuration = 0.;
-	for (Eigen::ArrayXXd::Index i = 12; i < m_NumOfNotes; i += 12)
+	for (Eigen::Index i = 12; i < m_NumOfNotes; i += 12)
 	{
 		theOctaveDuration += m_NotesMatrix.matrix().diagonal(i).sum() + 
 			m_NotesMatrix.matrix().diagonal(-i).sum();
@@ -55,7 +55,7 @@ const double NoteEvaluationStats::getOctaveErrors() const
 const double NoteEvaluationStats::getFifthErrors() const
 {
 	double theFifthDuration = 0.;
-	for (Eigen::ArrayXXd::Index i = 5; i < m_NumOfNotes; i += 12)
+	for (Eigen::Index i = 5; i < m_NumOfNotes; i += 12)
 	{
 		theFifthDuration += m_NotesMatrix.matrix().diagonal(i).sum() + 
 			m_NotesMatrix.matrix().diagonal(-i).sum();

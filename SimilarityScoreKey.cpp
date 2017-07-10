@@ -71,7 +71,7 @@ const double SimilarityScoreKey::score(const Key& inRefKey, const Key& inTestKey
 	else
 	{
 		//distance moving clockwise on circle of fifths from reference to test
-		int theClockwiseDistance = Interval(inRefKey.tonic(), inTestKey.tonic()).circleStepsCW();
+		ptrdiff_t theClockwiseDistance = Interval(inRefKey.tonic(), inTestKey.tonic()).circleStepsCW();
 		if (inRefKey.mode().isMajor())
 		{
 			return m_ScoreMatrix(inTestKey.mode().isMajor()?0:1,theClockwiseDistance);
@@ -89,7 +89,7 @@ const size_t SimilarityScoreKey::calcKeyIndex(const Key& inKey)
 	{
 		return 24;
 	}
-	int theIndex = Interval(s_firstChroma, inKey.tonic()).circleStepsCW();
-	int theMode = inKey.mode().isMajor()?0:1;
+	ptrdiff_t theIndex = Interval(s_firstChroma, inKey.tonic()).circleStepsCW();
+	size_t theMode = inKey.mode().isMajor()?0:1;
 	return 2 * theIndex + theMode;
 }

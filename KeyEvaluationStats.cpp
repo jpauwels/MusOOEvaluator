@@ -12,7 +12,7 @@
 #include "KeyEvaluationStats.h"
 
 KeyEvaluationStats::KeyEvaluationStats(const Eigen::ArrayXXd& inConfusionMatrix,
-									   const Eigen::ArrayXXd::Index inNumOfChromas /*= 12*/)
+									   const Eigen::Index inNumOfChromas /*= 12*/)
 : m_ConfusionMatrix(inConfusionMatrix), m_NumOfChromas(inNumOfChromas), 
   m_NumOfModes((inConfusionMatrix.rows()-1)/inNumOfChromas), 
   m_NumOfKeys(m_NumOfModes * m_NumOfChromas),
@@ -64,14 +64,14 @@ const double KeyEvaluationStats::getRelativeKeys() const
     Eigen::ArrayXd theRefMajorSubDiag = m_KeysMatrix.matrix().diagonal(-m_NumOfKeys+3*m_NumOfModes+1);
     Eigen::ArrayXd theRefMinorSuperDiag = m_KeysMatrix.matrix().diagonal(m_NumOfKeys-3*m_NumOfModes-1);
     Eigen::ArrayXd theRefMinorSubDiag = m_KeysMatrix.matrix().diagonal(-3*m_NumOfModes-1);
-	for (Eigen::ArrayXXd::Index i = 0; i < theRefMinorSuperDiag.size(); ++i)
+	for (Eigen::Index i = 0; i < theRefMinorSuperDiag.size(); ++i)
 	{
 		if (i % 2 == 1) //sum over odd indices
 		{
 			theRelKeyDuration += theRefMajorSubDiag[i] + theRefMinorSuperDiag[i];
 		}
 	}
-	for (Eigen::ArrayXXd::Index i = 0; i < theRefMinorSubDiag.size(); ++i)
+	for (Eigen::Index i = 0; i < theRefMinorSubDiag.size(); ++i)
 	{
 		if (i % 2 == 0) //sum over even indices
 		{
@@ -88,7 +88,7 @@ const double KeyEvaluationStats::getParallelKeys() const
 		throw std::invalid_argument("Parallel keys are only defined for major-minor mode pairs");
 	}
 	double theParKeyDuration = 0.;
-	for (Eigen::ArrayXXd::Index i = 0; i < m_NumOfChromas; ++i)
+	for (Eigen::Index i = 0; i < m_NumOfChromas; ++i)
 	{
 		theParKeyDuration += m_KeysMatrix(i*m_NumOfModes,i*m_NumOfModes+1) + 
 			m_KeysMatrix(i*m_NumOfModes+1,i*m_NumOfModes);
@@ -105,12 +105,12 @@ const double KeyEvaluationStats::getChromaticKeys() const
         m_KeysMatrix.matrix().diagonal(-m_NumOfKeys+5*m_NumOfModes).sum();
 }
 
-const Eigen::ArrayXXd::Index KeyEvaluationStats::getNumOfUniquesInRef() const
+const Eigen::Index KeyEvaluationStats::getNumOfUniquesInRef() const
 {
 	return (m_KeysMatrix > 0.).rowwise().any().count();
 }
 
-const Eigen::ArrayXXd::Index KeyEvaluationStats::getNumOfUniquesInTest() const
+const Eigen::Index KeyEvaluationStats::getNumOfUniquesInTest() const
 {
 	return (m_KeysMatrix > 0.).colwise().any().count();
 }
@@ -118,9 +118,9 @@ const Eigen::ArrayXXd::Index KeyEvaluationStats::getNumOfUniquesInTest() const
 const Eigen::ArrayXXd KeyEvaluationStats::getCorrectKeysPerMode() const
 {
     Eigen::ArrayXXd outCorrectKeysPerMode = Eigen::ArrayXXd::Zero(m_NumOfModes, 2);
-    for (Eigen::ArrayXXd::Index iMode = 0; iMode < m_NumOfModes; ++iMode)
+    for (Eigen::Index iMode = 0; iMode < m_NumOfModes; ++iMode)
     {
-        for (Eigen::ArrayXXd::Index iChroma = 0; iChroma < m_NumOfChromas; ++iChroma)
+        for (Eigen::Index iChroma = 0; iChroma < m_NumOfChromas; ++iChroma)
         {
             // Correct keys per mode
             outCorrectKeysPerMode(iMode,0) += m_ConfusionMatrix(iChroma*m_NumOfModes+iMode, iChroma*m_NumOfModes+iMode);
